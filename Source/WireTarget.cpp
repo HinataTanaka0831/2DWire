@@ -1,13 +1,14 @@
 #include "WireTarget.h"
 
-WireTarget::WireTarget(VECTOR initPos)
-	: Object2D("Resource/WireTarget.png", initPos)
+WireTarget::WireTarget(std::string filename, VECTOR initPos)
+	: Object2D(filename, initPos)
 {
 	SetTag(Object2D::WireTarget2D);
 }
 
 WireTarget::~WireTarget()
 {
+
 }
 
 void WireTarget::Update()

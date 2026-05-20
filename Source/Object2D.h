@@ -64,6 +64,8 @@ public:      // ゲッター・セッター
 	Tag GetTag() { return mnTag; }          // タグ取得
 
 	float GetRadius();   // 半径の取得
+	int GetSizeX();
+	int GetSizeY();
 
 
 protected:

@@ -1,11 +1,14 @@
 #pragma once
 
-// �v���O�������ŋ��ʂ��Ďg�p����萔��`�Ȃǂ������ɋL�q���Ă���
-// �֐��Ȃǂ��L�q���Ă���
+// プログラム内で共通して使用する定数定義などをここに記述していく
+// 関数なども記述していく
 
 class Utility
 {
-public:  // �萔��`
-	static const int SCREEN_WIDTH = 1920;   // ��ʂ̕�
-	static const int SCREEN_HEIGHT = 1080; // ��ʂ̍���
+public:  // 定数定義
+	static const int SCREEN_WIDTH = 1920;   // 画面の幅
+	static const int SCREEN_HEIGHT = 1080; // 画面の高さ
 };
+
+// グローバルなカメラX座標（スクロール用）
+extern float gCameraX;

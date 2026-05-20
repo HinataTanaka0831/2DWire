@@ -4,7 +4,7 @@
 class WireTarget : public Object2D
 {
 public:
-	WireTarget(VECTOR initPos);
+	WireTarget(std::string filename, VECTOR initPos);
 	virtual ~WireTarget();
 
 	void Update() override;

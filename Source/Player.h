@@ -14,7 +14,7 @@ private:  // Playerクラスで使用する定数の定義
 
 public:
 	// コンストラクタ
-	Player(VECTOR initPos);
+	Player(std::string filename, VECTOR initPos);
 	// デストラクタ
 	virtual ~Player();
 

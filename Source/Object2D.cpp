@@ -3,34 +3,35 @@
 #include "Master.h"
 #include "ObjectManager.h"
 #include "Scene.h"
+#include "Utility.h"
 
 
-// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 Object2D::Object2D(std::string filename, VECTOR initPos)
 	: mvPosition(initPos)
 	, mbDeleteFlag(false)
 {
-	// Œ»ÝƒV[ƒ“‚Ì ObjectManager ‚ÉŽ©githisj‚ð’Ç‰Á‚·‚é
+	// ç¾åœ¨ã‚·ãƒ¼ãƒ³ã® ObjectManager ã«è‡ªèº«ï¼ˆthisï¼‰ã‚’è¿½åŠ ã™ã‚‹
 	Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->AddObject(this);
 
-	// ‰æ‘œ¶¬
+	// ç”»åƒç”Ÿæˆ
 	mpTexture = new Texture(filename, initPos, true);
 
 
 
 }
 
-// ƒfƒXƒgƒ‰ƒNƒ^
+// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 Object2D::~Object2D()
 {
-	// ‰æ‘œ”jŠü
+	// ç”»åƒç ´æ£„
 	if (mpTexture != nullptr)
 	{
 		delete mpTexture;
 	}
 }
 
-// XV
+// æ›´æ–°
 void Object2D::Update()
 {
 	if (mpTexture != nullptr)
@@ -38,23 +39,35 @@ void Object2D::Update()
 		mpTexture->Update();
 	}
 
-	// À•WÝ’è
+	// åº§æ¨™è¨­å®š
 	mpTexture->SetPosition(mvPosition);
 }
 
-// •`‰æ
+// æç”»
 void Object2D::Draw()
 {
 	if (mpTexture != nullptr)
 	{
-		mpTexture->Draw();
+		mpTexture->Draw(gCameraX, 0.0f);
 	}
 }
 
 
 
-// ”¼Œa‚ÌŽæ“¾
+// åŠå¾„ã®å–å¾—
 float Object2D::GetRadius()
 {
       return mpTexture->GetRadius();
+}
+
+int Object2D::GetSizeX()
+{
+	if (mpTexture) return mpTexture->GetSizeX();
+	return 0;
+}
+
+int Object2D::GetSizeY()
+{
+	if (mpTexture) return mpTexture->GetSizeY();
+	return 0;
 }

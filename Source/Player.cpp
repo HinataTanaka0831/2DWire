@@ -5,13 +5,15 @@
 #include "Master.h"
 #include "ObjectManager.h"
 #include "Scene.h"
+#include "Collision.h"
 #include "GameScene.h"
+#include "Utility.h"
 #include <cmath>
 
 
 
-Player::Player(VECTOR initPos)
-	: Object2D("Resource/Player.bmp", initPos)
+Player::Player(std::string filename, VECTOR initPos)
+	: Object2D(filename, initPos)
 	, displayDamage(maxHp)
 {
 	SetTag(Object2D::Player2D);
@@ -41,7 +43,7 @@ void Player::Draw()
 	// ワイヤー接続中ならワイヤー（線）を描画
 	if (mbIsWireActive)
 	{
-		DrawLine((int)mvPosition.x, (int)mvPosition.y, (int)mvWireTargetPos.x, (int)mvWireTargetPos.y, GetColor(200, 255, 255), 3);
+		DrawLine((int)(mvPosition.x - gCameraX), (int)mvPosition.y, (int)(mvWireTargetPos.x - gCameraX), (int)mvWireTargetPos.y, GetColor(200, 255, 255), 3);
 	}
 
 	// クラスの描画呼ぶ
@@ -64,19 +66,32 @@ void Player::Move()
 		// ターゲットを探す
 		std::vector<Object2D*> targets = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::WireTarget2D);
 		
+		float worldClickX = clickX + gCameraX;
+		
 		for (auto* obj : targets)
 		{
 			VECTOR tPos = obj->GetPosition();
-			float dx = clickX - tPos.x;
-			float dy = clickY - tPos.y;
-			// ターゲットの半径を仮に40とする（クリック判定用）
-			float dist = std::sqrt(dx * dx + dy * dy);
-			
-			if (dist <= 40.0f) // クリック座標がターゲットの範囲内なら
+			int sizeX = obj->GetSizeX();
+			int sizeY = obj->GetSizeY();
+
+			VECTOR objDis = VSub(tPos, mvPosition);
+
+			float objdistance = VSize(objDis);
+
+			// ターゲットが遠すぎる場合はスルー
+			if (objdistance >= 950.0f)
+			{
+				mbIsWireActive = false;
+				continue; 
+			}
+			// オブジェクトの矩形範囲内か判定（クリックした「好きなところ」にワイヤーを付ける）
+			if (worldClickX >= tPos.x - sizeX / 2.0f && worldClickX <= tPos.x + sizeX / 2.0f &&
+				clickY >= tPos.y - sizeY / 2.0f && clickY <= tPos.y + sizeY / 2.0f)
 			{
 				// ワイヤー接続！
 				mbIsWireActive = true;
-				mvWireTargetPos = tPos;
+				// オブジェクトの中心ではなく、クリックした座標をターゲット位置にする
+				mvWireTargetPos = VGet(worldClickX, clickY, 0.0f);
 				
 				// 振り子の初期計算（プレイヤーと支点の距離と角度）
 				float diffX = mvPosition.x - mvWireTargetPos.x;
@@ -122,8 +137,8 @@ void Player::Move()
 			float angularAcceleration = -(GRAVITY / mWireLength) * std::sin(mPendulumAngle);
 			
 			// プレイヤーの左右キー入力でスイングを加速・減速
-			if (CheckHitKey(KEY_INPUT_D)) angularAcceleration += 0.002f;
-			if (CheckHitKey(KEY_INPUT_A)) angularAcceleration -= 0.002f;
+			if (CheckHitKey(KEY_INPUT_D)) angularAcceleration += 0.0013f;
+			if (CheckHitKey(KEY_INPUT_A)) angularAcceleration -= 0.0013f;
 
 			// 減衰（空気抵抗）
 			mPendulumAngularVelocity *= 0.995f;
@@ -155,6 +170,16 @@ void Player::Move()
 			mVelocityX *= 0.85f; // 摩擦で減速
 		}
 
+		if (CheckHitKey(KEY_INPUT_SPACE))
+		{
+			// ジャンプ（地面にいるときのみ）
+			if (mvPosition.y >= 850.0f) // 地面にいるかの簡易判定
+			{
+				mVelocityY = -10.0f; // 上向きの速度を与える
+			}
+		}
+
+
 		// 最高速度制限
 		if (mVelocityX > (float)MOVE_SPEED * 1.5f) mVelocityX = (float)MOVE_SPEED * 1.5f;
 		if (mVelocityX < -(float)MOVE_SPEED * 1.5f) mVelocityX = -(float)MOVE_SPEED * 1.5f;
@@ -162,11 +187,23 @@ void Player::Move()
 		// 座標更新
 		mvPosition.x += mVelocityX;
 		mvPosition.y += mVelocityY;
+	}
+
+	// 共通の地面判定（画面下部に行かないようにする）
+	if (mvPosition.y > 850.0f)
+	{
+		mvPosition.y = 850.0f;
 		
-		// 仮の地面判定（画面下部）※ウィンドウサイズ480を想定
-		if (mvPosition.y > 850.0f)
+		if (mbIsWireActive)
 		{
-			mvPosition.y = 850.0f;
+			// ワイヤー使用中に地面に触れた場合、たるまないようにワイヤーを自動で縮める
+			float diffX = mvPosition.x - mvWireTargetPos.x;
+			float diffY = mvPosition.y - mvWireTargetPos.y;
+			mWireLength = std::sqrt(diffX * diffX + diffY * diffY);
+			mPendulumAngle = std::atan2(diffX, diffY);
+		}
+		else
+		{
 			mVelocityY = 0.0f;
 		}
 	}

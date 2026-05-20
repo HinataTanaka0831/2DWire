@@ -72,24 +72,6 @@ void TitleScene::Update()
 
 void TitleScene::Draw()
 {
-
-	// 背景の表示
-	DrawGraph(0, 0, grHandle, false);
-
-	// 文字のフォントサイズ変更
-	SetFontSize(40);
-	// 文字列の表示
-	DrawString(Utility::SCREEN_WIDTH / 2 - 120, Utility::SCREEN_HEIGHT / 2 - 100, "串揚げShooting", GetColor(255, 255, 255));
-
-	SetFontSize(20);
-
-	DrawString(Utility::SCREEN_WIDTH / 2 - 100, 200, "W:上　S:下　ENTER:決定", GetColor(255, 255, 255));
-
-	DrawString(Utility::SCREEN_WIDTH / 2 - 60, Play_Y, "　プレイ　", GetColor(255, 255, 255));
-
-	DrawString(Utility::SCREEN_WIDTH / 2 - 60, PlayRule_Y, "　遊び方　", GetColor(255, 255, 255));
-
-
 	switch (NowSelect3)
 	{
 	case select_Play:  // 選択肢（プレイ）が選択されている場合はプレイのY座標を設定する

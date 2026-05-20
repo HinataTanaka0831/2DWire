@@ -8,22 +8,27 @@ class Enemy;
 class GameScene : public Scene
 {
 public:
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	GameScene();
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	virtual~GameScene();
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	virtual void Initialize() override;
-	// XV
+	// æ›´æ–°
 	virtual void Update() override;
-	// •`‰æ
+	// æç”»
 	virtual void Draw() override;
-	// I—¹ˆ—
+	// çµ‚äº†å‡¦ç†
 	virtual void Finalize() override;
 
 
 private:
 	Enemy* iEnemy;
 	char font[32];
+	
+	// èƒŒæ™¯ç”»åƒç”¨ãƒãƒ³ãƒ‰ãƒ«
+	int mBgDayHandle;
+	int mBgEveningHandle;
+	int mBgNightHandle;
 };

@@ -8,26 +8,25 @@ Texture::Texture(std::string filename, VECTOR centerPosition, int transFlag)
     , mnSizeY(0)
     , mnTransFlag(transFlag)
 {
-    // ‰æ‘œ‚Ì“Ç‚İ‚İ
+    // ç”»åƒã®èª­ã¿è¾¼ã¿
     mnHandle = LoadGraph(filename.c_str());
 
-    // ‰æ‘œ‚ÌƒTƒCƒY‚ğæ“¾‚·‚é
+    // ç”»åƒã®ã‚µã‚¤ã‚ºã‚’å–å¾—ã™ã‚‹
     GetGraphSize(mnHandle, &mnSizeX, &mnSizeY);
 
-    // ”¼Œa‚ğİ’èi‚Æ‚è‚ ‚¦‚¸‹¤’Ê‚Å•‚Ì”¼•ª‚ğ”¼Œa‚Æ‚µ‚Ä‚¨‚­j
+    // åŠå¾„ã‚’è¨­å®šï¼ˆã¨ã‚Šã‚ãˆãšå…±é€šã§å¹…ã®åŠåˆ†ã‚’åŠå¾„ã¨ã—ã¦ãŠãï¼‰
     mfRadius = (float)mnSizeX / 2.0f;
 }
 
 Texture::~Texture()
 {
-    // “Ç‚İ‚ñ‚¾‰æ‘œ‚Ì”jŠü
+    // èª­ã¿è¾¼ã‚“ã ç”»åƒã®ç ´æ£„
     DeleteGraph(mnHandle);
 }
 
-void Texture::Draw()
+void Texture::Draw(float offsetX, float offsetY)
 {
-    // ‰æ‘œ‚Ì•\¦
-    DrawGraph(mvPosition.x - (mnSizeX / 2), mvPosition.y - (mnSizeY / 2), mnHandle, mnTransFlag);
+    DrawGraph((int)(mvPosition.x - offsetX) - (mnSizeX / 2), (int)(mvPosition.y - offsetY) - (mnSizeY / 2), mnHandle, mnTransFlag);
 }
 
 void Texture::Update()
