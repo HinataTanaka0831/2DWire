@@ -32,6 +32,8 @@ public:     // enum, struct, 定数の定義
 		Bullet2D = 2200,
 		HomingBullet2D = 2201,
 		WireTarget2D = 2300,
+		Goal2D = 2400,
+		Ground2D = 2500,
 
 		// Resultシーンで使われるタグ（3000～）
 	};
@@ -63,9 +65,9 @@ public:      // ゲッター・セッター
 	void SetTag(Tag tag) { mnTag = tag; }   // タグ設定
 	Tag GetTag() { return mnTag; }          // タグ取得
 
-	float GetRadius();   // 半径の取得
-	int GetSizeX();
-	int GetSizeY();
+	virtual float GetRadius();   // 半径の取得
+	virtual int GetSizeX();
+	virtual int GetSizeY();
 
 
 protected:
