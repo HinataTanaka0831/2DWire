@@ -52,7 +52,7 @@ private:      // メンバ変数
 	// 物理演算用変数
 	float mVelocityY = 0.0f;               // 縦方向の速度
 	float mVelocityX = 0.0f;               // 横方向の速度
-	static constexpr float GRAVITY = 0.5f; // 重力加速度
+	static constexpr float GRAVITY = 0.2f; // 重力加速度
 
 	int Hp = 100;  // HP
 	int maxHp = 100; // 最大HP

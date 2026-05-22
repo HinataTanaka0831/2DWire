@@ -189,34 +189,11 @@ void Player::Move()
 		mvPosition.y += mVelocityY;
 	}
 
-	// 地面判定（地面オブジェクトとの衝突）
-	auto grounds = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Ground2D);
-	bool hitGround = false;
-	float groundTopY = 0.0f;
-
-	for (auto* obj : grounds)
+	// 共通の地面判定（画面下部に行かないようにする）
+	if (mvPosition.y > 950.0f)
 	{
-		float gLeft = obj->GetPosition().x - obj->GetSizeX() / 2.0f;
-		float gRight = obj->GetPosition().x + obj->GetSizeX() / 2.0f;
-		float gTop = obj->GetPosition().y - obj->GetSizeY() / 2.0f;
-		float gBottom = obj->GetPosition().y + obj->GetSizeY() / 2.0f;
+		mvPosition.y = 950.0f;
 
-		// プレイヤーのXが地面の範囲内にあり、かつYが地面にめり込んでいる場合
-		if (mvPosition.x >= gLeft && mvPosition.x <= gRight)
-		{
-			if (mvPosition.y >= gTop && mvPosition.y <= gBottom + 30.0f) // すり抜け防止のバッファ
-			{
-				hitGround = true;
-				groundTopY = gTop;
-				break;
-			}
-		}
-	}
-
-	if (hitGround)
-	{
-		mvPosition.y = groundTopY;
-		
 		if (mbIsWireActive)
 		{
 			// ワイヤー使用中に地面に触れた場合、たるまないようにワイヤーを自動で縮める
@@ -229,13 +206,10 @@ void Player::Move()
 		{
 			mVelocityY = 0.0f;
 		}
+
+
 	}
 
-	// 画面外（落下）判定
-	if (mvPosition.y > 2000.0f)
-	{
-		PDamage(Hp); // 落下死
-	}
 
 	// テクスチャ座標に反映
 	mpTexture->SetPosition(mvPosition);
@@ -244,8 +218,8 @@ void Player::Move()
 // HPゲージの描画
 void Player::HPGaugeDraw()
 {
-	int gaugeX = 25; // HPゲージの表示位置X
-	int gaugeY = 40; // HPゲージの表示位置Y
+	int gaugeX = (int)(mvPosition.x - gCameraX) - 100; // HPゲージの表示位置X
+	int gaugeY = (int)mvPosition.y - 50; // HPゲージの表示位置Y
 
 	// HPゲージの枠を描画
 	DrawBox(gaugeX, gaugeY, gaugeX + width, gaugeY + gaugeHeight, GetColor(0, 0, 0), TRUE);

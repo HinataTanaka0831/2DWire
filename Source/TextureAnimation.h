@@ -7,8 +7,8 @@ class TextureAnimation
 public:
 	// コンストラクタ
 	TextureAnimation(
-		VECTOR position,
 		std::string filename,
+		VECTOR position,
 		int allNum,
 		int xNum,
 		int yNum,
@@ -20,6 +20,15 @@ public:
 	void Update();  // 更新
 	void Draw();   // 描画
 
+	int GetSizeX() { return mnSizeX; }    // 幅サイズ取得
+	int GetSizeY() { return mnSizeY; }    // 高さサイズ取得
+
+	float GetRadius() { return (float)mnSizeX / 2.0f; }    // 半径取得（とりあえず幅の半分を半径としておく）
+
+	void SetScale(float scale) { mnScale = scale; }    // 描画倍率設定
+	float GetScale() { return mnScale; }    // 描画倍率取得
+
+
 private:
 	VECTOR mvPosition;  // ポジション
 	int mnCounter;      // アニメーションカウンタ
@@ -27,4 +36,7 @@ private:
 	int mnCurrentNum;   // 何番目のテクスチャを表示するか
 	int* mnHandleList;  // 分割されたテクスチャのハンドルリスト
 	int mnAllNum;       // テクスチャ分割数
+	int mnSizeX;       // 分割されたテクスチャの幅
+	int mnSizeY;       // 分割されたテクスチャの高さ
+	float mnScale;     // 描画倍率
 };

@@ -1,5 +1,6 @@
 #include "Object2D.h"
 #include "Texture.h"
+#include "TextureAnimation.h"
 #include "Master.h"
 #include "ObjectManager.h"
 #include "Scene.h"
@@ -10,6 +11,7 @@
 Object2D::Object2D(std::string filename, VECTOR initPos)
 	: mvPosition(initPos)
 	, mbDeleteFlag(false)
+	, mpTexture(nullptr)
 {
 	// 現在シーンの ObjectManager に自身（this）を追加する
 	Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->AddObject(this);
@@ -17,7 +19,19 @@ Object2D::Object2D(std::string filename, VECTOR initPos)
 	// 画像生成
 	mpTexture = new Texture(filename, initPos, true);
 
+}
 
+// コンストラクタ（アニメーション用）
+Object2D::Object2D(VECTOR initPos, std::string filename, int allNum, int numX, int numY, int interval, float scale)
+	: mvPosition(initPos)
+	, mbDeleteFlag(false)
+	, mpTexture(nullptr)
+{
+	// 現在シーンの ObjectManager に自身（this）を追加する
+	Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->AddObject(this);
+
+	// 画像生成
+	mpTextureAnimation = new TextureAnimation(filename, initPos, allNum, numX, numY, interval);
 
 }
 
@@ -29,6 +43,13 @@ Object2D::~Object2D()
 	{
 		delete mpTexture;
 	}
+
+	// 画像アニメーション破棄
+	if (mpTextureAnimation != nullptr)
+	{
+		delete mpTextureAnimation;
+	}
+
 }
 
 // 更新
@@ -37,6 +58,11 @@ void Object2D::Update()
 	if (mpTexture != nullptr)
 	{
 		mpTexture->Update();
+	}
+
+	if (mpTextureAnimation != nullptr)
+	{
+		mpTextureAnimation->Update();
 	}
 
 	// 座標設定
@@ -50,6 +76,12 @@ void Object2D::Draw()
 	{
 		mpTexture->Draw(gCameraX, 0.0f);
 	}
+
+	if (mpTextureAnimation != nullptr)
+	{
+		mpTextureAnimation->Draw();
+	}
+
 }
 
 
