@@ -7,7 +7,7 @@
 class Texture
 {
 public:
-	Texture(std::string filename, VECTOR centerPosition, int transFlag);      // コンストラクタ
+	Texture(std::string filename, VECTOR centerPosition, int transFlag, int );      // コンストラクタ
 
 	~Texture();     // デストラクタ
 

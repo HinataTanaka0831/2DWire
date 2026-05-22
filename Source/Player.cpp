@@ -189,36 +189,14 @@ void Player::Move()
 		mvPosition.y += mVelocityY;
 	}
 
-	// 地面判定（地面オブジェクトとの衝突）
-	auto grounds = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Ground2D);
-	bool hitGround = false;
-	float groundTopY = 0.0f;
-
-	for (auto* obj : grounds)
+	// 共通の地面判定（画面下部に行かないようにする）
+	if (mvPosition.y > 850.0f)
 	{
-		float gLeft = obj->GetPosition().x - obj->GetSizeX() / 2.0f;
-		float gRight = obj->GetPosition().x + obj->GetSizeX() / 2.0f;
-		float gTop = obj->GetPosition().y - obj->GetSizeY() / 2.0f;
-		float gBottom = obj->GetPosition().y + obj->GetSizeY() / 2.0f;
+		mvPosition.y = 850.0f;
 
-		// プレイヤーのXが地面の範囲内にあり、かつYが地面にめり込んでいる場合
-		if (mvPosition.x >= gLeft && mvPosition.x <= gRight)
-		{
-			if (mvPosition.y >= gTop && mvPosition.y <= gBottom + 30.0f) // すり抜け防止のバッファ
-			{
-				hitGround = true;
-				groundTopY = gTop;
-				break;
-			}
-		}
-	}
-
-	if (hitGround)
-	{
-		mvPosition.y = groundTopY;
-		
 		if (mbIsWireActive)
 		{
+			mvPosition.y = 850.0f;
 			// ワイヤー使用中に地面に触れた場合、たるまないようにワイヤーを自動で縮める
 			float diffX = mvPosition.x - mvWireTargetPos.x;
 			float diffY = mvPosition.y - mvWireTargetPos.y;
@@ -231,11 +209,6 @@ void Player::Move()
 		}
 	}
 
-	// 画面外（落下）判定
-	if (mvPosition.y > 2000.0f)
-	{
-		PDamage(Hp); // 落下死
-	}
 
 	// テクスチャ座標に反映
 	mpTexture->SetPosition(mvPosition);

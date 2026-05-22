@@ -32,7 +32,7 @@ void GameScene::Initialize()
 	// 背景の読み込み
 	mBgDayHandle = LoadGraph("Resource/bg_day.png");
 	mBgEveningHandle = LoadGraph("Resource/bg_evening.png");
-	mBgNightHandle = LoadGraph("Resource/bg_night_1.png");
+	mBgNightHandle = LoadGraph("Resource/bg_night.png");
 
 	new Player( 
 		"Resource/Player.bmp", VGet( (float)Utility::SCREEN_WIDTH / 9 , (float)Utility::SCREEN_HEIGHT / 2, 0.0f)
