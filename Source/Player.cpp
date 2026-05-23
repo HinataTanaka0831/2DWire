@@ -207,6 +207,8 @@ void Player::Move()
 		{
 			mVelocityY = 0.0f;
 		}
+
+
 	}
 
 
@@ -217,8 +219,8 @@ void Player::Move()
 // HPゲージの描画
 void Player::HPGaugeDraw()
 {
-	int gaugeX = 25; // HPゲージの表示位置X
-	int gaugeY = 40; // HPゲージの表示位置Y
+	int gaugeX = (int)(mvPosition.x - gCameraX) - 100; // HPゲージの表示位置X
+	int gaugeY = (int)mvPosition.y - 50; // HPゲージの表示位置Y
 
 	// HPゲージの枠を描画
 	DrawBox(gaugeX, gaugeY, gaugeX + width, gaugeY + gaugeHeight, GetColor(0, 0, 0), TRUE);

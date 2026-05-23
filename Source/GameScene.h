@@ -28,7 +28,6 @@ private:
 	char font[32];
 	
 	// 背景画像用ハンドル
-	int mBgDayHandle;
-	int mBgEveningHandle;
 	int mBgNightHandle;
+	int mBgNight_SkyHandle;
 };

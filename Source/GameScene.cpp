@@ -14,6 +14,7 @@
 #include <cmath>
 
 float gCameraX = 0.0f;
+float gCameraY = 0.0f;
 
 GameScene::GameScene()
 	: Scene()     // 基底クラスのコンストラクタを呼び出す
@@ -22,20 +23,18 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
-	DeleteGraph(mBgDayHandle);
-	DeleteGraph(mBgEveningHandle);
 	DeleteGraph(mBgNightHandle);
+	DeleteGraph(mBgNight_SkyHandle);
 }
 
 void GameScene::Initialize()
 {
 	// 背景の読み込み
-	mBgDayHandle = LoadGraph("Resource/bg_day.png");
-	mBgEveningHandle = LoadGraph("Resource/bg_evening.png");
 	mBgNightHandle = LoadGraph("Resource/bg_night.png");
+	mBgNight_SkyHandle = LoadGraph("Resource/bg_night_sky.png");
 
 	new Player( 
-		"Resource/Player.bmp", VGet( (float)Utility::SCREEN_WIDTH / 9 , (float)Utility::SCREEN_HEIGHT / 2, 0.0f)
+		"Resource/Player.bmp", VGet( (float)Utility::SCREEN_WIDTH / 9 , 950.0f, 0.0f)
 	);
 
 	// マップの読み込み
@@ -63,6 +62,7 @@ void GameScene::Update()
 		{
 			gCameraX = targetCameraX; // 左スクロールも許容
 		}
+
 
 		// ゴール判定
 		auto goalList = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Goal2D);

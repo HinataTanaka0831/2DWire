@@ -8,6 +8,7 @@
 // クラスの前方宣言
 class Texture;
 
+class TextureAnimation;
 
 
 //
@@ -42,6 +43,10 @@ public:     // enum, struct, 定数の定義
 public:
 	// コンストラクタ
 	Object2D(std::string filename, VECTOR initPos);
+
+	// コンストラクタ（アニメーション用）
+	Object2D(VECTOR initPos, std::string filename, int allNum, int numX, int numY, int interval, float scale);
+
 	// デストラクタ
 	virtual ~Object2D();
 
@@ -72,6 +77,7 @@ public:      // ゲッター・セッター
 
 protected:
 	Texture* mpTexture;     // 画像
+	TextureAnimation* mpTextureAnimation;     // 画像アニメーション
 	VECTOR mvPosition;      // 座標
 	VECTOR mvDirection;  // 移動方向
 	float mfAngle;       // 現在の目標角度
