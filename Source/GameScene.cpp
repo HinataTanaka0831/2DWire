@@ -19,6 +19,7 @@ float gCameraY = 0.0f;
 GameScene::GameScene()
 	: Scene()     // 基底クラスのコンストラクタを呼び出す
 {
+
 }
 
 GameScene::~GameScene()
@@ -33,7 +34,7 @@ void GameScene::Initialize()
 	mBgNightHandle = LoadGraph("Resource/bg_night.png");
 	mBgNight_SkyHandle = LoadGraph("Resource/bg_night_sky.png");
 
-	new Player( 
+	mpPlayer = new Player( 
 		"Resource/Player.bmp", VGet( (float)Utility::SCREEN_WIDTH / 9 , 950.0f, 0.0f)
 	);
 
@@ -47,11 +48,9 @@ void GameScene::Update()
 {
 
 	// プレイヤーの位置を取得してカメラを更新
-	auto pObj = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
-	Player* pPlayer = dynamic_cast<Player*>(pObj);
-	if (pPlayer != nullptr)
+	if (mpPlayer != nullptr)
 	{
-		float playerX = pPlayer->GetPosition().x;
+		float playerX = mpPlayer->GetPosition().x;
 		// プレイヤーが画面の中心（1920/2）を超えたらカメラを動かす
 		float targetCameraX = playerX - Utility::SCREEN_WIDTH / 3.0f;
 		float targetCameraX2 = playerX - Utility::SCREEN_WIDTH / 0.5f;
@@ -68,8 +67,8 @@ void GameScene::Update()
 		auto goalList = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Goal2D);
 		for (auto* goal : goalList)
 		{
-			float dx = pPlayer->GetPosition().x - goal->GetPosition().x;
-			float dy = pPlayer->GetPosition().y - goal->GetPosition().y;
+			float dx = mpPlayer->GetPosition().x - goal->GetPosition().x;
+			float dy = mpPlayer->GetPosition().y - goal->GetPosition().y;
 			float dist = std::sqrt(dx*dx + dy*dy);
 			// 少し余裕を持たせて判定
 			if (dist < goal->GetSizeX() / 2.0f + 50.0f)
@@ -110,11 +109,9 @@ void GameScene::Draw()
 
 
 	// プレイヤーのHPゲージの描画
-	auto pObj = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
-	Player* pPlayer = dynamic_cast<Player*>(pObj);
-	if (pPlayer != nullptr)
+	if (mpPlayer != nullptr)
 	{
-		pPlayer->HPGaugeDraw();
+		mpPlayer->HPGaugeDraw();
 	}
 
 

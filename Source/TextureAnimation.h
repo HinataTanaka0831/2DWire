@@ -12,22 +12,32 @@ public:
 		int allNum,
 		int xNum,
 		int yNum,
-		int interval
+		int interval,
+		float scale
 	);  
 	// デストラクタ
 	~TextureAnimation(); 
 
-	void Update();  // 更新
-	void Draw();   // 描画
+	// 更新
+	void Update(); 
 
-	int GetSizeX() { return mnSizeX; }    // 幅サイズ取得
-	int GetSizeY() { return mnSizeY; }    // 高さサイズ取得
+	// 描画
+	void Draw();   
 
-	float GetRadius() { return (float)mnSizeX / 2.0f; }    // 半径取得（とりあえず幅の半分を半径としておく）
+	// 幅サイズ取得
+	int GetSizeX() { return mnSizeX; }   
 
-	void SetScale(float scale) { mnScale = scale; }    // 描画倍率設定
-	float GetScale() { return mnScale; }    // 描画倍率取得
+	// 高さサイズ取得
+	int GetSizeY() { return mnSizeY; }    
 
+	// 半径取得（とりあえず幅の半分を半径としておく）
+	float GetRadius() { return (float)mnSizeX / 2.0f; }   
+
+	// 描画倍率取得
+	float GetScale() { return mnScale; }    
+
+	// アニメーションを1度だけ
+	int IsEnd() { return mnCurrentNum >= mnAllNum - 1; }
 
 private:
 	VECTOR mvPosition;  // ポジション

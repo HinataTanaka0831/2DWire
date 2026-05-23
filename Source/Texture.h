@@ -7,12 +7,17 @@
 class Texture
 {
 public:
-	Texture(std::string filename, VECTOR centerPosition, int transFlag, int );      // コンストラクタ
+	// コンストラクタ
+	Texture(std::string filename, VECTOR centerPosition, int transFlag);     
 
-	~Texture();     // デストラクタ
+	// デストラクタ
+	~Texture();     
 
-	void Draw(float offsetX = 0.0f, float offsetY = 0.0f);    // 描画
-	void Update();  // 更新
+	// 更新
+	void Update();  
+
+	// 描画
+	void Draw(float offsetX = 0.0f, float offsetY = 0.0f);
 
 	// セッター関数 //
 	// ポジション設定
@@ -21,6 +26,7 @@ public:
 	// ゲッター関数
 	// ポジション取得
 	VECTOR GetPosition() { return mvPosition; }
+
 	// サイズ取得
 	int GetSizeX() { return mnSizeX; }
 	int GetSizeY() { return mnSizeY; }

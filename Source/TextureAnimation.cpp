@@ -7,13 +7,15 @@ TextureAnimation::TextureAnimation(
 	int allNum,
 	int xNum,
 	int yNum,
-	int interval
+	int interval,
+	float scale
 )
 	: mvPosition()
 	, mnCounter(0)
 	, mnInterval(interval)
 	, mnCurrentNum(0)
 	, mnAllNum(allNum)
+	, mnScale(scale)
 {
 	mnHandleList = new int[allNum];
 

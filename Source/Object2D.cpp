@@ -31,7 +31,7 @@ Object2D::Object2D(VECTOR initPos, std::string filename, int allNum, int numX, i
 	Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->AddObject(this);
 
 	// 画像生成
-	mpTextureAnimation = new TextureAnimation(filename, initPos, allNum, numX, numY, interval);
+	mpTextureAnimation = new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale);
 
 }
 
@@ -55,11 +55,13 @@ Object2D::~Object2D()
 // 更新
 void Object2D::Update()
 {
+	// 画像の更新
 	if (mpTexture != nullptr)
 	{
 		mpTexture->Update();
 	}
 
+	// 画像アニメーションの更新
 	if (mpTextureAnimation != nullptr)
 	{
 		mpTextureAnimation->Update();
@@ -72,11 +74,13 @@ void Object2D::Update()
 // 描画
 void Object2D::Draw()
 {
+	// 画像の描画
 	if (mpTexture != nullptr)
 	{
 		mpTexture->Draw(gCameraX, 0.0f);
 	}
 
+	// 画像アニメーションの描画
 	if (mpTextureAnimation != nullptr)
 	{
 		mpTextureAnimation->Draw();
@@ -92,12 +96,14 @@ float Object2D::GetRadius()
       return mpTexture->GetRadius();
 }
 
+// 画像の幅サイズを取得
 int Object2D::GetSizeX()
 {
 	if (mpTexture) return mpTexture->GetSizeX();
 	return 0;
 }
 
+// 画像の横サイズを取得
 int Object2D::GetSizeY()
 {
 	if (mpTexture) return mpTexture->GetSizeY();

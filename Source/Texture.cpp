@@ -24,12 +24,13 @@ Texture::~Texture()
     DeleteGraph(mnHandle);
 }
 
-void Texture::Draw(float offsetX, float offsetY)
-{
-    DrawGraph((int)(mvPosition.x - offsetX) - (mnSizeX / 2), (int)(mvPosition.y - offsetY) - (mnSizeY / 2), mnHandle, mnTransFlag);
-}
-
 void Texture::Update()
 {
     
+}
+
+void Texture::Draw(float offsetX, float offsetY)
+{
+    // 読み込んだ画像を描画
+    DrawGraph((int)(mvPosition.x - offsetX) - (mnSizeX / 2), (int)(mvPosition.y - offsetY) - (mnSizeY / 2), mnHandle, mnTransFlag);
 }
