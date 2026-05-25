@@ -19,6 +19,7 @@ float gCameraY = 0.0f;
 GameScene::GameScene()
 	: Scene()     // 基底クラスのコンストラクタを呼び出す
 {
+
 }
 
 GameScene::~GameScene()
