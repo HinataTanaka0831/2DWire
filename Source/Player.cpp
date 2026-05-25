@@ -43,7 +43,9 @@ void Player::Draw()
 	// ワイヤー接続中ならワイヤー（線）を描画
 	if (mbIsWireActive)
 	{
-		DrawLine((int)(mvPosition.x - gCameraX), (int)mvPosition.y, (int)(mvWireTargetPos.x - gCameraX), (int)mvWireTargetPos.y, GetColor(200, 255, 255), 3);
+		DrawLine((int)(mvPosition.x - gCameraX), (int)(mvPosition.y - gCameraY),
+		         (int)(mvWireTargetPos.x - gCameraX), (int)(mvWireTargetPos.y - gCameraY),
+		         GetColor(200, 255, 255), 3);
 	}
 
 	// クラスの描画呼ぶ
@@ -67,6 +69,7 @@ void Player::Move()
 		std::vector<Object2D*> targets = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::WireTarget2D);
 		
 		float worldClickX = clickX + gCameraX;
+		float worldClickY = clickY + gCameraY; // gCameraYを加えてワールド座標に変換
 		
 		for (auto* obj : targets)
 		{
@@ -86,12 +89,12 @@ void Player::Move()
 			}
 			// オブジェクトの矩形範囲内か判定（クリックした「好きなところ」にワイヤーを付ける）
 			if (worldClickX >= tPos.x - sizeX / 2.0f && worldClickX <= tPos.x + sizeX / 2.0f &&
-				clickY >= tPos.y - sizeY / 2.0f && clickY <= tPos.y + sizeY / 2.0f)
+				worldClickY >= tPos.y - sizeY / 2.0f && worldClickY <= tPos.y + sizeY / 2.0f)
 			{
 				// ワイヤー接続！
 				mbIsWireActive = true;
-				// オブジェクトの中心ではなく、クリックした座標をターゲット位置にする
-				mvWireTargetPos = VGet(worldClickX, clickY, 0.0f);
+				// クリックしたワールド座標をターゲット位置にする
+				mvWireTargetPos = VGet(worldClickX, worldClickY, 0.0f);
 				
 				// 振り子の初期計算（プレイヤーと支点の距離と角度）
 				float diffX = mvPosition.x - mvWireTargetPos.x;
@@ -190,9 +193,9 @@ void Player::Move()
 	}
 
 	// 共通の地面判定（画面下部に行かないようにする）
-	if (mvPosition.y > 850.0f)
+	if (mvPosition.y > 950.0f)
 	{
-		mvPosition.y = 850.0f;
+		mvPosition.y = 950.0f;
 
 		if (mbIsWireActive)
 		{
@@ -207,6 +210,8 @@ void Player::Move()
 		{
 			mVelocityY = 0.0f;
 		}
+
+
 	}
 
 
@@ -217,8 +222,8 @@ void Player::Move()
 // HPゲージの描画
 void Player::HPGaugeDraw()
 {
-	int gaugeX = 25; // HPゲージの表示位置X
-	int gaugeY = 40; // HPゲージの表示位置Y
+	int gaugeX = (int)(mvPosition.x - gCameraX) - 120; // HPゲージの表示位置X
+	int gaugeY = (int)mvPosition.y - 80; // HPゲージの表示位置Y
 
 	// HPゲージの枠を描画
 	DrawBox(gaugeX, gaugeY, gaugeX + width, gaugeY + gaugeHeight, GetColor(0, 0, 0), TRUE);

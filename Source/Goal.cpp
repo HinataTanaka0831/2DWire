@@ -24,7 +24,7 @@ void Goal::Update()
 void Goal::Draw()
 {
 	int drawX = (int)(mvPosition.x - gCameraX);
-	int drawY = (int)mvPosition.y;
+	int drawY = (int)(mvPosition.y - gCameraY);
 
 	int left = drawX - mWidth / 2;
 	int top = drawY - mHeight / 2;

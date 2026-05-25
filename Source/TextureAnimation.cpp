@@ -2,18 +2,20 @@
 
 // コンストラクタ
 TextureAnimation::TextureAnimation(
-	VECTOR position,
 	std::string filename,
+	VECTOR position,
 	int allNum,
 	int xNum,
 	int yNum,
-	int interval
+	int interval,
+	float scale
 )
 	: mvPosition()
 	, mnCounter(0)
 	, mnInterval(interval)
 	, mnCurrentNum(0)
 	, mnAllNum(allNum)
+	, mnScale(scale)
 {
 	mnHandleList = new int[allNum];
 
@@ -28,6 +30,9 @@ TextureAnimation::TextureAnimation(
 	int sizeX, sizeY;
 	GetGraphSize(handle, &sizeX, &sizeY);
 
+	mnSizeX = sizeX / xNum;    // 分割されたテクスチャの幅を保存
+	mnSizeY = sizeY / yNum;    // 分割されたテクスチャの高さを保存
+
 	// テクスチャの分割読み込み
 	int success = LoadDivGraph(
 		filename.c_str(),
@@ -38,6 +43,7 @@ TextureAnimation::TextureAnimation(
 		sizeY / yNum,
 		mnHandleList
 	);
+
 }
 // デストラクタ
 TextureAnimation::~TextureAnimation()
@@ -45,6 +51,7 @@ TextureAnimation::~TextureAnimation()
 
 }
 
+// 更新
 void TextureAnimation::Update()
 {
 	// カウンタをインクリメント
@@ -60,7 +67,8 @@ void TextureAnimation::Update()
 	}
 }
 
+// 描画
 void TextureAnimation::Draw()
 {
-	DrawGraph(mvPosition.x, mvPosition.y, mnHandleList[mnCurrentNum], true);
+	DrawRotaGraph(mvPosition.x, mvPosition.y, mnScale, 0.0f, mnHandleList[mnCurrentNum], true);
 }

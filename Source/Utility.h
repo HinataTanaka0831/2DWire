@@ -10,5 +10,6 @@ public:  // 定数定義
 	static const int SCREEN_HEIGHT = 1080; // 画面の高さ
 };
 
-// グローバルなカメラX座標（スクロール用）
+// グローバルなカメラX座標（スクロール用）とY座標（縦スクロール用）を定義
 extern float gCameraX;
+extern float gCameraY;

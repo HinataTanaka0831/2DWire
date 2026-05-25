@@ -14,6 +14,7 @@
 #include <cmath>
 
 float gCameraX = 0.0f;
+float gCameraY = 0.0f;
 
 GameScene::GameScene()
 	: Scene()     // 基底クラスのコンストラクタを呼び出す
@@ -22,20 +23,17 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
-	DeleteGraph(mBgDayHandle);
-	DeleteGraph(mBgEveningHandle);
+	// 背景の削除
 	DeleteGraph(mBgNightHandle);
 }
 
 void GameScene::Initialize()
 {
 	// 背景の読み込み
-	mBgDayHandle = LoadGraph("Resource/bg_day.png");
-	mBgEveningHandle = LoadGraph("Resource/bg_evening.png");
 	mBgNightHandle = LoadGraph("Resource/bg_night.png");
 
-	new Player( 
-		"Resource/Player.bmp", VGet( (float)Utility::SCREEN_WIDTH / 9 , (float)Utility::SCREEN_HEIGHT / 2, 0.0f)
+	mpPlayer = new Player( 
+		"Resource/Player.bmp", VGet( (float)Utility::SCREEN_WIDTH / 9 , 950.0f, 0.0f)
 	);
 
 	// マップの読み込み
@@ -48,12 +46,12 @@ void GameScene::Update()
 {
 
 	// プレイヤーの位置を取得してカメラを更新
-	auto pObj = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
-	Player* pPlayer = dynamic_cast<Player*>(pObj);
-	if (pPlayer != nullptr)
+	if (mpPlayer != nullptr)
 	{
-		float playerX = pPlayer->GetPosition().x;
-		// プレイヤーが画面の中心（1920/2）を超えたらカメラを動かす
+		float playerX = mpPlayer->GetPosition().x;
+		float playerY = mpPlayer->GetPosition().y;
+		
+		// X軸カメラ追従
 		float targetCameraX = playerX - Utility::SCREEN_WIDTH / 3.0f;
 		float targetCameraX2 = playerX - Utility::SCREEN_WIDTH / 0.5f;
 		if (targetCameraX > gCameraX) {
@@ -64,12 +62,21 @@ void GameScene::Update()
 			gCameraX = targetCameraX; // 左スクロールも許容
 		}
 
+		// Y軸カメラ追従: プレイヤーが画面上半部に入ったら上に追従
+		float screenCenterY = Utility::SCREEN_HEIGHT / 1.5f;
+		float targetCameraY = playerY - screenCenterY;
+		// 地面以下にはカメラを下げない（地面の見える高さに固定）
+		if (gCameraY > Utility::SCREEN_HEIGHT) gCameraY = Utility::SCREEN_HEIGHT;
+		// スムーズに追従
+		gCameraY += (targetCameraY - gCameraY) * 0.1f;
+
+
 		// ゴール判定
 		auto goalList = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Goal2D);
 		for (auto* goal : goalList)
 		{
-			float dx = pPlayer->GetPosition().x - goal->GetPosition().x;
-			float dy = pPlayer->GetPosition().y - goal->GetPosition().y;
+			float dx = mpPlayer->GetPosition().x - goal->GetPosition().x;
+			float dy = mpPlayer->GetPosition().y - goal->GetPosition().y;
 			float dist = std::sqrt(dx*dx + dy*dy);
 			// 少し余裕を持たせて判定
 			if (dist < goal->GetSizeX() / 2.0f + 50.0f)
@@ -87,34 +94,44 @@ void GameScene::Update()
 
 void GameScene::Draw()
 {
-	// 背景のループ描画
+	//1. 空のグラデーションを最初に全画面描画（上が高いほど淡い青　1080px分）
+	for (int y = 0; y < Utility::SCREEN_HEIGHT; y++)
+	{
+		// 上から下へ: 混天 -> 夜空
+		int r = (int)(10 + 30.0f * (1.0f - (float)y / Utility::SCREEN_HEIGHT));
+		int g = (int)(10 + 50.0f * (1.0f - (float)y / Utility::SCREEN_HEIGHT));
+		int b = (int)(30 + 120.0f * (1.0f - (float)y / Utility::SCREEN_HEIGHT));
+		DrawLine(0, y, Utility::SCREEN_WIDTH, y, GetColor(r, g, b));
+	}
+
+	// 2. 都市背景をgCameraY分下にシフトして描画
 	int bgWidth, bgHeight;
 	GetGraphSize(mBgNightHandle, &bgWidth, &bgHeight);
 	
 	if (bgWidth > 0)
 	{
 		// カメラXに合わせて背景をスクロール
-		// スクロール速度を遅くしてパララックス効果を出す
 		float scrollSpeed = 0.5f;
 		int offsetX = (int)(gCameraX * scrollSpeed) % bgWidth;
 		
 		// offsetXが負になる場合の対策
 		if (offsetX < 0) offsetX += bgWidth;
 
-		// 画面サイズをカバーするのに必要な回数だけループして描画
+		// gCameraY分下にシフトして描画（上へ飛ぶとスカイラインが触れます）
+		int bgOffsetY = (int)gCameraY;
+
+		// スクロールしたら背景をループさせて描画
 		for (int x = -offsetX; x < Utility::SCREEN_WIDTH; x += bgWidth)
 		{
-			DrawGraph(x, 0, mBgNightHandle, false);
+			DrawGraph(x, -bgOffsetY, mBgNightHandle, TRUE);
 		}
 	}
 
 
 	// プレイヤーのHPゲージの描画
-	auto pObj = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
-	Player* pPlayer = dynamic_cast<Player*>(pObj);
-	if (pPlayer != nullptr)
+	if (mpPlayer != nullptr)
 	{
-		pPlayer->HPGaugeDraw();
+		mpPlayer->HPGaugeDraw();
 	}
 
 

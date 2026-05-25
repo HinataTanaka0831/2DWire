@@ -2,7 +2,7 @@
 
 #include "Scene.h"
 
-class Enemy;
+class Player;
 
 
 class GameScene : public Scene
@@ -24,11 +24,10 @@ public:
 
 
 private:
-	Enemy* iEnemy;
+	Player* mpPlayer;
 	char font[32];
 	
 	// 背景画像用ハンドル
-	int mBgDayHandle;
-	int mBgEveningHandle;
 	int mBgNightHandle;
+	int mBgNight_SkyHandle;
 };
