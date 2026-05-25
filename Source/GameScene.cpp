@@ -32,14 +32,16 @@ void GameScene::Initialize()
 	// 背景の読み込み
 	mBgNightHandle = LoadGraph("Resource/bg_night.png");
 
-	mpPlayer = new Player( 
-		"Resource/Player.bmp", VGet( (float)Utility::SCREEN_WIDTH / 9 , 950.0f, 0.0f)
-	);
-
 	// マップの読み込み
 	Map* map = new Map();
 	map->LoadStage(1);
 	delete map; // 初期化だけなので即破棄するか、メンバ変数に持つかは自由。ここでは配置だけ行う。
+
+	// プレイヤーの生成
+	mpPlayer = new Player( 
+		"Resource/Player.png", VGet( (float)Utility::SCREEN_WIDTH / 9 , 1000.0f, 0.0f)
+	);
+
 }
 
 void GameScene::Update()
@@ -127,12 +129,6 @@ void GameScene::Draw()
 		}
 	}
 
-
-	// プレイヤーのHPゲージの描画
-	if (mpPlayer != nullptr)
-	{
-		mpPlayer->HPGaugeDraw();
-	}
 
 
 	// 基底クラスの描画処理を呼び出す

@@ -3,7 +3,6 @@
 #include "Texture.h"
 #include "Object2D.h"
 
-class GameScene;
 
 class Player : public Object2D
 {
@@ -11,6 +10,16 @@ private:  // Playerクラスで使用する定数の定義
 	static const int MOVE_SPEED = 5;    // 移動速度
 	static const int BULLET_MAX = 10;   // 弾の個数
 	static const int BULLET_SHOT_INTERVAL = 10;   // 弾を打てる間隔（単位：フレーム）
+
+	enum MoveState
+	{
+		Idle,
+		Walking,
+		jumping,
+		Damaged,
+	};
+
+	MoveState mMoveState = Idle; // プレイヤーの移動状態
 
 public:
 	// コンストラクタ
@@ -54,6 +63,7 @@ private:      // メンバ変数
 	float mVelocityX = 0.0f;               // 横方向の速度
 	static constexpr float GRAVITY = 0.5f; // 重力加速度
 
+	// HP関連の変数
 	int Hp = 100;  // HP
 	int maxHp = 100; // 最大HP
 	int width = 250; // プレイヤーの幅
