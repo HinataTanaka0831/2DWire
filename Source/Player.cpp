@@ -5,7 +5,6 @@
 #include "Master.h"
 #include "ObjectManager.h"
 #include "Scene.h"
-#include "Collision.h"
 #include "GameScene.h"
 #include "Utility.h"
 #include <cmath>
@@ -48,12 +47,19 @@ void Player::Draw()
 		         GetColor(200, 255, 255), 3);
 	}
 
+	// HPゲージの描画
+	HPGaugeDraw();
+
 	// クラスの描画呼ぶ
 	Object2D::Draw();
 }
 
 void Player::Move()
 {
+	if (mMoveState == Idle)
+	{
+		
+	}
 	// ----------------------------------------------------
 	// 1. ワイヤーの接続・解除判定
 	// ----------------------------------------------------
@@ -163,10 +169,14 @@ void Player::Move()
 		if (CheckHitKey(KEY_INPUT_D))
 		{
 			mVelocityX += 0.5f; // 右へ加速
+
+			mMoveState = Walking; // 状態をWalkingに変更
 		}
 		else if (CheckHitKey(KEY_INPUT_A))
 		{
 			mVelocityX -= 0.5f; // 左へ加速
+
+			mMoveState = Walking; // 状態をWalkingに変更
 		}
 		else
 		{
@@ -179,6 +189,8 @@ void Player::Move()
 			if (mvPosition.y >= 850.0f) // 地面にいるかの簡易判定
 			{
 				mVelocityY = -10.0f; // 上向きの速度を与える
+
+				mMoveState = jumping; // 状態をjumpingに変更
 			}
 		}
 
@@ -193,9 +205,9 @@ void Player::Move()
 	}
 
 	// 共通の地面判定（画面下部に行かないようにする）
-	if (mvPosition.y > 950.0f)
+	if (mvPosition.y > 1000.0f)
 	{
-		mvPosition.y = 950.0f;
+		mvPosition.y = 1000.0f;
 
 		if (mbIsWireActive)
 		{
@@ -215,6 +227,18 @@ void Player::Move()
 	}
 
 
+	if (mMoveState == Walking)
+	{
+		// 歩いているときのアニメーション処理（例：フレーム切り替え）
+		// ここでは単純にテクスチャを切り替えるだけの例を示します
+		new Object2D("Resource/Player_WalkingAnimation.png", mvPosition, 5, 5, 1, 3);
+	}
+	else
+	{
+		mMoveState = Idle; // それ以外はIdleに戻す
+	}
+
+
 	// テクスチャ座標に反映
 	mpTexture->SetPosition(mvPosition);
 }
@@ -223,7 +247,7 @@ void Player::Move()
 void Player::HPGaugeDraw()
 {
 	int gaugeX = (int)(mvPosition.x - gCameraX) - 120; // HPゲージの表示位置X
-	int gaugeY = (int)mvPosition.y - 80; // HPゲージの表示位置Y
+	int gaugeY = (int)(mvPosition.y - gCameraY) - 80; // HPゲージの表示位置Y
 
 	// HPゲージの枠を描画
 	DrawBox(gaugeX, gaugeY, gaugeX + width, gaugeY + gaugeHeight, GetColor(0, 0, 0), TRUE);

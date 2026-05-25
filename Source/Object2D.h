@@ -45,7 +45,7 @@ public:
 	Object2D(std::string filename, VECTOR initPos);
 
 	// コンストラクタ（アニメーション用）
-	Object2D(VECTOR initPos, std::string filename, int allNum, int numX, int numY, int interval, float scale);
+	Object2D(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale = 1.0f);
 
 	// デストラクタ
 	virtual ~Object2D();
