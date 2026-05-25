@@ -74,7 +74,7 @@ void Object2D::Draw()
 {
 	if (mpTexture != nullptr)
 	{
-		mpTexture->Draw(gCameraX, 0.0f);
+		mpTexture->Draw(gCameraX, gCameraY);
 	}
 
 	if (mpTextureAnimation != nullptr)

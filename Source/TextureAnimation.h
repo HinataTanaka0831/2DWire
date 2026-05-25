@@ -12,7 +12,8 @@ public:
 		int allNum,
 		int xNum,
 		int yNum,
-		int interval
+		int interval,
+		float scale = 1.0f
 	);  
 	// デストラクタ
 	~TextureAnimation(); 
