@@ -5,39 +5,42 @@
 class TextureAnimation
 {
 public:
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	TextureAnimation(
 		std::string filename,
-		VECTOR position,
+		VECTOR initPos,
 		int allNum,
 		int xNum,
 		int yNum,
 		int interval,
 		float scale = 1.0f
 	);  
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~TextureAnimation(); 
 
-	void Update();  // XV
-	void Draw();   // •`‰æ
+	void Update();  // æ›´æ–°
+	void Draw(float cameraX = 0.0f, float cameraY = 0.0f);   // æç”»
 
-	int GetSizeX() { return mnSizeX; }    // •ƒTƒCƒYæ“¾
-	int GetSizeY() { return mnSizeY; }    // ‚‚³ƒTƒCƒYæ“¾
+	void Reset(); // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒªã‚»ãƒƒãƒˆ
+	void SetPosition(VECTOR pos) { mvPosition = pos; } // ä½ç½®ã®è¨­å®šæç”»
 
-	float GetRadius() { return (float)mnSizeX / 2.0f; }    // ”¼Œaæ“¾i‚Æ‚è‚ ‚¦‚¸•‚Ì”¼•ª‚ğ”¼Œa‚Æ‚µ‚Ä‚¨‚­j
+	int GetSizeX() { return mnSizeX; }    // å¹…ã‚µã‚¤ã‚ºå–å¾—
+	int GetSizeY() { return mnSizeY; }    // é«˜ã•ã‚µã‚¤ã‚ºå–å¾—
 
-	void SetScale(float scale) { mnScale = scale; }    // •`‰æ”{—¦İ’è
-	float GetScale() { return mnScale; }    // •`‰æ”{—¦æ“¾
+	float GetRadius() { return (float)mnSizeX / 2.0f; }    // åŠå¾„å–å¾—ï¼ˆã¨ã‚Šã‚ãˆãšå¹…ã®åŠåˆ†ã‚’åŠå¾„ã¨ã—ã¦ãŠãï¼‰
+
+	void SetScale(float scale) { mnScale = scale; }    // æç”»å€ç‡è¨­å®š
+	float GetScale() { return mnScale; }    // æç”»å€ç‡å–å¾—
 
 
 private:
-	VECTOR mvPosition;  // ƒ|ƒWƒVƒ‡ƒ“
-	int mnCounter;      // ƒAƒjƒ[ƒVƒ‡ƒ“ƒJƒEƒ“ƒ^
-	int mnInterval;     // ƒeƒNƒXƒ`ƒƒØ‚è‘Ö‚¦‚ÌƒtƒŒ[ƒ€”
-	int mnCurrentNum;   // ‰½”Ô–Ú‚ÌƒeƒNƒXƒ`ƒƒ‚ğ•\¦‚·‚é‚©
-	int* mnHandleList;  // •ªŠ„‚³‚ê‚½ƒeƒNƒXƒ`ƒƒ‚Ìƒnƒ“ƒhƒ‹ƒŠƒXƒg
-	int mnAllNum;       // ƒeƒNƒXƒ`ƒƒ•ªŠ„”
-	int mnSizeX;       // •ªŠ„‚³‚ê‚½ƒeƒNƒXƒ`ƒƒ‚Ì•
-	int mnSizeY;       // •ªŠ„‚³‚ê‚½ƒeƒNƒXƒ`ƒƒ‚Ì‚‚³
-	float mnScale;     // •`‰æ”{—¦
+	VECTOR mvPosition;  // ãƒã‚¸ã‚·ãƒ§ãƒ³
+	int mnCounter;      // ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚«ã‚¦ãƒ³ã‚¿
+	int mnInterval;     // ãƒ†ã‚¯ã‚¹ãƒãƒ£åˆ‡ã‚Šæ›¿ãˆã®ãƒ•ãƒ¬ãƒ¼ãƒ æ•°
+	int mnCurrentNum;   // ä½•ç•ªç›®ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’è¡¨ç¤ºã™ã‚‹ã‹
+	int* mnHandleList;  // åˆ†å‰²ã•ã‚ŒãŸãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒãƒ³ãƒ‰ãƒ«ãƒªã‚¹ãƒˆ
+	int mnAllNum;       // ãƒ†ã‚¯ã‚¹ãƒãƒ£åˆ†å‰²æ•°
+	int mnSizeX;       // åˆ†å‰²ã•ã‚ŒãŸãƒ†ã‚¯ã‚¹ãƒãƒ£ã®å¹…
+	int mnSizeY;       // åˆ†å‰²ã•ã‚ŒãŸãƒ†ã‚¯ã‚¹ãƒãƒ£ã®é«˜ã•
+	float mnScale;     // æç”»å€ç‡
 };

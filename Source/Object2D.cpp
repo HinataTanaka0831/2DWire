@@ -60,15 +60,19 @@ void Object2D::Update()
 	if (mpTexture != nullptr)
 	{
 		mpTexture->Update();
+
+		// 座標設定
+		mpTexture->SetPosition(mvPosition);
+
 	}
 
 	if (mpTextureAnimation != nullptr)
 	{
 		mpTextureAnimation->Update();
+
+		mpTextureAnimation->SetPosition(mvPosition);	
 	}
 
-	// 座標設定
-	mpTexture->SetPosition(mvPosition);
 }
 
 // 描画
@@ -81,11 +85,18 @@ void Object2D::Draw()
 
 	if (mpTextureAnimation != nullptr)
 	{
-		mpTextureAnimation->Draw();
+		mpTextureAnimation->Draw(gCameraX, gCameraY);
 	}
 
 }
 
+void Object2D::Reset()
+{
+	if (mpTextureAnimation != nullptr)
+	{
+		mpTextureAnimation->Reset();
+	}
+}
 
 
 // 半径の取得

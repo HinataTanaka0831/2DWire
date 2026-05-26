@@ -39,7 +39,7 @@ void GameScene::Initialize()
 
 	// プレイヤーの生成
 	mpPlayer = new Player( 
-		"Resource/Player.png", VGet( (float)Utility::SCREEN_WIDTH / 9 , 1000.0f, 0.0f)
+		"Resource/Player.png", VGet( (float)Utility::SCREEN_WIDTH / 9 , 1000.0f, 0.0f), 5, 5, 1, 5, 0.5f
 	);
 
 }

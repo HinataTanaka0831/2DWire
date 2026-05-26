@@ -2,6 +2,7 @@
 #include "DxLib.h"
 #include "Texture.h"
 #include "Object2D.h"
+#include "AnimationController.h"
 
 
 class Player : public Object2D
@@ -11,19 +12,22 @@ private:  // Playerクラスで使用する定数の定義
 	static const int BULLET_MAX = 10;   // 弾の個数
 	static const int BULLET_SHOT_INTERVAL = 10;   // 弾を打てる間隔（単位：フレーム）
 
-	enum MoveState
-	{
-		Idle,
-		Walking,
-		jumping,
-		Damaged,
-	};
 
-	MoveState mMoveState = Idle; // プレイヤーの移動状態
+private:
+	
+	// プレイヤーの状態を管理するアニメーションコントローラー
+	AnimationController mAnimController;
 
 public:
 	// コンストラクタ
-	Player(std::string filename, VECTOR initPos);
+	Player(std::string filename,
+		VECTOR initPos,
+		int allNum,
+		int xNum,
+		int yNum,
+		int interval,
+		float scale
+	);
 	// デストラクタ
 	virtual ~Player();
 
