@@ -3,41 +3,45 @@
 #include "Texture.h"
 #include <string>
 #include "Object2D.h"
+#include "AnimationController.h"
+#include "TextureAnimation.h"
 
 
 
 class Enemy : public Object2D
 {
+private:
+	// æ•µã®çŠ¶æ…‹ã‚’ç®¡ç†ã™ã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼
+	AnimationController mAnimController;
+
 public:
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	Enemy(VECTOR initPos, std::string filename, int t,int s);
 
-	//ƒfƒXƒgƒ‰ƒNƒ^
+	//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	virtual ~Enemy();
 
-	// XV
+	// æ›´æ–°
 	void Update() override;
 
-	// •`‰æ
+	// æç”»
 	void Draw() override;
 
-	// ˆÚ“®ˆ—
+	// ç§»å‹•å‡¦ç†
 	void Move();
 
-	// ‰æ–ÊŠO‚Éo‚½‚ç
+	// ç”»é¢å¤–ã«å‡ºãŸã‚‰
 	bool IsScreenOut();
 
-	//// ‰Šú‰»
+	//// åˆæœŸåŒ–
 	void Initialize();
 
-	// ƒ_ƒ[ƒWˆ—
+	// ãƒ€ãƒ¡ãƒ¼ã‚¸å‡¦ç†
 	void ChangeDamage(int damage);
 	//void ChangeDamage2(int damage);
 
 	void Calcdamage();
 
-
-public:
 
 	void Settype(int a) { type = a; }
 
@@ -45,12 +49,12 @@ public:
 	int GetEnemytype() { return enemytype; }
 
 private:
-	VECTOR mvDirection;  // ˆÚ“®•ûŒü
-	int StartTime = GetNowCount();  // ŠÔw’è
+	VECTOR mvDirection;  // ç§»å‹•æ–¹å‘
+	int StartTime = GetNowCount();  // æ™‚é–“æŒ‡å®š
 	static const int MOVE_SPEED = 5;
 	int time = 0;
 	int type;
-	int mnHp = 6;  // HP(Enemy‚Å‚µ‚©g—p‚µ‚È‚¢•Ï”)
+	int mnHp = 6;  // HP(Enemyã§ã—ã‹ä½¿ç”¨ã—ãªã„å¤‰æ•°)
 	int enemytype;
 
 };

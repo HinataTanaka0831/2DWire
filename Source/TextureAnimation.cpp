@@ -1,16 +1,16 @@
 #include "TextureAnimation.h"
 
-// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 TextureAnimation::TextureAnimation(
+	VECTOR Position,
 	std::string filename,
-	VECTOR position,
 	int allNum,
 	int xNum,
 	int yNum,
 	int interval,
 	float scale
 )
-	: mvPosition()
+	: mvPosition(Position)
 	, mnCounter(0)
 	, mnInterval(interval)
 	, mnCurrentNum(0)
@@ -19,21 +19,21 @@ TextureAnimation::TextureAnimation(
 {
 	mnHandleList = new int[allNum];
 
-	// ‰æ‘œƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+	// ç”»åƒãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 	int handle = LoadGraph(filename.c_str());
 	if (handle == -1)
 	{
-		return;   // “Ç‚İ‚İ¸”s‚µ‚Ä‚¢‚½‚çˆÈ~‚Íˆ—‚µ‚È‚¢
+		return;   // èª­ã¿è¾¼ã¿å¤±æ•—ã—ã¦ã„ãŸã‚‰ä»¥é™ã¯å‡¦ç†ã—ãªã„
 	}
 
-	// ƒTƒCƒYæ“¾
+	// ã‚µã‚¤ã‚ºå–å¾—
 	int sizeX, sizeY;
 	GetGraphSize(handle, &sizeX, &sizeY);
 
-	mnSizeX = sizeX / xNum;    // •ªŠ„‚³‚ê‚½ƒeƒNƒXƒ`ƒƒ‚Ì•‚ğ•Û‘¶
-	mnSizeY = sizeY / yNum;    // •ªŠ„‚³‚ê‚½ƒeƒNƒXƒ`ƒƒ‚Ì‚‚³‚ğ•Û‘¶
+	mnSizeX = sizeX / xNum;    // åˆ†å‰²ã•ã‚ŒãŸãƒ†ã‚¯ã‚¹ãƒãƒ£ã®å¹…ã‚’ä¿å­˜
+	mnSizeY = sizeY / yNum;    // åˆ†å‰²ã•ã‚ŒãŸãƒ†ã‚¯ã‚¹ãƒãƒ£ã®é«˜ã•ã‚’ä¿å­˜
 
-	// ƒeƒNƒXƒ`ƒƒ‚Ì•ªŠ„“Ç‚İ‚İ
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®åˆ†å‰²èª­ã¿è¾¼ã¿
 	int success = LoadDivGraph(
 		filename.c_str(),
 		allNum,
@@ -45,30 +45,36 @@ TextureAnimation::TextureAnimation(
 	);
 
 }
-// ƒfƒXƒgƒ‰ƒNƒ^
+// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 TextureAnimation::~TextureAnimation()
 {
 
 }
 
-// XV
+// æ›´æ–°
 void TextureAnimation::Update()
 {
-	// ƒJƒEƒ“ƒ^‚ğƒCƒ“ƒNƒŠƒƒ“ƒg
+	// ã‚«ã‚¦ãƒ³ã‚¿ã‚’ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 	mnCounter++;
 	if (mnCounter % mnInterval == 0)
 	{
-		mnCounter = 0;   // ƒJƒEƒ“ƒ^‚ğ–ß‚·
-		mnCurrentNum++;  // ƒeƒNƒXƒ`ƒƒ”Ô†‚ği‚ß‚é
-		if (mnCurrentNum >= mnAllNum)  // •ªŠ„”‚ğ’´‚¦‚é‚È‚çƒ‹[ƒv‚³‚¹‚é
+		mnCounter = 0;   // ã‚«ã‚¦ãƒ³ã‚¿ã‚’æˆ»ã™
+		mnCurrentNum++;  // ãƒ†ã‚¯ã‚¹ãƒãƒ£ç•ªå·ã‚’é€²ã‚ã‚‹
+		if (mnCurrentNum >= mnAllNum)  // åˆ†å‰²æ•°ã‚’è¶…ãˆã‚‹ãªã‚‰ãƒ«ãƒ¼ãƒ—ã•ã›ã‚‹
 		{
-			mnCurrentNum = 0;   // ƒ‹[ƒv‚³‚¹‚é
+			mnCurrentNum = 0;   // ãƒ«ãƒ¼ãƒ—ã•ã›ã‚‹
 		}
 	}
 }
 
-// •`‰æ
-void TextureAnimation::Draw()
+// æç”»
+void TextureAnimation::Draw(float cameraX, float cameraY)
 {
-	DrawRotaGraph(mvPosition.x, mvPosition.y, mnScale, 0.0f, mnHandleList[mnCurrentNum], true);
+	DrawRotaGraph((int)(mvPosition.x - cameraX), (int)(mvPosition.y - cameraY), mnScale, 0.0f, mnHandleList[mnCurrentNum], true);
+}
+
+void TextureAnimation::Reset()
+{
+	mnCounter = 0;
+	mnCurrentNum = 0;
 }

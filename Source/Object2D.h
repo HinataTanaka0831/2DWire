@@ -45,7 +45,7 @@ public:
 	Object2D(std::string filename, VECTOR initPos);
 
 	// コンストラクタ（アニメーション用）
-	Object2D(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale = 1.0f);
+	Object2D(VECTOR Position, std::string filename, int allNum = 0, int numX = 0, int numY = 0, int interval = 0, float scale = 1.0f);
 
 	// デストラクタ
 	virtual ~Object2D();
@@ -58,6 +58,7 @@ public:
 	// 描画
 	virtual void Draw();
 
+	void Reset();
 
 
 public:      // ゲッター・セッター
@@ -70,10 +71,10 @@ public:      // ゲッター・セッター
 	void SetTag(Tag tag) { mnTag = tag; }   // タグ設定
 	Tag GetTag() { return mnTag; }          // タグ取得
 
+
 	virtual float GetRadius();   // 半径の取得
 	virtual int GetSizeX();
 	virtual int GetSizeY();
-
 
 protected:
 	Texture* mpTexture;     // 画像

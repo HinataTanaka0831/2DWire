@@ -31,7 +31,7 @@ GameScene::~GameScene()
 void GameScene::Initialize()
 {
 	// 背景の読み込み
-	mBgNightHandle = LoadGraph("Resource/bg_night.png");
+	mBgNightHandle = LoadGraph("Resource/BackGround/bg_night.png");
 
 	// マップの読み込み
 	Map* map = new Map();
@@ -39,9 +39,7 @@ void GameScene::Initialize()
 	delete map; // 初期化だけなので即破棄するか、メンバ変数に持つかは自由。ここでは配置だけ行う。
 
 	// プレイヤーの生成
-	mpPlayer = new Player( 
-		"Resource/Player.png", VGet( (float)Utility::SCREEN_WIDTH / 9 , 1000.0f, 0.0f)
-	);
+	mpPlayer = new Player(VGet( (float)Utility::SCREEN_WIDTH / 9 , 1000.0f, 0.0f));
 
 }
 
