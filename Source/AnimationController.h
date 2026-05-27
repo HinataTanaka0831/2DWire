@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-#include "Object2D.h"
+#include "TextureAnimation.h"
 
 enum class CharacterState {
     Idle,
@@ -15,15 +15,23 @@ public:
     AnimationController();
     ~AnimationController();
 
-    void RegisterAnimation(CharacterState state, Object2D* anim);
+    // Register a TextureAnimation for a given state
+    void RegisterAnimation(CharacterState state, TextureAnimation* anim);
+
+    // Change state (only resets animation if state actually changed)
     void ChangeState(CharacterState newState);
+
+    // Update the current animation
     void Update();
-    void Draw(float x, float y);
+
+    // Draw the current animation at the given world position
+    void Draw(float x, float y, float cameraX, float cameraY);
 
     CharacterState GetCurrentState() const { return mCurrentState; }
 
 private:
-    std::map<CharacterState, Object2D*> mAnimations;
+    std::map<CharacterState, TextureAnimation*> mAnimations;
     CharacterState mCurrentState;
+    CharacterState mPrevState;
     bool mIsInitialized;
 };

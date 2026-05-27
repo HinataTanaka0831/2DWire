@@ -11,25 +11,18 @@
 
 
 
-Player::Player(std::string filename,
-	VECTOR initPos,
-	int allNum,
-	int xNum,
-	int yNum,
-	int interval,
-	float scale
-)
-	: Object2D(filename, initPos, allNum, xNum, yNum, interval, scale)
+Player::Player(VECTOR Position)
+	: Object2D(Position, "Resource/Player/Player.png", 1, 1, 1, 10, 1.0f)
 	, displayDamage(maxHp)
 {
 	SetTag(Object2D::Player2D);
 
-	// アニメーションの登録（現在は1枚の画像をすべての状態に割り当て）
-	mAnimController.RegisterAnimation(CharacterState::Idle, new Object2D(filename, initPos, allNum, xNum, yNum, interval, scale));
-	mAnimController.RegisterAnimation(CharacterState::Moving, new Object2D("Resource/Player_Walking.png", initPos, 5, 5, 1, 5));
-	mAnimController.RegisterAnimation(CharacterState::Attacking, new Object2D(filename, initPos, 1, 1, 1, 10, 1.0f));
-	mAnimController.RegisterAnimation(CharacterState::Damaged, new Object2D(filename, initPos, 1, 1, 1, 10, 1.0f));
-	mAnimController.RegisterAnimation(CharacterState::Dead, new Object2D(filename, initPos, 1, 1, 1, 10, 1.0f));
+	// Idle: 1 frame static image
+	mAnimController.RegisterAnimation(CharacterState::Idle,
+		new TextureAnimation(Position, "Resource/Player/Player.png", 1, 1, 1, 10, 1.0f));
+	// Moving: 5 frame walking animation
+	mAnimController.RegisterAnimation(CharacterState::Moving,
+		new TextureAnimation(Position, "Resource/Player/Player_Walking.png", 5, 5, 1, 8, 1.0f));
 
 	mAnimController.ChangeState(CharacterState::Idle);
 }
@@ -47,15 +40,6 @@ void Player::Update()
 	// 移動処理
 	Move();
 
-	// 状態の判定
-	if (Hp <= 0) {
-		mAnimController.ChangeState(CharacterState::Dead);
-	} else if (mvPosition.x != 0.0f || mvPosition.y != 1000.0f) {
-		mAnimController.ChangeState(CharacterState::Moving);
-	} else {
-		mAnimController.ChangeState(CharacterState::Idle);
-	}
-	mAnimController.Update();
 
 	// 基底クラスの更新を呼ぶ
 	Object2D::Update();
@@ -73,13 +57,10 @@ void Player::Draw()
 	}
 
 	// アニメーションコントローラーによる描画
-	mAnimController.Draw(mvPosition.x, mvPosition.y);
+	mAnimController.Draw(mvPosition.x, mvPosition.y, gCameraX, gCameraY);
 
 	// HPゲージの描画
 	HPGaugeDraw();
-
-	// クラスの描画呼ぶ
-	Object2D::Draw();
 }
 
 void Player::Move()
@@ -251,9 +232,18 @@ void Player::Move()
 	}
 
 
-
-	// テクスチャ座標に反映
-	mpTexture->SetPosition(mvPosition);
+	// 状態の判定
+	if (Hp <= 0) {
+		mAnimController.ChangeState(CharacterState::Dead);
+	}
+	else if (std::abs(mVelocityX) > 0.5f || mbIsWireActive) {
+		mAnimController.ChangeState(CharacterState::Moving);
+	}
+	else {
+		mAnimController.ChangeState(CharacterState::Idle);
+	}
+	mAnimController.Update();
+	
 }
 
 // HPゲージの描画

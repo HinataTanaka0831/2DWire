@@ -7,8 +7,8 @@ class TextureAnimation
 public:
 	// コンストラクタ
 	TextureAnimation(
+		VECTOR Position,
 		std::string filename,
-		VECTOR initPos,
 		int allNum,
 		int xNum,
 		int yNum,

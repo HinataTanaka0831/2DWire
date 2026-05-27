@@ -4,6 +4,7 @@
 #include <string>
 #include "Object2D.h"
 #include "AnimationController.h"
+#include "TextureAnimation.h"
 
 
 

@@ -20,12 +20,12 @@ Enemy::Enemy(VECTOR initPos, std::string filename, int t, int s)
 
 	SetEnemytype(s);
 
-	// アニメーションの登録（現在は1枚の画像をすべての状態に割り当て）
-	mAnimController.RegisterAnimation(CharacterState::Idle, new Object2D(filename, initPos, 1, 1, 1, 10, 1.0f));
-	mAnimController.RegisterAnimation(CharacterState::Moving, new Object2D(filename, initPos, 1, 1, 1, 10, 1.0f));
-	mAnimController.RegisterAnimation(CharacterState::Attacking, new Object2D(filename, initPos, 1, 1, 1, 10, 1.0f));
-	mAnimController.RegisterAnimation(CharacterState::Damaged, new Object2D(filename, initPos, 1, 1, 1, 10, 1.0f));
-	mAnimController.RegisterAnimation(CharacterState::Dead, new Object2D(filename, initPos, 1, 1, 1, 10, 1.0f));
+	// Idle: 6 frame monster walk animation
+	mAnimController.RegisterAnimation(CharacterState::Idle,
+		new TextureAnimation(initPos, filename, 1, 1, 1, 10, 1.0f));
+	// Moving: same 6 frame animation
+	mAnimController.RegisterAnimation(CharacterState::Moving,
+		new TextureAnimation(initPos, filename, 1, 1, 1, 10, 1.0f));
 
 	mAnimController.ChangeState(CharacterState::Moving);
 }
@@ -67,8 +67,7 @@ void Enemy::Update()
 
 void Enemy::Draw()
 {
-	// アニメーションコントローラーによる描画
-	mAnimController.Draw(mvPosition.x, mvPosition.y);
+	mAnimController.Draw(mvPosition.x, mvPosition.y, gCameraX, gCameraY);
 }
 
 void Enemy::Move()

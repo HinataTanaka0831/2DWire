@@ -1,6 +1,6 @@
 #pragma once
 #include "DxLib.h"
-#include "Texture.h"
+#include "TextureAnimation.h"
 #include "Object2D.h"
 #include "AnimationController.h"
 
@@ -20,14 +20,8 @@ private:
 
 public:
 	// コンストラクタ
-	Player(std::string filename,
-		VECTOR initPos,
-		int allNum,
-		int xNum,
-		int yNum,
-		int interval,
-		float scale
-	);
+	Player(VECTOR initPos);
+
 	// デストラクタ
 	virtual ~Player();
 

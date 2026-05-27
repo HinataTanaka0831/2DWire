@@ -2,15 +2,15 @@
 
 // コンストラクタ
 TextureAnimation::TextureAnimation(
+	VECTOR Position,
 	std::string filename,
-	VECTOR initPos,
 	int allNum,
 	int xNum,
 	int yNum,
 	int interval,
 	float scale
 )
-	: mvPosition(initPos)
+	: mvPosition(Position)
 	, mnCounter(0)
 	, mnInterval(interval)
 	, mnCurrentNum(0)
@@ -70,7 +70,7 @@ void TextureAnimation::Update()
 // 描画
 void TextureAnimation::Draw(float cameraX, float cameraY)
 {
-	DrawRotaGraph(mvPosition.x - cameraX, mvPosition.y - cameraY, mnScale, 0.0f, mnHandleList[mnCurrentNum], true);
+	DrawRotaGraph((int)(mvPosition.x - cameraX), (int)(mvPosition.y - cameraY), mnScale, 0.0f, mnHandleList[mnCurrentNum], true);
 }
 
 void TextureAnimation::Reset()
