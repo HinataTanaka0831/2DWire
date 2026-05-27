@@ -11,18 +11,18 @@
 
 
 
-Player::Player(VECTOR Position)
-	: Object2D(Position, "Resource/Player/Player.png", 1, 1, 1, 10, 1.0f)
+Player::Player(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale)
+	: Object2D(filename, initPos, allNum, numX, numY, interval, scale)
 	, displayDamage(maxHp)
 {
 	SetTag(Object2D::Player2D);
 
 	// Idle: 1 frame static image
 	mAnimController.RegisterAnimation(CharacterState::Idle,
-		new TextureAnimation(Position, "Resource/Player/Player.png", 1, 1, 1, 10, 1.0f));
+		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale));
 	// Moving: 5 frame walking animation
 	mAnimController.RegisterAnimation(CharacterState::Moving,
-		new TextureAnimation(Position, "Resource/Player/Player_Walking.png", 5, 5, 1, 8, 1.0f));
+		new TextureAnimation("Resource/Player/Player_Walking.png", initPos, 5, 5, 1, 8, 1.0f));
 
 	mAnimController.ChangeState(CharacterState::Idle);
 }

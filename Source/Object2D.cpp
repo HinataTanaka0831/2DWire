@@ -22,8 +22,8 @@ Object2D::Object2D(std::string filename, VECTOR initPos)
 }
 
 // コンストラクタ（アニメーション用）
-Object2D::Object2D(VECTOR Position, std::string filename, int allNum, int numX, int numY, int interval, float scale)
-	: mvPosition(Position)
+Object2D::Object2D(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale)
+	: mvPosition(initPos)
 	, mbDeleteFlag(false)
 	, mpTexture(nullptr)
 {
@@ -31,7 +31,7 @@ Object2D::Object2D(VECTOR Position, std::string filename, int allNum, int numX, 
 	Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->AddObject(this);
 
 	// 画像生成
-	mpTextureAnimation = new TextureAnimation(Position, filename, allNum, numX, numY, interval);
+	mpTextureAnimation = new TextureAnimation(filename, initPos, allNum, numX, numY, interval);
 
 	if (mpTextureAnimation != nullptr)
 	{

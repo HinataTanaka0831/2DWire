@@ -16,7 +16,7 @@ private:
 
 public:
 	// コンストラクタ
-	Enemy(VECTOR initPos, std::string filename, int t,int s);
+	Enemy(std::string filename, VECTOR initPos, int t,int s);
 
 	//デストラクタ
 	virtual ~Enemy();

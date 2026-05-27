@@ -7,11 +7,11 @@ class TextureAnimation
 public:
 	// コンストラクタ
 	TextureAnimation(
-		VECTOR Position,
 		std::string filename,
+		VECTOR initPos,
 		int allNum,
-		int xNum,
-		int yNum,
+		int NumX,
+		int NumY,
 		int interval,
 		float scale = 1.0f
 	);  

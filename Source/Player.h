@@ -20,7 +20,7 @@ private:
 
 public:
 	// コンストラクタ
-	Player(VECTOR initPos);
+	Player(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale);
 
 	// デストラクタ
 	virtual ~Player();
