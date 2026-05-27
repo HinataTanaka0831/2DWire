@@ -11,12 +11,20 @@
 
 
 
-Player::Player(std::string filename, VECTOR initPos)
-	: Object2D(filename, initPos)
+Player::Player(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale)
+	: Object2D(filename, initPos, allNum, numX, numY, interval, scale)
 	, displayDamage(maxHp)
 {
 	SetTag(Object2D::Player2D);
 
+	// Idle: 1 frame static image
+	mAnimController.RegisterAnimation(CharacterState::Idle,
+		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale));
+	// Moving: 5 frame walking animation
+	mAnimController.RegisterAnimation(CharacterState::Moving,
+		new TextureAnimation("Resource/Player/Player_Walking.png", initPos, 5, 5, 1, 8, 1.0f));
+
+	mAnimController.ChangeState(CharacterState::Idle);
 }
 
 Player::~Player()
@@ -31,6 +39,7 @@ void Player::Update()
 
 	// 移動処理
 	Move();
+
 
 	// 基底クラスの更新を呼ぶ
 	Object2D::Update();
@@ -47,19 +56,16 @@ void Player::Draw()
 		         GetColor(200, 255, 255), 3);
 	}
 
+	// アニメーションコントローラーによる描画
+	mAnimController.Draw(mvPosition.x, mvPosition.y, gCameraX, gCameraY);
+
 	// HPゲージの描画
 	HPGaugeDraw();
-
-	// クラスの描画呼ぶ
-	Object2D::Draw();
 }
 
 void Player::Move()
 {
-	if (mMoveState == Idle)
-	{
-		
-	}
+
 	// ----------------------------------------------------
 	// 1. ワイヤーの接続・解除判定
 	// ----------------------------------------------------
@@ -170,13 +176,13 @@ void Player::Move()
 		{
 			mVelocityX += 0.5f; // 右へ加速
 
-			mMoveState = Walking; // 状態をWalkingに変更
+
 		}
 		else if (CheckHitKey(KEY_INPUT_A))
 		{
 			mVelocityX -= 0.5f; // 左へ加速
 
-			mMoveState = Walking; // 状態をWalkingに変更
+
 		}
 		else
 		{
@@ -190,7 +196,7 @@ void Player::Move()
 			{
 				mVelocityY = -10.0f; // 上向きの速度を与える
 
-				mMoveState = jumping; // 状態をjumpingに変更
+
 			}
 		}
 
@@ -227,20 +233,18 @@ void Player::Move()
 	}
 
 
-	if (mMoveState == Walking)
-	{
-		// 歩いているときのアニメーション処理（例：フレーム切り替え）
-		// ここでは単純にテクスチャを切り替えるだけの例を示します
-		new Object2D("Resource/Player_WalkingAnimation.png", mvPosition, 5, 5, 1, 3);
+	// 状態の判定
+	if (Hp <= 0) {
+		mAnimController.ChangeState(CharacterState::Dead);
 	}
-	else
-	{
-		mMoveState = Idle; // それ以外はIdleに戻す
+	else if (std::abs(mVelocityX) > 0.5f || mbIsWireActive) {
+		mAnimController.ChangeState(CharacterState::Moving);
 	}
-
-
-	// テクスチャ座標に反映
-	mpTexture->SetPosition(mvPosition);
+	else {
+		mAnimController.ChangeState(CharacterState::Idle);
+	}
+	mAnimController.Update();
+	
 }
 
 // HPゲージの描画

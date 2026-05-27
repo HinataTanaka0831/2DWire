@@ -33,7 +33,10 @@ Object2D::Object2D(std::string filename, VECTOR initPos, int allNum, int numX, i
 	// 画像生成
 	mpTextureAnimation = new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale);
 
-	mpTextureAnimation->SetScale(scale);
+	if (mpTextureAnimation != nullptr)
+	{
+		mpTextureAnimation->SetScale(scale);
+	}
 
 }
 
@@ -61,16 +64,21 @@ void Object2D::Update()
 	if (mpTexture != nullptr)
 	{
 		mpTexture->Update();
+
+		// 座標設定
+		mpTexture->SetPosition(mvPosition);
+
 	}
 
 	// 画像アニメーションの更新
 	if (mpTextureAnimation != nullptr)
 	{
 		mpTextureAnimation->Update();
+		
+		// 座標設定
+		mpTextureAnimation->SetPosition(mvPosition);	
 	}
 
-	// 座標設定
-	mpTexture->SetPosition(mvPosition);
 }
 
 // 描画
@@ -85,11 +93,18 @@ void Object2D::Draw()
 	// 画像アニメーションの描画
 	if (mpTextureAnimation != nullptr)
 	{
-		mpTextureAnimation->Draw();
+		mpTextureAnimation->Draw(gCameraX, gCameraY);
 	}
 
 }
 
+void Object2D::Reset()
+{
+	if (mpTextureAnimation != nullptr)
+	{
+		mpTextureAnimation->Reset();
+	}
+}
 
 
 // 半径の取得

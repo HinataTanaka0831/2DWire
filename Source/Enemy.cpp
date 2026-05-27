@@ -9,9 +9,9 @@
 
 
 
-Enemy::Enemy(VECTOR initPos, std::string filename, int t, int s)
+Enemy::Enemy(std::string filename, VECTOR initPos, int t, int s)
 	: Object2D(filename, initPos)
-	,mvDirection(VGet(-1.0f, 0.0f, 0.0f))   // Å‰‚ÍX²‚Ì‰E•ûŒü‚Ö“®‚­‚æ‚¤‚É‚µ‚Ä‚¨‚­
+	,mvDirection(VGet(-1.0f, 0.0f, 0.0f))   // æœ€åˆã¯Xè»¸ã®å³æ–¹å‘ã¸å‹•ãã‚ˆã†ã«ã—ã¦ãŠã
 	
 {
 	SetTag(Object2D::Enemy2D);
@@ -20,6 +20,14 @@ Enemy::Enemy(VECTOR initPos, std::string filename, int t, int s)
 
 	SetEnemytype(s);
 
+	// Idle: 6 frame monster walk animation
+	mAnimController.RegisterAnimation(CharacterState::Idle,
+		new TextureAnimation(filename, initPos, 1, 1, 1, 10, 1.0f));
+	// Moving: same 6 frame animation
+	mAnimController.RegisterAnimation(CharacterState::Moving,
+		new TextureAnimation(filename, initPos, 1, 1, 1, 10, 1.0f));
+
+	mAnimController.ChangeState(CharacterState::Moving);
 }
 
 
@@ -31,7 +39,7 @@ Enemy::~Enemy()
 void Enemy::Update()
 {
 
-	// ˆÚ“®ˆ—
+	// ç§»å‹•å‡¦ç†
 	Move();
 
 	Calcdamage();
@@ -40,17 +48,26 @@ void Enemy::Update()
 	{
 		SetDeleteFlag(true);
 		
-		Initialize();
+		//Initialize();
 		
 	}
 
-	
+	// çŠ¶æ…‹ã®åˆ¤å®šï¼ˆä¾‹ã¨ã—ã¦ç§»å‹•çŠ¶æ…‹ã®åˆ‡ã‚Šæ›¿ãˆï¼‰
+	if (mnHp <= 0) {
+		mAnimController.ChangeState(CharacterState::Dead);
+	} else if (mvDirection.x != 0.0f || mvDirection.y != 0.0f) {
+		mAnimController.ChangeState(CharacterState::Moving);
+	} else {
+		mAnimController.ChangeState(CharacterState::Idle);
+	}
+	mAnimController.Update();
+
 	Object2D::Update();
 }
 
 void Enemy::Draw()
 {
-	Object2D::Draw();
+	mAnimController.Draw(mvPosition.x, mvPosition.y, gCameraX, gCameraY);
 }
 
 void Enemy::Move()
@@ -65,11 +82,11 @@ void Enemy::Move()
 
 	if (GetNowCount() - StartTime > time)
 	{
-		// mvDirection.x ‚Ì•ûŒü‚Öi‚Ş‚æ‚¤‚É‚·‚é
+		// mvDirection.x ã®æ–¹å‘ã¸é€²ã‚€ã‚ˆã†ã«ã™ã‚‹
 		mvPosition.x += (float)MOVE_SPEED * mvDirection.x;
 	}
 
-	// ƒeƒNƒXƒ`ƒƒ‚ÉÀ•W‚ğ“`‚¦‚é
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã«åº§æ¨™ã‚’ä¼ãˆã‚‹
 	mpTexture->SetPosition(mvPosition);
 }
 
@@ -80,93 +97,93 @@ bool Enemy::IsScreenOut()
 
 
 
-void Enemy::Initialize()
-{
-	int work = rand() % 8;
-
-
-	switch (work)
-	{
-	case 0:
-
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
-			"Resource/kusikatsu_gyu.png", 1,1
-		);
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
-			"Resource/torimomoniku.png", 2, 1
-		);
-
-		break;
-		
-	case 1:
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
-			"Resource/torimomoniku.png", 2,1
-		);
-		break;
-
-	case 2:
-
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
-			"Resource/hamukatsu.png", 3,1
-		);
-		break;
-
-	case 3:
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 140.0f, GetRand(380), 0.0f),
-			"Resource/Rebakatsu.png", 4,1
-		);
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
-			"Resource/hamukatsu.png", 3, 1
-		);
-
-		break;
-
-	case 4:
-		// ‹ø—g‚°‰–
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
-			"Resource/kusikatsu_ton.png", 1, 2
-		);
-
-		break;
-	case 5:
-		// ‹ø—g‚°‰–
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
-			"Resource/renkon.png", 2, 2
-		);
-		break;
-	case 6:
-		// ‹ø—g‚°‰–
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 150.0f, GetRand(380), 0.0f),
-			"Resource/torisasami.png", 3, 2
-		);
-		// ‹ø—g‚°‰–
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
-			"Resource/kusikatsu_ton.png", 1, 2
-		);
-
-		break;
-	case 7:
-		// ‹ø—g‚°‰–
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
-			"Resource/tamanegi.png", 4, 2
-		);
-		break;
-
-
-	}
-
-}
+//void Enemy::Initialize()
+//{
+//	int work = rand() % 8;
+//
+//
+//	switch (work)
+//	{
+//	case 0:
+//
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
+//			"Resource/kusikatsu_gyu.png", 1,1
+//		);
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
+//			"Resource/torimomoniku.png", 2, 1
+//		);
+//
+//		break;
+//		
+//	case 1:
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
+//			"Resource/torimomoniku.png", 2,1
+//		);
+//		break;
+//
+//	case 2:
+//
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
+//			"Resource/hamukatsu.png", 3,1
+//		);
+//		break;
+//
+//	case 3:
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 140.0f, GetRand(380), 0.0f),
+//			"Resource/Rebakatsu.png", 4,1
+//		);
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
+//			"Resource/hamukatsu.png", 3, 1
+//		);
+//
+//		break;
+//
+//	case 4:
+//		// ä¸²æšã’å¡©
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
+//			"Resource/kusikatsu_ton.png", 1, 2
+//		);
+//
+//		break;
+//	case 5:
+//		// ä¸²æšã’å¡©
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
+//			"Resource/renkon.png", 2, 2
+//		);
+//		break;
+//	case 6:
+//		// ä¸²æšã’å¡©
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 150.0f, GetRand(380), 0.0f),
+//			"Resource/torisasami.png", 3, 2
+//		);
+//		// ä¸²æšã’å¡©
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
+//			"Resource/kusikatsu_ton.png", 1, 2
+//		);
+//
+//		break;
+//	case 7:
+//		// ä¸²æšã’å¡©
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
+//			"Resource/tamanegi.png", 4, 2
+//		);
+//		break;
+//
+//
+//	}
+//
+//}
 
 
 void Enemy::ChangeDamage(int damage)
@@ -196,43 +213,6 @@ void Enemy::ChangeDamage(int damage)
 
 
 
-	
-
-
-
-//void Enemy::ChangeDamage2(int damage)
-//{
-//	mnHp -= damage;
-//
-//	if (mnHp <= 0)
-//	{
-//
-//		SetDeleteFlag(true);
-//		
-//
-//		//auto pPlayer = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
-//
-//		//Player* cPlayer = dynamic_cast<Player*>(pPlayer);
-//
-//		//if (cPlayer != nullptr)
-//		//{
-//
-//		//	if (enemytype == 2)
-//		//	{
-//		//		cPlayer->PDamage(1);
-//		//	}
-//		//	
-//
-//		//}
-//
-//
-//	}
-//
-//
-//
-//	
-//}
-
 void Enemy::Calcdamage()
 {
 	auto pTarget = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
@@ -241,9 +221,9 @@ void Enemy::Calcdamage()
 	Player* pPlayer = dynamic_cast<Player*>(pTarget);
 
 
-	if (pPlayer != nullptr)     // dynamic_cast ‚ğ‚µ‚½Œã‚Í•K‚¸nullƒ`ƒFƒbƒN‚ğs‚¤
+	if (pPlayer != nullptr)     // dynamic_cast ã‚’ã—ãŸå¾Œã¯å¿…ãšnullãƒã‚§ãƒƒã‚¯ã‚’è¡Œã†
 	{
-		// “–‚½‚è”»’è
+		// å½“ãŸã‚Šåˆ¤å®š
 		if (Collision::CheckCircleToCircle(
 			mvPosition,
 			GetRadius(),

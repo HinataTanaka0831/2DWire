@@ -58,6 +58,7 @@ public:
 	// 描画
 	virtual void Draw();
 
+	void Reset();
 
 
 public:      // ゲッター・セッター
@@ -70,10 +71,10 @@ public:      // ゲッター・セッター
 	void SetTag(Tag tag) { mnTag = tag; }   // タグ設定
 	Tag GetTag() { return mnTag; }          // タグ取得
 
+
 	virtual float GetRadius();   // 半径の取得
 	virtual int GetSizeX();
 	virtual int GetSizeY();
-
 
 protected:
 	Texture* mpTexture;     // 画像
