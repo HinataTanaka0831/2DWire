@@ -9,7 +9,7 @@
 
 
 
-Enemy::Enemy(VECTOR initPos, std::string filename, int t, int s)
+Enemy::Enemy(std::string filename, VECTOR initPos, int t, int s)
 	: Object2D(filename, initPos)
 	,mvDirection(VGet(-1.0f, 0.0f, 0.0f))   // 最初はX軸の右方向へ動くようにしておく
 	
@@ -22,10 +22,10 @@ Enemy::Enemy(VECTOR initPos, std::string filename, int t, int s)
 
 	// Idle: 6 frame monster walk animation
 	mAnimController.RegisterAnimation(CharacterState::Idle,
-		new TextureAnimation(initPos, filename, 1, 1, 1, 10, 1.0f));
+		new TextureAnimation(filename, initPos, 1, 1, 1, 10, 1.0f));
 	// Moving: same 6 frame animation
 	mAnimController.RegisterAnimation(CharacterState::Moving,
-		new TextureAnimation(initPos, filename, 1, 1, 1, 10, 1.0f));
+		new TextureAnimation(filename, initPos, 1, 1, 1, 10, 1.0f));
 
 	mAnimController.ChangeState(CharacterState::Moving);
 }
@@ -48,7 +48,7 @@ void Enemy::Update()
 	{
 		SetDeleteFlag(true);
 		
-		Initialize();
+		//Initialize();
 		
 	}
 
@@ -97,93 +97,93 @@ bool Enemy::IsScreenOut()
 
 
 
-void Enemy::Initialize()
-{
-	int work = rand() % 8;
-
-
-	switch (work)
-	{
-	case 0:
-
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
-			"Resource/kusikatsu_gyu.png", 1,1
-		);
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
-			"Resource/torimomoniku.png", 2, 1
-		);
-
-		break;
-		
-	case 1:
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
-			"Resource/torimomoniku.png", 2,1
-		);
-		break;
-
-	case 2:
-
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
-			"Resource/hamukatsu.png", 3,1
-		);
-		break;
-
-	case 3:
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 140.0f, GetRand(380), 0.0f),
-			"Resource/Rebakatsu.png", 4,1
-		);
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
-			"Resource/hamukatsu.png", 3, 1
-		);
-
-		break;
-
-	case 4:
-		// 串揚げ塩
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
-			"Resource/kusikatsu_ton.png", 1, 2
-		);
-
-		break;
-	case 5:
-		// 串揚げ塩
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
-			"Resource/renkon.png", 2, 2
-		);
-		break;
-	case 6:
-		// 串揚げ塩
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 150.0f, GetRand(380), 0.0f),
-			"Resource/torisasami.png", 3, 2
-		);
-		// 串揚げ塩
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
-			"Resource/kusikatsu_ton.png", 1, 2
-		);
-
-		break;
-	case 7:
-		// 串揚げ塩
-		new Enemy(
-			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
-			"Resource/tamanegi.png", 4, 2
-		);
-		break;
-
-
-	}
-
-}
+//void Enemy::Initialize()
+//{
+//	int work = rand() % 8;
+//
+//
+//	switch (work)
+//	{
+//	case 0:
+//
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
+//			"Resource/kusikatsu_gyu.png", 1,1
+//		);
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
+//			"Resource/torimomoniku.png", 2, 1
+//		);
+//
+//		break;
+//		
+//	case 1:
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
+//			"Resource/torimomoniku.png", 2,1
+//		);
+//		break;
+//
+//	case 2:
+//
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
+//			"Resource/hamukatsu.png", 3,1
+//		);
+//		break;
+//
+//	case 3:
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 140.0f, GetRand(380), 0.0f),
+//			"Resource/Rebakatsu.png", 4,1
+//		);
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
+//			"Resource/hamukatsu.png", 3, 1
+//		);
+//
+//		break;
+//
+//	case 4:
+//		// 串揚げ塩
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
+//			"Resource/kusikatsu_ton.png", 1, 2
+//		);
+//
+//		break;
+//	case 5:
+//		// 串揚げ塩
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
+//			"Resource/renkon.png", 2, 2
+//		);
+//		break;
+//	case 6:
+//		// 串揚げ塩
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 150.0f, GetRand(380), 0.0f),
+//			"Resource/torisasami.png", 3, 2
+//		);
+//		// 串揚げ塩
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
+//			"Resource/kusikatsu_ton.png", 1, 2
+//		);
+//
+//		break;
+//	case 7:
+//		// 串揚げ塩
+//		new Enemy(
+//			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
+//			"Resource/tamanegi.png", 4, 2
+//		);
+//		break;
+//
+//
+//	}
+//
+//}
 
 
 void Enemy::ChangeDamage(int damage)
