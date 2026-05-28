@@ -44,7 +44,10 @@ public:
 	// ダメージ処理
 	void PDamage(int damage);
 
-	
+	float GetVelocityX() const { return mVelocityX; } // 横方向の速度を取得
+	float GetAngularAcceleration() const { return angularAcceleration; } // 振り子の角加速度を取得
+	bool IsWireActive() const { return mbIsWireActive; } // ワイヤー使用中かを取得
+
 private:      // メンバ変数
 	// 弾撃ち間隔カウンター
 	int mnBulletShotCounter;
@@ -59,6 +62,7 @@ private:      // メンバ変数
 	// 物理演算用変数
 	float mVelocityY = 0.0f;               // 縦方向の速度
 	float mVelocityX = 0.0f;               // 横方向の速度
+	float angularAcceleration;		       // 振り子の角加速度
 	static constexpr float GRAVITY = 0.5f; // 重力加速度
 
 	// HP関連の変数

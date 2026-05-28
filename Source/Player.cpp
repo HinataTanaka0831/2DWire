@@ -22,7 +22,7 @@ Player::Player(std::string filename, VECTOR initPos, int allNum, int numX, int n
 		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale));
 	// Moving: 5 frame walking animation
 	mAnimController.RegisterAnimation(CharacterState::Moving,
-		new TextureAnimation("Resource/Player/Player_Walking.png", initPos, 5, 5, 1, 8, 1.0f));
+		new TextureAnimation("Resource/Player/Player_Walk.png", initPos, 4, 4, 1, 8, 1.0f));
 
 	mAnimController.ChangeState(CharacterState::Idle);
 }
@@ -149,7 +149,7 @@ void Player::Move()
 		if (mWireLength > 0.0f)
 		{
 			// 重力による角加速度（-g/L * sin(θ)）
-			float angularAcceleration = -(GRAVITY / mWireLength) * std::sin(mPendulumAngle);
+			angularAcceleration = -(GRAVITY / mWireLength) * std::sin(mPendulumAngle);
 			
 			// プレイヤーの左右キー入力でスイングを加速・減速
 			if (CheckHitKey(KEY_INPUT_D)) angularAcceleration += 0.0013f;

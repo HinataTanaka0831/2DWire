@@ -43,4 +43,6 @@ private:
 	int mnSizeX;       // 分割されたテクスチャの幅
 	int mnSizeY;       // 分割されたテクスチャの高さ
 	float mnScale;     // 描画倍率
+	bool mbReverseX;    // 描画反転フラグ（左右反転）
+	bool mbReverseY;    // 描画反転フラグ（上下反転）
 };

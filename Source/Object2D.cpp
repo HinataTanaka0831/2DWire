@@ -31,12 +31,7 @@ Object2D::Object2D(std::string filename, VECTOR initPos, int allNum, int numX, i
 	Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->AddObject(this);
 
 	// 画像生成
-	mpTextureAnimation = new TextureAnimation(filename, initPos, allNum, numX, numY, interval);
-
-	if (mpTextureAnimation != nullptr)
-	{
-		mpTextureAnimation->SetScale(scale);
-	}
+	mpTextureAnimation = new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale);
 
 }
 

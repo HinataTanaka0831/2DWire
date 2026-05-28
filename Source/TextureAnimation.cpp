@@ -1,4 +1,8 @@
 #include "TextureAnimation.h"
+#include "Master.h"
+#include "SceneManager.h"
+#include "ObjectManager.h"
+#include "Player.h"
 
 // コンストラクタ
 TextureAnimation::TextureAnimation(
@@ -54,6 +58,16 @@ TextureAnimation::~TextureAnimation()
 // 更新
 void TextureAnimation::Update()
 {
+
+	auto pObj = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
+	Player* pPlayer = dynamic_cast<Player*>(pObj);
+
+	if (pPlayer != nullptr)
+	{
+		// プレイヤーの向きに合わせて描画反転フラグを設定
+		mbReverseX = (pPlayer->GetVelocityX() < 0.0f || pPlayer->GetAngularAcceleration() < 0.0f && pPlayer->IsWireActive()); // 左向きなら反転
+	}
+
 	// カウンタをインクリメント
 	mnCounter++;
 	if (mnCounter % mnInterval == 0)
@@ -70,7 +84,7 @@ void TextureAnimation::Update()
 // 描画
 void TextureAnimation::Draw(float cameraX, float cameraY)
 {
-	DrawRotaGraph((int)(mvPosition.x - cameraX), (int)(mvPosition.y - cameraY), mnScale, 0.0f, mnHandleList[mnCurrentNum], true);
+	DrawRotaGraph((int)(mvPosition.x - cameraX), (int)(mvPosition.y - cameraY), mnScale, 0.0f, mnHandleList[mnCurrentNum], true, mbReverseX, mbReverseY);
 }
 
 void TextureAnimation::Reset()
