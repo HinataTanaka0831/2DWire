@@ -5,7 +5,6 @@
 #include "ObjectManager.h"
 #include "Scene.h"
 #include "Player.h"
-#include "SelectScene.h"
 
 
 
@@ -17,8 +16,6 @@ Bullet::Bullet(VECTOR initPos, std::string filename)
 	
 {
 	SetTag(Object2D::Bullet2D);
-
-	ch = new SelectScene();
 
 }
 
@@ -33,20 +30,6 @@ void Bullet::Update()
 	Move();
 
 	CalcCollision();
-	//ch->ChangeAttack();
-	//switch (ch->Getflag())
-	//{
-	//case true:
-	//	CalcCollision(true);
-	//	break;
-
-	//case false:
-	//	CalcCollision(false);
-	//	break;
-
-	//default:
-	//	break;
-	//}
 
 	// ‰æ–ÊŠO‚Éo‚½‚çíœ‚·‚é
 	if (IsScreenOut())

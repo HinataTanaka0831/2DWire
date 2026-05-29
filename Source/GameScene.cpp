@@ -1,4 +1,4 @@
-#include "GameScene.h"
+﻿#include "GameScene.h"
 #include "DxLib.h"
 #include "Utility.h"
 #include "Master.h"
@@ -37,8 +37,12 @@ void GameScene::Initialize()
 	map->LoadStage(1);
 	delete map; // 初期化だけなので即破棄するか、メンバ変数に持つかは自由。ここでは配置だけ行う。
 
+
 	// プレイヤーの生成
-	mpPlayer = new Player("Resource/Player/Player_Idle.png", VGet((float)Utility::SCREEN_WIDTH / 9, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f);
+	mpPlayer = new Player("Resource/Player/Player_Idle.png", VGet((float)Utility::SCREEN_WIDTH / 2, 1000.0f, 0.0f), 3, 3, 1, 20, 1.0f, true);
+
+	// 敵の生成
+	new Enemy("Resource/Enemy/Monster_Fly.png", VGet((float)Utility::SCREEN_WIDTH * 2, 1000.0f, 0.0f), 3, 3, 1, 8, 1.0f, false);
 
 }
 

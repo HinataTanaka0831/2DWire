@@ -6,9 +6,6 @@
 
 class Player;
 
-class SelectScene;
-
-
 class Bullet : public Object2D
 {
 
@@ -47,5 +44,4 @@ protected:
 	VECTOR mvDirection;  // ˆÚ“®•ûŒü
 	float mfAngle;       // Œ»İ‚Ì–Ú•WŠp“x
 	float mfspeed;
-	SelectScene* ch;
 };

@@ -1,4 +1,4 @@
-#include "Goal.h"
+﻿#include "Goal.h"
 #include "Utility.h"
 #include <cmath>
 

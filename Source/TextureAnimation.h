@@ -1,11 +1,12 @@
-#pragma once
+﻿#pragma once
 #include "DxLib.h"
 #include <string>
 
 class TextureAnimation
 {
 public:
-	// コンストラクタ
+	// スプライトシート画像を分割ロードし、アニメーション用リソースを初期化
+	// 入力：filename（画像パス）, initPos（初期座標）, allNum（全フレーム数）, NumX/NumY（分割コマ数）, interval（更新間隔）, scale（拡縮率） / 副作用：mnHandleListのメモリ確保
 	TextureAnimation(
 		std::string filename,
 		VECTOR initPos,
@@ -13,36 +14,48 @@ public:
 		int NumX,
 		int NumY,
 		int interval,
-		float scale = 1.0f
+		float scale = 1.0f,
+		bool type = true
 	);  
-	// デストラクタ
+	// 確保した画像ハンドルリストのメモリ領域を破棄
+	// 副作用：mnHandleListのメモリ解放
 	~TextureAnimation(); 
 
-	void Update();  // 更新
-	void Draw(float cameraX = 0.0f, float cameraY = 0.0f);   // 描画
+	// プレイヤーの移動向きを監視し、スプライトの左右反転フラグとアニメーションコマを更新
+	// 副作用：反転フラグおよびアニメーションカウンタを更新
+	void Update();  
 
-	void Reset(); // アニメーションのリセット
-	void SetPosition(VECTOR pos) { mvPosition = pos; } // 位置の設定描画
+	// カメラのスクロール座標を減算したスクリーン座標で、反転設定を反映して描画
+	// 入力：cameraX, cameraY（カメラのワールド座標）
+	void Draw(float cameraX = 0.0f, float cameraY = 0.0f);   
 
-	int GetSizeX() { return mnSizeX; }    // 幅サイズ取得
-	int GetSizeY() { return mnSizeY; }    // 高さサイズ取得
+	// アニメーションを最初のフレームに戻し、再生をリスタート
+	// 副作用：再生フレームの初期化
+	void Reset(); 
+	void SetPosition(VECTOR pos) { mvPosition = pos; } 
 
-	float GetRadius() { return (float)mnSizeX / 2.0f; }    // 半径取得（とりあえず幅の半分を半径としておく）
+	int GetSizeX() { return mnSizeX; }    
+	int GetSizeY() { return mnSizeY; }    
 
-	void SetScale(float scale) { mnScale = scale; }    // 描画倍率設定
-	float GetScale() { return mnScale; }    // 描画倍率取得
+	float GetRadius() { return mfRadius; }    
+
+	void SetScale(float scale) { mnScale = scale; }    
+	float GetScale() { return mnScale; }    
 
 
 private:
-	VECTOR mvPosition;  // ポジション
-	int mnCounter;      // アニメーションカウンタ
-	int mnInterval;     // テクスチャ切り替えのフレーム数
-	int mnCurrentNum;   // 何番目のテクスチャを表示するか
-	int* mnHandleList;  // 分割されたテクスチャのハンドルリスト
-	int mnAllNum;       // テクスチャ分割数
-	int mnSizeX;       // 分割されたテクスチャの幅
-	int mnSizeY;       // 分割されたテクスチャの高さ
-	float mnScale;     // 描画倍率
-	bool mbReverseX;    // 描画反転フラグ（左右反転）
-	bool mbReverseY;    // 描画反転フラグ（上下反転）
+	VECTOR mvPosition;  
+	int mnCounter;      
+	int mnInterval;     
+	int mnCurrentNum;   
+	int* mnHandleList;  
+	int mnAllNum;       
+	int mnSizeX;       
+	int mnSizeY;       
+	float mfRadius = 60.0f;
+	float mnScale;     
+	bool mbPlayerReverseX;    
+	bool mbEnemyReverseX;
+	bool mbType;
+  
 };

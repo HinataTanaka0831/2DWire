@@ -1,10 +1,10 @@
-#include "TextureAnimation.h"
+﻿#include "TextureAnimation.h"
 #include "Master.h"
 #include "SceneManager.h"
 #include "ObjectManager.h"
 #include "Player.h"
+#include "Enemy.h"
 
-// コンストラクタ
 TextureAnimation::TextureAnimation(
 	std::string filename,
 	VECTOR initPos,
@@ -12,7 +12,8 @@ TextureAnimation::TextureAnimation(
 	int NumX,
 	int NumY,
 	int interval,
-	float scale
+	float scale,
+	bool type
 )
 	: mvPosition(initPos)
 	, mnCounter(0)
@@ -20,25 +21,26 @@ TextureAnimation::TextureAnimation(
 	, mnCurrentNum(0)
 	, mnAllNum(allNum)
 	, mnScale(scale)
+	, mbType(type)
 {
 	mnHandleList = new int[allNum];
 
-	// 画像ファイル読み込み
 	int handle = LoadGraph(filename.c_str());
+	// 不正ファイル読み込みによるクラッシュを回避するため、失敗時は早期離脱
 	if (handle == -1)
 	{
-		return;   // 読み込み失敗していたら以降は処理しない
+		return;
 	}
 
-	// サイズ取得
 	int sizeX, sizeY;
 	GetGraphSize(handle, &sizeX, &sizeY);
 
-	mnSizeX = sizeX / NumX;    // 分割されたテクスチャの幅を保存
-	mnSizeY = sizeY / NumY;    // 分割されたテクスチャの高さを保存
+	// 衝突判定および描画時の矩形計算用として等分割した一コマ分のサイズを保存
+	mnSizeX = sizeX / NumX;
+	mnSizeY = sizeY / NumY;
 
-	// テクスチャの分割読み込み
-	int success = LoadDivGraph(
+
+	LoadDivGraph(
 		filename.c_str(),
 		allNum,
 		NumX,
@@ -47,44 +49,53 @@ TextureAnimation::TextureAnimation(
 		sizeY / NumY,
 		mnHandleList
 	);
-
 }
-// デストラクタ
+
 TextureAnimation::~TextureAnimation()
 {
-
+	// メモリリーク防止のため、コンストラクタでnewしたグラフィックハンドル配列を確実に解放
+	delete[] mnHandleList;
 }
 
-// 更新
 void TextureAnimation::Update()
 {
-
 	auto pObj = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
 	Player* pPlayer = dynamic_cast<Player*>(pObj);
 
 	if (pPlayer != nullptr)
 	{
-		// プレイヤーの向きに合わせて描画反転フラグを設定
-		mbReverseX = (pPlayer->GetVelocityX() < 0.0f || pPlayer->GetAngularAcceleration() < 0.0f && pPlayer->IsWireActive()); // 左向きなら反転
+		// 意図しない反転挙動のバグを防ぐため、演算子の優先順位を括弧で明示
+		mbPlayerReverseX = (pPlayer->GetVelocityX() < 0.0f || (pPlayer->GetAngularAcceleration() < 0.0f && pPlayer->IsWireActive()));
 	}
 
-	// カウンタをインクリメント
+	auto pobj = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Enemy2D);
+	Enemy* pEnemy = dynamic_cast<Enemy*>(pobj);
+
+	if (pEnemy != nullptr)
+	{
+		mbEnemyReverseX = (pEnemy->GetDirection().x > 0.0f);
+	}
+
+	// 指定されたインターバル時間に基づき、等速でアニメーションをループ再生
 	mnCounter++;
 	if (mnCounter % mnInterval == 0)
 	{
-		mnCounter = 0;   // カウンタを戻す
-		mnCurrentNum++;  // テクスチャ番号を進める
-		if (mnCurrentNum >= mnAllNum)  // 分割数を超えるならループさせる
-		{
-			mnCurrentNum = 0;   // ループさせる
-		}
+		mnCounter = 0;
+		mnCurrentNum = (mnCurrentNum + 1) % mnAllNum;
 	}
 }
 
-// 描画
 void TextureAnimation::Draw(float cameraX, float cameraY)
 {
-	DrawRotaGraph((int)(mvPosition.x - cameraX), (int)(mvPosition.y - cameraY), mnScale, 0.0f, mnHandleList[mnCurrentNum], true, mbReverseX, mbReverseY);
+	if (mbType)
+	{
+		DrawRotaGraph((int)(mvPosition.x - cameraX), (int)(mvPosition.y - cameraY), mnScale, 0.0f, mnHandleList[mnCurrentNum], true, mbPlayerReverseX);
+	}
+
+	if (!mbType)
+	{
+		DrawRotaGraph((int)(mvPosition.x - cameraX), (int)(mvPosition.y - cameraY), mnScale, 0.0f, mnHandleList[mnCurrentNum], true, mbEnemyReverseX);
+	}
 }
 
 void TextureAnimation::Reset()

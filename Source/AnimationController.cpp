@@ -1,4 +1,4 @@
-#include "AnimationController.h"
+﻿#include "AnimationController.h"
 
 AnimationController::AnimationController()
     : mCurrentState(CharacterState::Idle)
@@ -22,15 +22,13 @@ void AnimationController::RegisterAnimation(CharacterState state, TextureAnimati
 
 void AnimationController::ChangeState(CharacterState newState)
 {
-    // Same state: do nothing (don't reset animation)
+    // 同一状態でのアニメーション再初期化によるちらつきを防止
     if (mIsInitialized && mCurrentState == newState) return;
 
-    // Save previous state
     mPrevState = mCurrentState;
     mCurrentState = newState;
     mIsInitialized = true;
 
-    // Reset animation to frame 0
     if (mAnimations.count(mCurrentState)) {
         mAnimations[mCurrentState]->Reset();
     }

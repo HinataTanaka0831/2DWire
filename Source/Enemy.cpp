@@ -1,4 +1,4 @@
-#include "Enemy.h"
+﻿#include "Enemy.h"
 #include "Utility.h"
 #include "Master.h"
 #include "ObjectManager.h"
@@ -9,25 +9,23 @@
 
 
 
-Enemy::Enemy(std::string filename, VECTOR initPos, int t, int s)
-	: Object2D(filename, initPos)
-	,mvDirection(VGet(-1.0f, 0.0f, 0.0f))   // 最初はX軸の右方向へ動くようにしておく
-	
+Enemy::Enemy(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool type)
+	: Object2D(filename, initPos, allNum, numX, numY, interval, scale, type)
+	, mvDirection(VGet(-1.0f, 0.0f, 0.0f))
 {
 	SetTag(Object2D::Enemy2D);
 
-	Settype(t);
-
-	SetEnemytype(s);
-
-	// Idle: 6 frame monster walk animation
 	mAnimController.RegisterAnimation(CharacterState::Idle,
-		new TextureAnimation(filename, initPos, 1, 1, 1, 10, 1.0f));
-	// Moving: same 6 frame animation
+		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale, type));
+	
 	mAnimController.RegisterAnimation(CharacterState::Moving,
-		new TextureAnimation(filename, initPos, 1, 1, 1, 10, 1.0f));
+		new TextureAnimation("Resource/Enemy/Monster_Walk.png", initPos, 6, 6, 1, 8, scale, type));
 
-	mAnimController.ChangeState(CharacterState::Moving);
+	// 攻撃中はコマ送りを2倍速にし、攻撃の激しさを視覚的に演出
+	mAnimController.RegisterAnimation(CharacterState::Attacking,
+		new TextureAnimation("Resource/Enemy/Monster_Walk.png", initPos, 6, 6, 1, 4, scale, type));
+
+	mAnimController.ChangeState(CharacterState::Idle);
 }
 
 
@@ -38,27 +36,34 @@ Enemy::~Enemy()
 
 void Enemy::Update()
 {
-
-	// 移動処理
 	Move();
-
 	Calcdamage();
 
-	if (IsScreenOut())
-	{
-		SetDeleteFlag(true);
-		
-		//Initialize();
-		
-	}
-
-	// 状態の判定（例として移動状態の切り替え）
 	if (mnHp <= 0) {
 		mAnimController.ChangeState(CharacterState::Dead);
-	} else if (mvDirection.x != 0.0f || mvDirection.y != 0.0f) {
-		mAnimController.ChangeState(CharacterState::Moving);
-	} else {
-		mAnimController.ChangeState(CharacterState::Idle);
+	} 
+	else {
+		auto pTarget = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
+		Player* pPlayer = dynamic_cast<Player*>(pTarget);
+		
+		if (pPlayer != nullptr) {
+			VECTOR diff = VSub(pPlayer->GetPosition(), mvPosition);
+			float distance = VSize(diff);
+
+			// プレイヤーとの距離関係に基づき、アニメーションステートを動的に制御
+			if (distance <= ATTACK_RANGE) {
+				mAnimController.ChangeState(CharacterState::Attacking);
+			}
+			else if (distance <= SEARCH_RANGE) {
+				mAnimController.ChangeState(CharacterState::Moving);
+			}
+			else {
+				mAnimController.ChangeState(CharacterState::Idle);
+			}
+		}
+		else {
+			mAnimController.ChangeState(CharacterState::Idle);
+		}
 	}
 	mAnimController.Update();
 
@@ -72,22 +77,45 @@ void Enemy::Draw()
 
 void Enemy::Move()
 {
-	switch (type)
-	{
-	case 1:time = 400; break;
-	case 2:time = 100; break;
-	case 3:time = 600; break;
-	case 4:time = 800; break;
-	}
+	auto pTarget = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
+	Player* pPlayer = dynamic_cast<Player*>(pTarget);
 
-	if (GetNowCount() - StartTime > time)
+	if (pPlayer != nullptr)
 	{
-		// mvDirection.x の方向へ進むようにする
-		mvPosition.x += (float)MOVE_SPEED * mvDirection.x;
-	}
+		VECTOR diff = VSub(pPlayer->GetPosition(), mvPosition);
+		float distance = VSize(diff);
 
-	// テクスチャに座標を伝える
-	mpTexture->SetPosition(mvPosition);
+		if (distance <= ATTACK_RANGE)
+		{
+			// 立ち止まって攻撃動作に専念させるため、移動成分をゼロにリセット
+			mvDirection.x = 0.0f;
+
+			// 被弾間隔を制限し、毎フレーム多重ヒットによる即死バグを防ぐタイマー制御
+			if (mnAttackCooldown > 0)
+			{
+				mnAttackCooldown--;
+			}
+			else
+			{
+				pPlayer->PDamage(1);
+				mnAttackCooldown = ATTACK_INTERVAL;
+			}
+		}
+		else if (distance <= SEARCH_RANGE)
+		{
+			// プレイヤーの居場所へ向けて追跡するための方向決定
+			mvDirection.x = (diff.x > 0.0f) ? 1.0f : -1.0f;
+			mvPosition.x += (float)MOVE_SPEED * mvDirection.x;
+			
+			// 接近した瞬間の一発目を即時被弾させず、プレイヤーがワイヤーで退避する隙を作る初期化
+			mnAttackCooldown = ATTACK_INTERVAL;
+		}
+		else
+		{
+			// 索敵範囲から外れた場合は進行を停止し、Idle状態で待機
+			mvDirection.x = 0.0f;
+		}
+	}
 }
 
 bool Enemy::IsScreenOut()
@@ -95,135 +123,23 @@ bool Enemy::IsScreenOut()
 	return(mvPosition.x + mpTexture->GetSizeX() / 2) < 0.0f;
 }
 
-
-
-//void Enemy::Initialize()
-//{
-//	int work = rand() % 8;
-//
-//
-//	switch (work)
-//	{
-//	case 0:
-//
-//		new Enemy(
-//			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
-//			"Resource/kusikatsu_gyu.png", 1,1
-//		);
-//		new Enemy(
-//			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
-//			"Resource/torimomoniku.png", 2, 1
-//		);
-//
-//		break;
-//		
-//	case 1:
-//		new Enemy(
-//			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
-//			"Resource/torimomoniku.png", 2,1
-//		);
-//		break;
-//
-//	case 2:
-//
-//		new Enemy(
-//			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
-//			"Resource/hamukatsu.png", 3,1
-//		);
-//		break;
-//
-//	case 3:
-//		new Enemy(
-//			VGet((float)Utility::SCREEN_WIDTH + 140.0f, GetRand(380), 0.0f),
-//			"Resource/Rebakatsu.png", 4,1
-//		);
-//		new Enemy(
-//			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
-//			"Resource/hamukatsu.png", 3, 1
-//		);
-//
-//		break;
-//
-//	case 4:
-//		// 串揚げ塩
-//		new Enemy(
-//			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
-//			"Resource/kusikatsu_ton.png", 1, 2
-//		);
-//
-//		break;
-//	case 5:
-//		// 串揚げ塩
-//		new Enemy(
-//			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
-//			"Resource/renkon.png", 2, 2
-//		);
-//		break;
-//	case 6:
-//		// 串揚げ塩
-//		new Enemy(
-//			VGet((float)Utility::SCREEN_WIDTH + 150.0f, GetRand(380), 0.0f),
-//			"Resource/torisasami.png", 3, 2
-//		);
-//		// 串揚げ塩
-//		new Enemy(
-//			VGet((float)Utility::SCREEN_WIDTH + 115.0f, GetRand(380), 0.0f),
-//			"Resource/kusikatsu_ton.png", 1, 2
-//		);
-//
-//		break;
-//	case 7:
-//		// 串揚げ塩
-//		new Enemy(
-//			VGet((float)Utility::SCREEN_WIDTH + 130.0f, GetRand(380), 0.0f),
-//			"Resource/tamanegi.png", 4, 2
-//		);
-//		break;
-//
-//
-//	}
-//
-//}
-
-
 void Enemy::ChangeDamage(int damage)
 {
 	mnHp -= damage;
-
 	if (mnHp <= 0)
 	{
 		SetDeleteFlag(true);
-
-
-		//auto pPlayer = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
-
-		//Player* cPlayer = dynamic_cast<Player*>(pPlayer);
-
-		//if (cPlayer != nullptr)
-		//{
-
-		//	if (enemytype == 1)
-		//	{
-		//		cPlayer->PDamage(1);
-		//	}
-
 	}
-
 }
-
-
 
 void Enemy::Calcdamage()
 {
 	auto pTarget = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
-
-
 	Player* pPlayer = dynamic_cast<Player*>(pTarget);
 
-
-	if (pPlayer != nullptr)     // dynamic_cast をした後は必ずnullチェックを行う
+	// 動的キャスト失敗時のnullptr参照によるプログラムクラッシュを防止する安全対策
+	if (pPlayer != nullptr)
 	{
-		// 当たり判定
 		if (Collision::CheckCircleToCircle(
 			mvPosition,
 			GetRadius(),
@@ -233,9 +149,7 @@ void Enemy::Calcdamage()
 		{
 			pPlayer->PDamage(1);
 		}
-
 	}
-
 }
 
 
