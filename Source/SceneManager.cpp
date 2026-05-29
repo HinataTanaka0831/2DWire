@@ -3,7 +3,6 @@
 #include "TitleScene.h"
 #include "GameScene.h"
 #include "ResultScene.h"
-#include "SelectScene.h"
 #include "GameRuleScene.h"
 #include "GameOverScene.h"
 
@@ -80,10 +79,6 @@ void SceneManager::ChangeSceneIfNeeded()
 
 	case SCENE_TYPE::SCENE_RESULT:
 		mpCurrentScene = new ResultScene();
-		break;
-
-	case SCENE_TYPE::SCENE_SELECT:
-		mpCurrentScene = new SelectScene();
 		break;
 
 	case SCENE_TYPE::SCENE_GAME_RULE:

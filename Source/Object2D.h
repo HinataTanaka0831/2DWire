@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "DxLib.h"
 #include <string>
@@ -45,7 +45,7 @@ public:
 	Object2D(std::string filename, VECTOR initPos);
 
 	// コンストラクタ（アニメーション用）
-	Object2D(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale = 1.0f);
+	Object2D(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale = 1.0f, bool type = true);
 
 	// デストラクタ
 	virtual ~Object2D();

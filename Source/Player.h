@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "DxLib.h"
 #include "TextureAnimation.h"
 #include "Object2D.h"
@@ -7,10 +7,10 @@
 
 class Player : public Object2D
 {
-private:  // Playerクラスで使用する定数の定義
-	static const int MOVE_SPEED = 5;    // 移動速度
-	static const int BULLET_MAX = 10;   // 弾の個数
-	static const int BULLET_SHOT_INTERVAL = 10;   // 弾を打てる間隔（単位：フレーム）
+private:
+	static const int MOVE_SPEED = 5;
+	static const int BULLET_MAX = 10;
+	static const int BULLET_SHOT_INTERVAL = 10;
 
 
 private:
@@ -19,56 +19,60 @@ private:
 	AnimationController mAnimController;
 
 public:
-	// コンストラクタ
-	Player(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale);
+	// アニメーション用リソースおよび初期ステータスを初期化
+	// 入力：filename（画像パス）, initPos（初期座標）, allNum（全フレーム数）, numX/numY（分割数）, interval（再生間隔）, scale（拡縮率）/ 副作用：初期状態アニメーションの登録
+	Player(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool type);
 
-	// デストラクタ
 	virtual ~Player();
 
-
-	// 更新
+	// 物理挙動、入力検知、HP表示制御など毎フレームの更新処理
+	// 副作用：位置座標や速度パラメータの更新、アニメーション状態の更新
 	void Update() override;
 
-	// 描画
+	// ワイヤーのライン描画、アニメーション、およびHPゲージをスクリーンに描画
 	void Draw() override;
 
-	// 移動処理
+	// 左右キーおよびマウスによるワイヤー振り子運動などの物理演算と状態遷移制御
+	// 副作用：移動速度、座標、ワイヤー状態、アニメーション状態を更新
 	void Move();
 
-	// HPゲージの描画
+	// キャラクターの頭上に現在HPを示すUIゲージを描画
 	void HPGaugeDraw();
 
-	// HPゲージの更新
+	// 被弾時にダメージ量を赤色ゲージとして滑らかに追従させる描画用の幅計算
+	// 副作用：演出用HP幅パラメータの更新
 	void HPGaugeUpdate();
 
-	// ダメージ処理
+	// 被弾によるHPの減算、およびHPゼロ時のゲームオーバー遷移トリガー
+	// 入力：damage（被弾ダメージ量） / 副作用：HP減算、およびゲームオーバーへのシーン遷移
 	void PDamage(int damage);
 
-	
-private:      // メンバ変数
-	// 弾撃ち間隔カウンター
+	float GetVelocityX() const { return mVelocityX; } 
+	float GetAngularAcceleration() const { return angularAcceleration; } 
+	bool IsWireActive() const { return mbIsWireActive; } 
+
+private:      
 	int mnBulletShotCounter;
 
-	// ワイヤーアクション用変数
-	bool mbIsWireActive = false;           // ワイヤー使用中か
-	VECTOR mvWireTargetPos;                // ワイヤーの支点座標
-	float mPendulumAngle = 0.0f;           // 振り子の角度
-	float mPendulumAngularVelocity = 0.0f; // 振り子の角速度
-	float mWireLength = 0.0f;              // ワイヤーの長さ
+	bool mbIsWireActive = false;           
+	VECTOR mvWireTargetPos;                
+	float mPendulumAngle = 0.0f;           
+	float mPendulumAngularVelocity = 0.0f; 
+	float mWireLength = 0.0f;              
 	
-	// 物理演算用変数
-	float mVelocityY = 0.0f;               // 縦方向の速度
-	float mVelocityX = 0.0f;               // 横方向の速度
-	static constexpr float GRAVITY = 0.5f; // 重力加速度
+	float mVelocityY = 0.0f;               
+	float mVelocityX = 0.0f;               
+	float angularAcceleration = 0.0f;		       
+	static constexpr float GRAVITY = 0.5f; 
 
-	// HP関連の変数
-	int Hp = 100;  // HP
-	int maxHp = 100; // 最大HP
-	int width = 250; // プレイヤーの幅
-	int gaugeWidth = 0; // HPゲージの幅
-	int gaugeHeight = 20; // HPゲージの高さ
-	int damageWidth = 0; // ダメージ表示の幅
-	int minWidth = 5; // HPゲージの最小幅
-	int displayDamage; // HPゲージでダメージを受けた表示位置
-	const float gaugeSpeed = 1.0f; // HPゲージの表示位置が変化する速度
+	int Hp = 100;  
+	int maxHp = 100; 
+	int width = 250; 
+	int gaugeWidth = 0; 
+	int gaugeHeight = 20; 
+	int damageWidth = 0; 
+	int minWidth = 5; 
+	int displayDamage; 
+	int Timer = 0;
+	const float Gauge_Frame = 0.5; 
 };

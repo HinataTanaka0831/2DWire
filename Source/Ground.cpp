@@ -1,4 +1,4 @@
-#include "Ground.h"
+﻿#include "Ground.h"
 #include "Utility.h"
 
 Ground::Ground(std::string filename, VECTOR initPos, int width, int height)
