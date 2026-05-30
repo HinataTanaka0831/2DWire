@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "DxLib.h"
 #include "Texture.h"
 #include <string>
@@ -11,52 +11,56 @@
 class Enemy : public Object2D
 {
 private:
-	// 敵の状態を管理するアニメーションコントローラー
 	AnimationController mAnimController;
 
 public:
-	// コンストラクタ
-	Enemy(std::string filename, VECTOR initPos, int t,int s);
+	// 敵キャラクターのアニメーションおよびステータスを初期化
+	// 入力：filename（画像パス）, initPos（初期座標）, allNum/numX/numY（画像分割情報）, interval（アニメーション間隔）, scale（描画倍率）, type（反転有無） / 副作用：Idle/Moving/Attacking アニメーションの登録
+	Enemy(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool type);
 
-	//デストラクタ
 	virtual ~Enemy();
 
-	// 更新
+	// 毎フレームのAI思考（追跡・攻撃判断）および物理座標とアニメーションの更新処理
+	// 副作用：位置座標（mvPosition）、移動方向（mvDirection）、アニメーション状態、HP等の更新
 	void Update() override;
 
-	// 描画
+	// アニメーションコントローラーを呼び出し、カメラオフセットを考慮した画面上の位置に描画
 	void Draw() override;
 
-	// 移動処理
+	// プレイヤーとの距離に応じて、巡回・追跡・攻撃のAI意思決定および移動処理を実行
+	// 副作用：mvPosition、mvDirection、mnAttackCooldown の更新
 	void Move();
 
-	// 画面外に出たら
+	// 画面の左端から完全にはみ出したかを判定
+	// 出力：画面外に出た場合は true
 	bool IsScreenOut();
 
-	//// 初期化
 	void Initialize();
 
-	// ダメージ処理
+	// 被弾によるHP減算、およびHPゼロ時のオブジェクト消滅フラグの設定
+	// 入力：damage（被弾ダメージ量） / 副作用：mnHpの減算およびdeleteFlagの設定
 	void ChangeDamage(int damage);
-	//void ChangeDamage2(int damage);
 
+	// プレイヤーとの衝突判定を行い、接触時にプレイヤーへ被弾ダメージを適用する処理
+	// 副作用：接触したプレイヤーのHPを減算
 	void Calcdamage();
 
-
-	void Settype(int a) { type = a; }
-
-	void SetEnemytype(int set) { enemytype = set; }
-	int GetEnemytype() { return enemytype; }
+	VECTOR GetDirection() const { return mvDirection; }
 
 private:
-	VECTOR mvDirection;  // 移動方向
-	int StartTime = GetNowCount();  // 時間指定
-	static const int MOVE_SPEED = 5;
+	VECTOR mvDirection;  
+	int StartTime = GetNowCount();  
+	static const int MOVE_SPEED = 3; // プレイヤーの移動速度（5）に対して、ゲームバランス上追跡を可能にするため適度に遅い速度（3）に調整
 	int time = 0;
 	int type;
-	int mnHp = 6;  // HP(Enemyでしか使用しない変数)
-	int enemytype;
+	int mnHp = 6;  
 
+	// AI意思決定用のパラメータ定数
+	static constexpr float SEARCH_RANGE = 500.0f; // プレイヤーを検知して追跡を開始するワールド座標系での閾値
+	static constexpr float ATTACK_RANGE = 100.0f;  // 攻撃アニメーションに切り替え、定期ダメージ判定を行う距離
+	static constexpr int ATTACK_INTERVAL = 60;     // 攻撃が毎フレーム多重ヒットしてプレイヤーが瞬殺されるバグを防ぐためのクールダウン時間
+
+	int mnAttackCooldown = 0; // 攻撃の実行周期を制御するクールダウンカウンター
 };
 
 
