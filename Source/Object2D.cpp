@@ -1,4 +1,4 @@
-#include "Object2D.h"
+﻿#include "Object2D.h"
 #include "Texture.h"
 #include "TextureAnimation.h"
 #include "Master.h"
@@ -22,7 +22,7 @@ Object2D::Object2D(std::string filename, VECTOR initPos)
 }
 
 // コンストラクタ（アニメーション用）
-Object2D::Object2D(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale)
+Object2D::Object2D(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool type)
 	: mvPosition(initPos)
 	, mbDeleteFlag(false)
 	, mpTexture(nullptr)
@@ -31,12 +31,7 @@ Object2D::Object2D(std::string filename, VECTOR initPos, int allNum, int numX, i
 	Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->AddObject(this);
 
 	// 画像生成
-	mpTextureAnimation = new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale);
-
-	if (mpTextureAnimation != nullptr)
-	{
-		mpTextureAnimation->SetScale(scale);
-	}
+	mpTextureAnimation = new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale, type);
 
 }
 
@@ -110,19 +105,28 @@ void Object2D::Reset()
 // 半径の取得
 float Object2D::GetRadius()
 {
-      return mpTexture->GetRadius();
+	if (mpTexture != nullptr)
+	{
+		return mpTexture->GetRadius();
+	}
+
+	if (mpTextureAnimation != nullptr)
+	{
+		return mpTextureAnimation->GetRadius();
+	}
+
+	return 0.0f;
 }
 
-// 画像の幅サイズを取得
 int Object2D::GetSizeX()
 {
-	if (mpTexture) return mpTexture->GetSizeX();
+	if (mpTexture != nullptr) return mpTexture->GetSizeX();
 	return 0;
 }
 
 // 画像の横サイズを取得
 int Object2D::GetSizeY()
 {
-	if (mpTexture) return mpTexture->GetSizeY();
+	if (mpTexture != nullptr) return mpTexture->GetSizeY();
 	return 0;
 }

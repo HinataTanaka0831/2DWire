@@ -1,4 +1,4 @@
-#include "Texture.h"
+﻿#include "Texture.h"
 #include "DxLib.h"
 
 Texture::Texture(std::string filename, VECTOR centerPosition, int transFlag)

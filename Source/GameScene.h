@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Scene.h"
 
@@ -25,7 +25,6 @@ public:
 
 private:
 	Player* mpPlayer;
-	char font[32];
 	
 	// 背景画像用ハンドル
 	int mBgNightHandle;
