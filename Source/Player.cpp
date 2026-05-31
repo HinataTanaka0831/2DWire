@@ -1,4 +1,4 @@
-﻿#include "Player.h"
+#include "Player.h"
 #include "Collision.h"
 #include "HomingBullet.h"
 #include "Bullet.h"
@@ -8,7 +8,8 @@
 #include "GameScene.h"
 #include "Utility.h"
 #include <cmath>
-
+#include "InputManager.h"
+#include "Enemy.h"
 
 
 Player::Player(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool type)
@@ -21,6 +22,8 @@ Player::Player(std::string filename, VECTOR initPos, int allNum, int numX, int n
 		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale, type));
 	mAnimController.RegisterAnimation(CharacterState::Moving,
 		new TextureAnimation("Resource/Player/Player_Walk.png", initPos, 4, 4, 1, 8, 1.0f, type));
+	mAnimController.RegisterAnimation(CharacterState::Attacking,
+		new TextureAnimation("Resource/Player/Player_Attack.png", initPos, 9, 3, 3, 7, 1.0f, type));
 
 	mAnimController.ChangeState(CharacterState::Idle);
 }
@@ -34,6 +37,31 @@ void Player::Update()
 {
 	HPGaugeUpdate();
 	Move();
+
+	if (mnAttackTimer > 0)
+	{
+		mnAttackTimer--;
+		if (mnAttackTimer <= 0)
+		{
+			mbIsAttack = false;
+		}
+	}
+
+	if (Hp <= 0) {
+		mAnimController.ChangeState(CharacterState::Dead);
+	}
+	else if (mbIsAttack)
+	{
+		mAnimController.ChangeState(CharacterState::Attacking);
+	}
+	else if (std::abs(mVelocityX) > 0.5f || mbIsWireActive) {
+		mAnimController.ChangeState(CharacterState::Moving);
+	}
+	else {
+		mAnimController.ChangeState(CharacterState::Idle);
+	}
+	mAnimController.Update();
+
 	Object2D::Update();
 }
 
@@ -154,10 +182,33 @@ void Player::Move()
 
 		if (CheckHitKey(KEY_INPUT_SPACE))
 		{
-			// 空中での多段ジャンプを防止するため、暫定の設置ライン（Y=850以上）にいる場合のみジャンプを許容
-			if (mvPosition.y >= 850.0f) 
+			// 空中での多段ジャンプを防止するため、暫定の設置ライン（Y=1000以上）にいる場合のみジャンプを許容
+			if (mvPosition.y >= 1000.0f) 
 			{
 				mVelocityY = -10.0f; 
+			}
+		}
+
+		if (InputManager::CheckDownKey(KEY_INPUT_F))
+		{
+			mbIsAttack = true;
+			mnAttackTimer = 63; // 9 frames * 7 interval = 63 frames
+
+			auto pObj = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Enemy2D);
+			Enemy* pEnemy = dynamic_cast<Enemy*>(pObj);
+
+			if (pEnemy != nullptr)
+			{
+				if (Collision::CheckCircleToCircle(
+					mvPosition,
+					GetRadius(),
+					pEnemy->GetPosition(),
+					pEnemy->GetRadius()
+				))
+				{
+					pEnemy->EDamage(1);
+				}
+
 			}
 		}
 
@@ -188,22 +239,12 @@ void Player::Move()
 		}
 	}
 
-	if (Hp <= 0) {
-		mAnimController.ChangeState(CharacterState::Dead);
-	}
-	else if (std::abs(mVelocityX) > 0.5f || mbIsWireActive) {
-		mAnimController.ChangeState(CharacterState::Moving);
-	}
-	else {
-		mAnimController.ChangeState(CharacterState::Idle);
-	}
-	mAnimController.Update();
 }
 
 void Player::HPGaugeDraw()
 {
-	int gaugeX = (int)(mvPosition.x - gCameraX) - 120;
-	int gaugeY = (int)(mvPosition.y - gCameraY) - 80;
+	int gaugeX = (int)(mvPosition.x - gCameraX) - 110;
+	int gaugeY = (int)(mvPosition.y - gCameraY) - 160;
 
 	DrawBox(gaugeX, gaugeY, gaugeX + width, gaugeY + gaugeHeight, GetColor(0, 0, 0), TRUE);
 	DrawBox(gaugeX, gaugeY, gaugeX + damageWidth, gaugeY + gaugeHeight, GetColor(255, 0, 0), TRUE);

@@ -30,7 +30,6 @@ public:
 	virtual void Finalize() = 0;
 
 
-
 	// オブジェクトマネージャーの取得
 	ObjectManager* GetObjectManager() { return mpObjectManager; }
 
@@ -40,5 +39,4 @@ protected:
 
 private:
 	ObjectManager* mpObjectManager;        // オブジェクト管理クラスのポインタ
-
 };
