@@ -40,4 +40,3 @@ void Scene::Draw()
 
 }
 
-

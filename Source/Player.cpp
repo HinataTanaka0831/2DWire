@@ -21,6 +21,8 @@ Player::Player(std::string filename, VECTOR initPos, int allNum, int numX, int n
 		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale, type));
 	mAnimController.RegisterAnimation(CharacterState::Moving,
 		new TextureAnimation("Resource/Player/Player_Walk.png", initPos, 4, 4, 1, 8, 1.0f, type));
+	//mAnimController.RegisterAnimation(CharacterState::Attacking,
+	//	new TextureAnimation("Resource/Player/Player_Attack.png", initPos, ))
 
 	mAnimController.ChangeState(CharacterState::Idle);
 }
@@ -34,6 +36,18 @@ void Player::Update()
 {
 	HPGaugeUpdate();
 	Move();
+
+	if (Hp <= 0) {
+		mAnimController.ChangeState(CharacterState::Dead);
+	}
+	else if (std::abs(mVelocityX) > 0.5f || mbIsWireActive) {
+		mAnimController.ChangeState(CharacterState::Moving);
+	}
+	else {
+		mAnimController.ChangeState(CharacterState::Idle);
+	}
+	mAnimController.Update();
+
 	Object2D::Update();
 }
 
@@ -154,8 +168,8 @@ void Player::Move()
 
 		if (CheckHitKey(KEY_INPUT_SPACE))
 		{
-			// 空中での多段ジャンプを防止するため、暫定の設置ライン（Y=850以上）にいる場合のみジャンプを許容
-			if (mvPosition.y >= 850.0f) 
+			// 空中での多段ジャンプを防止するため、暫定の設置ライン（Y=1000以上）にいる場合のみジャンプを許容
+			if (mvPosition.y >= 1000.0f) 
 			{
 				mVelocityY = -10.0f; 
 			}
@@ -188,16 +202,6 @@ void Player::Move()
 		}
 	}
 
-	if (Hp <= 0) {
-		mAnimController.ChangeState(CharacterState::Dead);
-	}
-	else if (std::abs(mVelocityX) > 0.5f || mbIsWireActive) {
-		mAnimController.ChangeState(CharacterState::Moving);
-	}
-	else {
-		mAnimController.ChangeState(CharacterState::Idle);
-	}
-	mAnimController.Update();
 }
 
 void Player::HPGaugeDraw()
