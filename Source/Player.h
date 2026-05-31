@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "DxLib.h"
 #include "TextureAnimation.h"
 #include "Object2D.h"
@@ -74,5 +74,9 @@ private:
 	int minWidth = 5; 
 	int displayDamage; 
 	int Timer = 0;
-	const float Gauge_Frame = 0.5; 
+	const float Gauge_Frame = 3.0f; 
+
+	bool mbIsAttack = false;
+	int mnAttackTimer = 0;
 };
+

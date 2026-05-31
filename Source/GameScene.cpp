@@ -43,7 +43,15 @@ void GameScene::Initialize()
 	mpPlayer = new Player("Resource/Player/Player_Idle.png", VGet((float)Utility::SCREEN_WIDTH / 2, 1000.0f, 0.0f), 3, 3, 1, 20, 1.0f, true);
 
 	// 敵の生成
-	new Enemy("Resource/Enemy/Monster_Fly.png", VGet((float)Utility::SCREEN_WIDTH * 2, 1000.0f, 0.0f), 3, 3, 1, 8, 1.0f, false);
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet((float)Utility::SCREEN_WIDTH * 2, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet((float)Utility::SCREEN_WIDTH / 6, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet((float)Utility::SCREEN_WIDTH * 3, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet((float)Utility::SCREEN_WIDTH / 9, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet((float)Utility::SCREEN_WIDTH / 10, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
 
 }
 

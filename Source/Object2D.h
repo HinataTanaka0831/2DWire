@@ -28,7 +28,6 @@ public:     // enum, struct, 定数の定義
 		// Gameシーンで使われるタグ（2000～）
 		Player2D = 2000,
 		Enemy2D = 2100,
-		Enemy22D = 2101,
 		BossEnemy2D = 2200,
 		Bullet2D = 2200,
 		HomingBullet2D = 2201,

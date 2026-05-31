@@ -52,9 +52,6 @@ public:
 	void DrawTransitionEffects();
 
 	Scene* GetCurrentScene() { return mpCurrentScene; }
-	bool GetIsTransition() const { return mIsTransition; }
-	int GetTransTimer() const { return mTransitionTimer; }
-	const int GetTRANSITION_TIME() const { return TRANSITION_TIME; }
 
 private:
 	SCENE_TYPE mnSceneType;

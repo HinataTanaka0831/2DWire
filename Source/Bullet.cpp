@@ -101,7 +101,6 @@ void Bullet::CalcCollision()
 				{
 
 					
-					pEnemy->ChangeDamage(1);
 					
 
 				}
