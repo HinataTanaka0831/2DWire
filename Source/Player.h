@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 #include "DxLib.h"
 #include "TextureAnimation.h"
 #include "Object2D.h"
@@ -23,7 +23,7 @@ public:
 	// 入力：filename（画像パス）, initPos（初期座標）, allNum（全フレーム数）, numX/numY（分割数）, interval（再生間隔）, scale（拡縮率）/ 副作用：初期状態アニメーションの登録
 	Player(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool type);
 
-	virtual ~Player();
+	~Player();
 
 	// 物理挙動、入力検知、HP表示制御など毎フレームの更新処理
 	// 副作用：位置座標や速度パラメータの更新、アニメーション状態の更新
@@ -74,5 +74,9 @@ private:
 	int minWidth = 5; 
 	int displayDamage; 
 	int Timer = 0;
-	const float Gauge_Frame = 0.5; 
+	const float Gauge_Frame = 3.0f; 
+
+	bool mbIsAttack = false;
+	int mnAttackTimer = 0;
 };
+

@@ -12,6 +12,7 @@
 Enemy::Enemy(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool type)
 	: Object2D(filename, initPos, allNum, numX, numY, interval, scale, type)
 	, mvDirection(VGet(-1.0f, 0.0f, 0.0f))
+	, displayDamage(maxHp)
 {
 	SetTag(Object2D::Enemy2D);
 
@@ -123,7 +124,7 @@ bool Enemy::IsScreenOut()
 	return(mvPosition.x + mpTexture->GetSizeX() / 2) < 0.0f;
 }
 
-void Enemy::ChangeDamage(int damage)
+void Enemy::EDamage(int damage)
 {
 	mnHp -= damage;
 	if (mnHp <= 0)
@@ -153,6 +154,59 @@ void Enemy::Calcdamage()
 }
 
 
+void Enemy::HPGaugeDraw()
+{
+	int gaugeX = (int)(mvPosition.x - gCameraX) - 110;
+	int gaugeY = (int)(mvPosition.y - gCameraY) - 160;
+
+	DrawBox(gaugeX, gaugeY, gaugeX + width, gaugeY + gaugeHeight, GetColor(0, 0, 0), TRUE);
+	DrawBox(gaugeX, gaugeY, gaugeX + damageWidth, gaugeY + gaugeHeight, GetColor(255, 0, 0), TRUE);
+	DrawBox(gaugeX, gaugeY, gaugeX + gaugeWidth, gaugeY + gaugeHeight, GetColor(51, 204, 51), TRUE);
+	DrawBox(gaugeX, gaugeY, gaugeX + width, gaugeY + gaugeHeight, GetColor(255, 255, 255), FALSE);
+}
+
+void Enemy::HPGaugeUpdate()
+{
+	Timer++;
+
+	if (Timer >= Gauge_Frame)
+	{
+
+		if (displayDamage > Hp)
+		{
+
+			// 被弾演出としてダメージ分の赤ゲージを滑らかに追従させ、被弾の実感を与える
+			displayDamage--;
+
+			if (displayDamage < Hp)
+			{
+				displayDamage = Hp;
+
+			}
+
+		}
+
+		Timer = 0;
+
+	}
+
+
+	int display = displayDamage;
+	// 描画サイズがマイナス値になることでゲージの描画が反転・破綻するのを防ぐ防御処理
+	if (display < 0 && display > minWidth)
+	{
+		display = minWidth;
+	}
+
+	int displayHp = Hp;
+	if (displayHp < 0 && displayHp > minWidth)
+	{
+		displayHp = minWidth;
+	}
+
+	damageWidth = (int)((float)display / maxHp * width);
+	gaugeWidth = (int)((float)displayHp / maxHp * width);
+}
 
 
 

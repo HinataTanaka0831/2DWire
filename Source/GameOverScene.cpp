@@ -45,8 +45,6 @@ void GameOverScene::Draw()
 {
 	// 背景の表示
 	DrawGraph(0, 0, grHandle, false);
-	// 四角形の表示
-	DrawBox(Utility::SCREEN_WIDTH / 2 - 150, 50, Utility::SCREEN_WIDTH / 2 + 150, 200, GetColor(255, 255, 255), false);
 	// 文字のフォントサイズ変更
 	SetFontSize(50);
 	// 文字列の表示
@@ -55,7 +53,7 @@ void GameOverScene::Draw()
 
 	SetFontSize(20);
 
-	DrawString(Utility::SCREEN_WIDTH / 2 - 120, 300, "　ENTER: タイトルへ　", GetColor(255, 255, 255));
+	DrawString(Utility::SCREEN_WIDTH / 2 - 120, 600, "　ENTER: タイトルへ　", GetColor(255, 255, 255));
 
 
 
@@ -69,3 +67,4 @@ void GameOverScene::Finalize()
 {
 
 }
+

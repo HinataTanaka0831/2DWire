@@ -8,15 +8,15 @@ class GameOverScene : public Scene
 
 public:
 	GameOverScene();
-	virtual ~GameOverScene();
+	~GameOverScene();
 
 	// ‰Šú‰»
-	virtual void Initialize() override;
+	void Initialize() override;
 	// XV
-	virtual void Update() override;
+	void Update() override;
 	// •`‰æ
-	virtual void Draw() override;
+	void Draw() override;
 	// I—¹ˆ—
-	virtual void Finalize() override;
+	void Finalize() override;
 
 };

@@ -17,32 +17,41 @@ float gCameraY = 0.0f;
 
 GameScene::GameScene()
 	: Scene()     // 基底クラスのコンストラクタを呼び出す
+	, mBgNightHandle(-1)
+	, mpPlayer(nullptr)
 {
 
 }
 
 GameScene::~GameScene()
 {
-	// 背景の削除
-	DeleteGraph(mBgNightHandle);
+
 }
 
 void GameScene::Initialize()
 {
+
 	// 背景の読み込み
-	mBgNightHandle = LoadGraph("Resource/BackGround/bg_night.png");
+	if (mBgNightHandle == -1) mBgNightHandle = LoadGraph("Resource/BackGround/bg_night.png");
 
 	// マップの読み込み
 	Map* map = new Map();
 	map->LoadStage(1);
 	delete map; // 初期化だけなので即破棄するか、メンバ変数に持つかは自由。ここでは配置だけ行う。
 
-
 	// プレイヤーの生成
 	mpPlayer = new Player("Resource/Player/Player_Idle.png", VGet((float)Utility::SCREEN_WIDTH / 2, 1000.0f, 0.0f), 3, 3, 1, 20, 1.0f, true);
 
 	// 敵の生成
-	new Enemy("Resource/Enemy/Monster_Fly.png", VGet((float)Utility::SCREEN_WIDTH * 2, 1000.0f, 0.0f), 3, 3, 1, 8, 1.0f, false);
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet((float)Utility::SCREEN_WIDTH * 2, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet((float)Utility::SCREEN_WIDTH / 6, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet((float)Utility::SCREEN_WIDTH * 3, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet((float)Utility::SCREEN_WIDTH / 9, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet((float)Utility::SCREEN_WIDTH / 10, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
 
 }
 
@@ -140,9 +149,12 @@ void GameScene::Draw()
 
 void GameScene::Finalize()
 {
+	if (mBgNightHandle != -1)
+	{
+		// 背景の削除
+		DeleteGraph(mBgNightHandle);
+		mBgNightHandle = -1;
+	}
 
 }
-
-
-
 
