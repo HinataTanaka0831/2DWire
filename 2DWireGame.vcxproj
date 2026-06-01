@@ -135,7 +135,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\BossEnemycpp.cpp" />
     <ClCompile Include="Source\AnimationController.cpp" />
     <ClCompile Include="Source\Bullet.cpp" />
     <ClCompile Include="Source\Collision.cpp" />
@@ -163,7 +162,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AnimationController.h" />
-    <ClInclude Include="Source\BossEnemy.h" />
     <ClInclude Include="Source\Bullet.h" />
     <ClInclude Include="Source\Collision.h" />
     <ClInclude Include="Source\Enemy.h" />
