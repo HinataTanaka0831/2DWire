@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "DxLib.h"
 #include "TextureAnimation.h"
 #include "Object2D.h"
@@ -21,7 +21,7 @@ private:
 public:
 	// アニメーション用リソースおよび初期ステータスを初期化
 	// 入力：filename（画像パス）, initPos（初期座標）, allNum（全フレーム数）, numX/numY（分割数）, interval（再生間隔）, scale（拡縮率）/ 副作用：初期状態アニメーションの登録
-	Player(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool type);
+	Player(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scalse, bool type);
 
 	~Player();
 

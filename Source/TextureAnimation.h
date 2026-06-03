@@ -1,63 +1,56 @@
-﻿#pragma once
+#pragma once
+#pragma once
 #include "DxLib.h"
 #include <string>
 
 class TextureAnimation
 {
 public:
-	// スプライトシート画像を分割ロードし、アニメーション用リソースを初期化
-	// 入力：filename（画像パス）, initPos（初期座標）, allNum（全フレーム数）, NumX/NumY（分割コマ数）, interval（更新間隔）, scale（拡縮率） / 副作用：mnHandleListのメモリ確保
-	TextureAnimation(
-		std::string filename,
-		VECTOR initPos,
-		int allNum,
-		int NumX,
-		int NumY,
-		int interval,
-		float scale = 1.0f,
-		bool type = true
-	);  
-	// 確保した画像ハンドルリストのメモリ領域を破棄
-	// 副作用：mnHandleListのメモリ解放
-	~TextureAnimation(); 
+    // Initialize animation by loading sprite sheet and splitting frames
+    TextureAnimation(
+        std::string filename,
+        VECTOR initPos,
+        int allNum,
+        int NumX,
+        int NumY,
+        int interval,
+        float scale = 1.0f,
+        bool type = true
+    );
 
-	// プレイヤーの移動向きを監視し、スプライトの左右反転フラグとアニメーションコマを更新
-	// 副作用：反転フラグおよびアニメーションカウンタを更新
-	void Update();  
+    // Destructor releases allocated handles
+    ~TextureAnimation();
 
-	// カメラのスクロール座標を減算したスクリーン座標で、反転設定を反映して描画
-	// 入力：cameraX, cameraY（カメラのワールド座標）
-	void Draw(float cameraX = 0.0f, float cameraY = 0.0f);   
+    // Set enemy flip flag (used for enemy animations)
+    void SetReverse(bool rev) { mbEnemyReverseX = rev;}
 
-	// アニメーションを最初のフレームに戻し、再生をリスタート
-	// 副作用：再生フレームの初期化
-	void Reset(); 
-	void SetPosition(VECTOR pos) { mvPosition = pos; } 
+    // Update animation state and player/enemy flip flags
+    void Update();
 
-	int GetSizeX() { return mnSizeX; }    
-	int GetSizeY() { return mnSizeY; }    
+    // Draw current frame with optional horizontal flip
+    void Draw(float cameraX, float cameraY);
 
-	float GetRadius() { return mfRadius; }    
+    // Reset animation to first frame
+    void Reset();
 
-	void SetScale(float scale) { mnScale = scale; }    
-	float GetScale() { return mnScale; }    
+    // Position setter
+    void SetPosition(const VECTOR& pos) { mvPosition = pos; }
 
-	// アニメーションを1度だけ
-	int IsEnd() { return mnCurrentNum >= mnAllNum - 1; }
+    float GetRadius() { return mfRadius; }
 
-private:
-	VECTOR mvPosition;  
-	int mnCounter;      
-	int mnInterval;     
-	int mnCurrentNum;   
-	int* mnHandleList;  
-	int mnAllNum;       
-	int mnSizeX;       
-	int mnSizeY;       
-	float mfRadius = 60.0f;
-	float mnScale;     
-	bool mbPlayerReverseX;    
-	bool mbEnemyReverseX;
-	bool mbType;
-  
+    // Member variables
+    VECTOR mvPosition;
+    int mnCounter = 0;
+    int mnInterval;
+    int mnCurrentNum = 0;
+    int* mnHandleList = nullptr;
+    int mnAllNum;
+    int mnSizeX;
+    int mnSizeY;
+    float mfRadius = 60.0f;
+    float mnScale;
+    bool mbPlayerReverseX = false;
+    bool mbEnemyReverseX = false;
+    bool mbType;
+
 };

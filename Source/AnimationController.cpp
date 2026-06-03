@@ -34,12 +34,21 @@ void AnimationController::ChangeState(CharacterState newState)
     }
 }
 
+void AnimationController::SetEnemyReverse(bool rev)
+{
+    // Apply reverse flag to the currently active animation (if any)
+    if (mAnimations.count(mCurrentState)) {
+        mAnimations[mCurrentState]->SetReverse(rev);
+    }
+}
+
 void AnimationController::Update()
 {
     if (mAnimations.count(mCurrentState)) {
         mAnimations[mCurrentState]->Update();
     }
 }
+
 
 void AnimationController::Draw(float x, float y, float cameraX, float cameraY)
 {

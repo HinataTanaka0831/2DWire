@@ -41,19 +41,16 @@ void GameScene::Initialize()
 	delete map; // 初期化だけなので即破棄するか、メンバ変数に持つかは自由。ここでは配置だけ行う。
 
 	// プレイヤーの生成
-	mpPlayer = new Player("Resource/Player/Player_Idle.png", VGet((float)Utility::SCREEN_WIDTH / 2, 1000.0f, 0.0f), 3, 3, 1, 20, 1.0f, true);
+	mpPlayer = new Player("Resource/Player/Player_Idle.png", VGet(300.0f, 1000.0f, 0.0f), 3, 3, 1, 20, 1.0f, true);
 
-	// 敵の生成
-	new Enemy("Resource/Enemy/Monster_Idle.png", VGet((float)Utility::SCREEN_WIDTH * 2, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-
-	new Enemy("Resource/Enemy/Monster_Idle.png", VGet((float)Utility::SCREEN_WIDTH / 6, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-
-	new Enemy("Resource/Enemy/Monster_Idle.png", VGet((float)Utility::SCREEN_WIDTH * 3, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-
-	new Enemy("Resource/Enemy/Monster_Idle.png", VGet((float)Utility::SCREEN_WIDTH / 9, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-
-	new Enemy("Resource/Enemy/Monster_Idle.png", VGet((float)Utility::SCREEN_WIDTH / 10, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-
+	// 敵の生成 (プレイヤー進行ルートに沿って戦略的かつ段階的に配置)
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet(1000.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet(1800.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet(2500.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet(3300.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet(4100.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet(4800.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+	new Enemy("Resource/Enemy/Monster_Idle.png", VGet(5400.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
 }
 
 void GameScene::Update()

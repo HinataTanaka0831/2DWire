@@ -6,7 +6,8 @@
 #include "Collision.h"
 #include "Player.h"
 
-
+static bool gCurrentEnemyFlip = false;
+extern bool gEnemyReverseX; // Global flag for enemy flip direction
 
 
 Enemy::Enemy(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool type)
@@ -17,14 +18,14 @@ Enemy::Enemy(std::string filename, VECTOR initPos, int allNum, int numX, int num
 	SetTag(Object2D::Enemy2D);
 
 	mAnimController.RegisterAnimation(CharacterState::Idle,
-		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale, type));
+		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale));
 	
 	mAnimController.RegisterAnimation(CharacterState::Moving,
-		new TextureAnimation("Resource/Enemy/Monster_Walk.png", initPos, 6, 6, 1, 8, scale, type));
+		new TextureAnimation("Resource/Enemy/Monster_Walk.png", initPos, 6, 6, 1, 8, scale));
 
 	// 攻撃中はコマ送りを2倍速にし、攻撃の激しさを視覚的に演出
 	mAnimController.RegisterAnimation(CharacterState::Attacking,
-		new TextureAnimation("Resource/Enemy/Monster_Walk.png", initPos, 6, 6, 1, 4, scale, type));
+		new TextureAnimation("Resource/Enemy/Monster_Walk.png", initPos, 6, 6, 1, 4, scale));
 
 	mAnimController.ChangeState(CharacterState::Idle);
 }
@@ -37,6 +38,11 @@ Enemy::~Enemy()
 
 void Enemy::Update()
 {
+	if (mnAttackCooldown > 0)
+	{
+		mnAttackCooldown--;
+	}
+
 	Move();
 	Calcdamage();
 
@@ -91,14 +97,9 @@ void Enemy::Move()
 			// 立ち止まって攻撃動作に専念させるため、移動成分をゼロにリセット
 			mvDirection.x = 0.0f;
 
-			// 被弾間隔を制限し、毎フレーム多重ヒットによる即死バグを防ぐタイマー制御
-			if (mnAttackCooldown > 0)
+			if (mnAttackCooldown <= 0)
 			{
-				mnAttackCooldown--;
-			}
-			else
-			{
-				pPlayer->PDamage(1);
+				pPlayer->PDamage(5); // 1ヒットあたり5ダメージ与える (最大10回耐えられる)
 				mnAttackCooldown = ATTACK_INTERVAL;
 			}
 		}
@@ -108,13 +109,23 @@ void Enemy::Move()
 			mvDirection.x = (diff.x > 0.0f) ? 1.0f : -1.0f;
 			mvPosition.x += (float)MOVE_SPEED * mvDirection.x;
 			
+			// Update global flip flag based on current movement direction
+			gEnemyReverseX = (mvDirection.x > 0.0f);
+			mAnimController.SetEnemyReverse(gEnemyReverseX);
+
 			// 接近した瞬間の一発目を即時被弾させず、プレイヤーがワイヤーで退避する隙を作る初期化
-			mnAttackCooldown = ATTACK_INTERVAL;
+			if (mnAttackCooldown <= 0)
+			{
+				mnAttackCooldown = ATTACK_INTERVAL;
+			}
 		}
 		else
 		{
 			// 索敵範囲から外れた場合は進行を停止し、Idle状態で待機
 			mvDirection.x = 0.0f;
+			// Enemy is idle; ensure flip flag reflects no movement (default to false)
+			gEnemyReverseX = false;
+			mAnimController.SetEnemyReverse(gEnemyReverseX);
 		}
 	}
 }
@@ -148,7 +159,11 @@ void Enemy::Calcdamage()
 			pPlayer->GetRadius())
 			)
 		{
-			pPlayer->PDamage(1);
+			if (mnAttackCooldown <= 0)
+			{
+				pPlayer->PDamage(5); // 円衝突時も10ダメージ与える
+				mnAttackCooldown = ATTACK_INTERVAL;
+			}
 		}
 	}
 }
