@@ -1,4 +1,4 @@
-#include "Player.h"
+﻿#include "Player.h"
 #include "Collision.h"
 #include "HomingBullet.h"
 #include "Bullet.h"
@@ -19,11 +19,11 @@ Player::Player(std::string filename, VECTOR initPos, int allNum, int numX, int n
 	SetTag(Object2D::Player2D);
 
 	mAnimController.RegisterAnimation(CharacterState::Idle,
-		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale, type));
+		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale));
 	mAnimController.RegisterAnimation(CharacterState::Moving,
-		new TextureAnimation("Resource/Player/Player_Walk.png", initPos, 4, 4, 1, 8, 1.0f, type));
+		new TextureAnimation("Resource/Player/Player_Walk.png", initPos, 4, 4, 1, 8, 1.0f));
 	mAnimController.RegisterAnimation(CharacterState::Attacking,
-		new TextureAnimation("Resource/Player/Player_Attack.png", initPos, 9, 3, 3, 7, 1.0f, type));
+		new TextureAnimation("Resource/Player/Player_Attack.png", initPos, 9, 3, 3, 7, 1.0f));
 
 	mAnimController.ChangeState(CharacterState::Idle);
 }
@@ -206,7 +206,7 @@ void Player::Move()
 					pEnemy->GetRadius()
 				))
 				{
-					pEnemy->EDamage(1);
+					pEnemy->EDamage(10);
 				}
 
 			}

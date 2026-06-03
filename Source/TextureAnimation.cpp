@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "Enemy.h"
 
+bool gEnemyReverseX = false; // Global flag indicating if enemies should be drawn flipped horizontally
+
 TextureAnimation::TextureAnimation(
 	std::string filename,
 	VECTOR initPos,
@@ -68,15 +70,8 @@ void TextureAnimation::Update()
 		mbPlayerReverseX = (pPlayer->GetVelocityX() < 0.0f || (pPlayer->GetAngularAcceleration() < 0.0f && pPlayer->IsWireActive()));
 	}
 
-	auto pobj = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Enemy2D);
-	Enemy* pEnemy = dynamic_cast<Enemy*>(pobj);
-
-	if (pEnemy != nullptr)
-	{
-		mbEnemyReverseX = (pEnemy->GetDirection().x > 0.0f);
-	}
-
-	// 指定されたインターバル時間に基づき、等速でアニメーションをループ再生
+	    mbEnemyReverseX = gEnemyReverseX; // set enemy flip based on movement direction
+    // 指定されたインターバル時間に基づき、等速でアニメーションをループ再生
 	mnCounter++;
 	if (mnCounter % mnInterval == 0)
 	{

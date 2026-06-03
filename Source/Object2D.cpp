@@ -55,6 +55,7 @@ Object2D::~Object2D()
 // 更新
 void Object2D::Update()
 {
+	// 画像の更新
 	if (mpTexture != nullptr)
 	{
 		mpTexture->Update();
@@ -64,6 +65,7 @@ void Object2D::Update()
 
 	}
 
+	// 画像アニメーションの更新
 	if (mpTextureAnimation != nullptr)
 	{
 		mpTextureAnimation->Update();
@@ -77,11 +79,13 @@ void Object2D::Update()
 // 描画
 void Object2D::Draw()
 {
+	// 画像の描画
 	if (mpTexture != nullptr)
 	{
 		mpTexture->Draw(gCameraX, gCameraY);
 	}
 
+	// 画像アニメーションの描画
 	if (mpTextureAnimation != nullptr)
 	{
 		mpTextureAnimation->Draw(gCameraX, gCameraY);
@@ -120,6 +124,7 @@ int Object2D::GetSizeX()
 	return 0;
 }
 
+// 画像の横サイズを取得
 int Object2D::GetSizeY()
 {
 	if (mpTexture != nullptr) return mpTexture->GetSizeY();
