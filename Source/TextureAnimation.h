@@ -34,6 +34,8 @@ public:
 	void Reset(); 
 	void SetPosition(VECTOR pos) { mvPosition = pos; } 
 
+	void SetReverse(bool rev) { mbEnemyReverseX = rev; }
+
 	int GetSizeX() { return mnSizeX; }    
 	int GetSizeY() { return mnSizeY; }    
 
