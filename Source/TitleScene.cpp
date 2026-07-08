@@ -56,6 +56,7 @@ void TitleScene::Update()
 		switch (NowSelect3)
 		{
 		case select_Play:  // ƒvƒŒƒC‰æ–Ê‚Ö
+		    gCurrentStage = 1;
 			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_GAME);
 			break;
 

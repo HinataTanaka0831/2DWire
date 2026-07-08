@@ -1,8 +1,11 @@
 ﻿#pragma once
 
 #include "Scene.h"
+#include "Map.h"
 
 class Player;
+
+class Map;
 
 class GameScene : public Scene
 {
@@ -14,6 +17,9 @@ public:
 
 	// 初期化
 	void Initialize() override;
+	// 
+	void LoadStageData();
+
 	// 更新
 	void Update() override;
 	// 描画
@@ -21,10 +27,12 @@ public:
 	// 終了処理
 	void Finalize() override;
 
-
 private:
 	Player* mpPlayer;
-	
 	// 背景画像用ハンドル
-	int mBgNightHandle;
+	int mBg_NightHandle;
+
+	Map* mpMap;
+	StageInfo mStageInfo;
+	bool mIsGoalReached = false;
 };

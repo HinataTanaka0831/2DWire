@@ -4,8 +4,6 @@
 #include <cstdio>
 #include "Master.h"
 #include "GameScene.h"
-#include "Player.h"
-#include "Enemy.h"
 #include "Scene.h"
 #include "ObjectManager.h"
 
@@ -79,6 +77,27 @@ const char* InitializeSceneManagerTask::GetTaskName() const {
     return "Initialize Scene Manager";
 }
 
+
+
+// ========================
+// MapTask ŽÀ‘•
+// ========================
+InitializeLoadStageData::InitializeLoadStageData() {}
+
+int InitializeLoadStageData::Execute() {
+    GameScene* pGameScene = dynamic_cast<GameScene*>(Master::mpSceneManager->GetCurrentScene());
+
+    if (pGameScene != nullptr)
+    {
+        pGameScene->LoadStageData();
+    }
+
+    return 0;
+}
+
+const char* InitializeLoadStageData::GetTaskName() const {
+    return "Initialize LoadStageData";
+}
 
 
 

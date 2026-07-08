@@ -20,27 +20,6 @@ void AnimationController::RegisterAnimation(CharacterState state, TextureAnimati
     mAnimations[state] = anim;
 }
 
-void AnimationController::ChangeState(CharacterState newState)
-{
-    // 同一状態でのアニメーション再初期化によるちらつきを防止
-    if (mIsInitialized && mCurrentState == newState) return;
-
-    mPrevState = mCurrentState;
-    mCurrentState = newState;
-    mIsInitialized = true;
-
-    if (mAnimations.count(mCurrentState)) {
-        mAnimations[mCurrentState]->Reset();
-    }
-}
-
-void AnimationController::SetEnemyReverse(bool rev)
-{
-    // Apply reverse flag to the currently active animation (if any)
-    if (mAnimations.count(mCurrentState)) {
-        mAnimations[mCurrentState]->SetReverse(rev);
-    }
-}
 
 void AnimationController::Update()
 {
@@ -55,5 +34,31 @@ void AnimationController::Draw(float x, float y, float cameraX, float cameraY)
     if (mAnimations.count(mCurrentState)) {
         mAnimations[mCurrentState]->SetPosition(VGet(x, y, 0.0f));
         mAnimations[mCurrentState]->Draw(cameraX, cameraY);
+    }
+}
+
+
+void AnimationController::ChangeState(CharacterState newState)
+{
+    // 同一状態でのアニメーション再初期化によるちらつきを防止
+    if (mIsInitialized && mCurrentState == newState) return;
+
+    mPrevState = mCurrentState;
+    mCurrentState = newState;
+    mIsInitialized = true;
+
+    if (mAnimations.count(mCurrentState)) {
+        mAnimations[mCurrentState]->Reset();
+    }
+}
+
+
+void AnimationController::SetEnemyReverse(bool rev)
+{
+    // Idle / Moving / Attacking など、登録済みの全アニメに設定
+	// 状態が切り替わっても向きが引き継がれる
+    for (auto& pair : mAnimations)
+    {
+        pair.second->SetReverse(rev);
     }
 }

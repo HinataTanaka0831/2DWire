@@ -18,14 +18,14 @@ Enemy::Enemy(std::string filename, VECTOR initPos, int allNum, int numX, int num
 	SetTag(Object2D::Enemy2D);
 
 	mAnimController.RegisterAnimation(CharacterState::Idle,
-		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale));
+		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale, type));
 	
 	mAnimController.RegisterAnimation(CharacterState::Moving,
-		new TextureAnimation("Resource/Enemy/Monster_Walk.png", initPos, 6, 6, 1, 8, scale));
+		new TextureAnimation("Resource/Enemy/Anim_Monster01_Walk.png", initPos, 6, 6, 1, 8, scale, type));
 
 	// 攻撃中はコマ送りを2倍速にし、攻撃の激しさを視覚的に演出
 	mAnimController.RegisterAnimation(CharacterState::Attacking,
-		new TextureAnimation("Resource/Enemy/Monster_Walk.png", initPos, 6, 6, 1, 4, scale));
+		new TextureAnimation("Resource/Enemy/Anim_Monster01_Attack.png", initPos, 4, 4, 1, 10, scale,type));
 
 	mAnimController.ChangeState(CharacterState::Idle);
 }
@@ -38,15 +38,11 @@ Enemy::~Enemy()
 
 void Enemy::Update()
 {
-	if (mnAttackCooldown > 0)
-	{
-		mnAttackCooldown--;
-	}
-
+	HPGaugeUpdate();
 	Move();
 	Calcdamage();
 
-	if (mnHp <= 0) {
+	if (Hp <= 0) {
 		mAnimController.ChangeState(CharacterState::Dead);
 	} 
 	else {
@@ -80,6 +76,7 @@ void Enemy::Update()
 void Enemy::Draw()
 {
 	mAnimController.Draw(mvPosition.x, mvPosition.y, gCameraX, gCameraY);
+	HPGaugeDraw();
 }
 
 void Enemy::Move()
@@ -91,6 +88,8 @@ void Enemy::Move()
 	{
 		VECTOR diff = VSub(pPlayer->GetPosition(), mvPosition);
 		float distance = VSize(diff);
+
+		mnAttackCooldown--;
 
 		if (distance <= ATTACK_RANGE)
 		{
@@ -109,9 +108,8 @@ void Enemy::Move()
 			mvDirection.x = (diff.x > 0.0f) ? 1.0f : -1.0f;
 			mvPosition.x += (float)MOVE_SPEED * mvDirection.x;
 			
-			// Update global flip flag based on current movement direction
-			gEnemyReverseX = (mvDirection.x > 0.0f);
-			mAnimController.SetEnemyReverse(gEnemyReverseX);
+			// この敵だけの向きで、この敵のアニメーションだけ反転
+			mAnimController.SetEnemyReverse(mvDirection.x > 0.0f);
 
 			// 接近した瞬間の一発目を即時被弾させず、プレイヤーがワイヤーで退避する隙を作る初期化
 			if (mnAttackCooldown <= 0)
@@ -123,9 +121,7 @@ void Enemy::Move()
 		{
 			// 索敵範囲から外れた場合は進行を停止し、Idle状態で待機
 			mvDirection.x = 0.0f;
-			// Enemy is idle; ensure flip flag reflects no movement (default to false)
-			gEnemyReverseX = false;
-			mAnimController.SetEnemyReverse(gEnemyReverseX);
+			mAnimController.SetEnemyReverse(false);
 		}
 	}
 }
@@ -137,8 +133,8 @@ bool Enemy::IsScreenOut()
 
 void Enemy::EDamage(int damage)
 {
-	mnHp -= damage;
-	if (mnHp <= 0)
+	Hp -= damage;
+	if (Hp <= 0)
 	{
 		SetDeleteFlag(true);
 	}
@@ -161,7 +157,7 @@ void Enemy::Calcdamage()
 		{
 			if (mnAttackCooldown <= 0)
 			{
-				pPlayer->PDamage(5); // 円衝突時も10ダメージ与える
+				pPlayer->PDamage(1); // 円衝突時は1ダメージ与える
 				mnAttackCooldown = ATTACK_INTERVAL;
 			}
 		}
@@ -172,7 +168,7 @@ void Enemy::Calcdamage()
 void Enemy::HPGaugeDraw()
 {
 	int gaugeX = (int)(mvPosition.x - gCameraX) - 110;
-	int gaugeY = (int)(mvPosition.y - gCameraY) - 160;
+	int gaugeY = (int)(mvPosition.y - gCameraY) - 190;
 
 	DrawBox(gaugeX, gaugeY, gaugeX + width, gaugeY + gaugeHeight, GetColor(0, 0, 0), TRUE);
 	DrawBox(gaugeX, gaugeY, gaugeX + damageWidth, gaugeY + gaugeHeight, GetColor(255, 0, 0), TRUE);

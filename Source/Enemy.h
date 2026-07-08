@@ -58,12 +58,11 @@ private:
 	static const int MOVE_SPEED = 3; // プレイヤーの移動速度（5）に対して、ゲームバランス上追跡を可能にするため適度に遅い速度（3）に調整
 	int time = 0;
 	int type;
-	int mnHp = 6;  
 
 	// AI意思決定用のパラメータ定数
 	static constexpr float SEARCH_RANGE = 700.0f; // プレイヤーを検知して追跡を開始するワールド座標系での閾値
 	static constexpr float ATTACK_RANGE = 100.0f;  // 攻撃アニメーションに切り替え、定期ダメージ判定を行う距離
-	static constexpr int ATTACK_INTERVAL = 90;     // 攻撃が毎フレーム多重ヒットしてプレイヤーが瞬殺されるバグを防ぐためのクールダウン時間 (90フレーム = 1.5秒)
+	static constexpr int ATTACK_INTERVAL = 60;     // 攻撃が毎フレーム多重ヒットしてプレイヤーが瞬殺されるバグを防ぐためのクールダウン時間 (90フレーム = 1.5秒)
 
 	int mnAttackCooldown = 0; // 攻撃の実行周期を制御するクールダウンカウンター
 

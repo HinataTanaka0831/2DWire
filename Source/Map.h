@@ -1,17 +1,36 @@
-#pragma once
+ï»¿#pragma once
+
+// 1ã‚¹ãƒ†ãƒ¼ã‚¸åˆ†ã®è¨­å®šãƒ‡ãƒ¼ã‚¿
+struct StageInfo
+{
+	float playerStartX;
+	float playerStartY;
+	float goalX;
+	float goalY;
+	float cameraMinX;
+	float cameraMaxX;
+	float playerMinX;
+	float playerMaxX;
+};
 
 class Map
 {
 public:
-	// ƒCƒ“ƒXƒgƒ‰ƒNƒ^
+	// ?C???X?g???N?^
 	Map();
 
-	// ƒfƒXƒgƒ‰ƒNƒ^
+	// ?f?X?g???N?^
 	~Map();
 
-	// ‰Šú‰»
+	// ??????
 	void Initialize();
 
-	// ƒXƒe[ƒW‚Ì“Ç‚İ‚İ
+	// ?X?e?[?W???????
 	void LoadStage(int stageNum);
+
+	// èª­ã¿è¾¼ã‚“ã ã‚¹ãƒ†ãƒ¼ã‚¸ã®è¨­å®šã‚’å–å¾—
+	StageInfo GetStageInfo() const { return mStageInfo;}
+
+private:
+    StageInfo mStageInfo;
 };

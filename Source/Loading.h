@@ -48,21 +48,12 @@ public:
 
 
 // ========== ‰Šú‰»GameSceneƒ^ƒXƒN ==========
-class InitializePlayerTask : public ILoadTask {
+class InitializeLoadStageData : public ILoadTask {
 public:
-    InitializePlayerTask();
+    InitializeLoadStageData();
     int Execute() override;
     const char* GetTaskName() const override;
 };
-
-
-class InitializeEnemyTask : public ILoadTask {
-public:
-    InitializeEnemyTask();
-    int Execute() override;
-    const char* GetTaskName() const override;
-};
-
 
 
 

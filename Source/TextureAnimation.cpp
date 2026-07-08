@@ -5,7 +5,6 @@
 #include "Player.h"
 #include "Enemy.h"
 
-bool gEnemyReverseX = false; // Global flag indicating if enemies should be drawn flipped horizontally
 
 TextureAnimation::TextureAnimation(
 	std::string filename,
@@ -61,16 +60,20 @@ TextureAnimation::~TextureAnimation()
 
 void TextureAnimation::Update()
 {
-	auto pObj = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
-	Player* pPlayer = dynamic_cast<Player*>(pObj);
 
-	if (pPlayer != nullptr)
+	if (mbType)
 	{
-		// 意図しない反転挙動のバグを防ぐため、演算子の優先順位を括弧で明示
-		mbPlayerReverseX = (pPlayer->GetVelocityX() < 0.0f || (pPlayer->GetAngularAcceleration() < 0.0f && pPlayer->IsWireActive()));
+		auto pObj = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
+		Player* pPlayer = dynamic_cast<Player*>(pObj);
+
+		if (pPlayer != nullptr)
+		{
+			// 意図しない反転挙動のバグを防ぐため、演算子の優先順位を括弧で明示
+			mbPlayerReverseX = (pPlayer->GetVelocityX() < 0.0f || (pPlayer->GetAngularAcceleration() < 0.0f && pPlayer->IsWireActive()));
+		}
 	}
 
-	    mbEnemyReverseX = gEnemyReverseX; // set enemy flip based on movement direction
+
     // 指定されたインターバル時間に基づき、等速でアニメーションをループ再生
 	mnCounter++;
 	if (mnCounter % mnInterval == 0)
@@ -86,8 +89,7 @@ void TextureAnimation::Draw(float cameraX, float cameraY)
 	{
 		DrawRotaGraph((int)(mvPosition.x - cameraX), (int)(mvPosition.y - cameraY), mnScale, 0.0f, mnHandleList[mnCurrentNum], true, mbPlayerReverseX);
 	}
-
-	if (!mbType)
+	else
 	{
 		DrawRotaGraph((int)(mvPosition.x - cameraX), (int)(mvPosition.y - cameraY), mnScale, 0.0f, mnHandleList[mnCurrentNum], true, mbEnemyReverseX);
 	}

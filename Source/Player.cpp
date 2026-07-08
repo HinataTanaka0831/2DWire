@@ -19,11 +19,11 @@ Player::Player(std::string filename, VECTOR initPos, int allNum, int numX, int n
 	SetTag(Object2D::Player2D);
 
 	mAnimController.RegisterAnimation(CharacterState::Idle,
-		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale));
+		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale,type));
 	mAnimController.RegisterAnimation(CharacterState::Moving,
-		new TextureAnimation("Resource/Player/Player_Walk.png", initPos, 4, 4, 1, 8, 1.0f));
+		new TextureAnimation("Resource/Player/Anim_Player_Walk.png", initPos, 4, 4, 1, 7, 1.0f,type));
 	mAnimController.RegisterAnimation(CharacterState::Attacking,
-		new TextureAnimation("Resource/Player/Player_Attack.png", initPos, 9, 3, 3, 7, 1.0f));
+		new TextureAnimation("Resource/Player/Anim_Player_Attack.png", initPos, 8, 4, 2, 5, 1.0f,type));
 
 	mAnimController.ChangeState(CharacterState::Idle);
 }
@@ -193,24 +193,38 @@ void Player::Move()
 		{
 			mbIsAttack = true;
 			mnAttackTimer = 63; // 9 frames * 7 interval = 63 frames
+			mHasHitThisAttack = false;
+		}
 
-			auto pObj = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Enemy2D);
-			Enemy* pEnemy = dynamic_cast<Enemy*>(pObj);
-
-			if (pEnemy != nullptr)
+		// 攻撃中（最初の15フレームくらい）に当たり判定
+			if (mbIsAttack && !mHasHitThisAttack && mnAttackTimer > 48)
 			{
-				if (Collision::CheckCircleToCircle(
-					mvPosition,
-					GetRadius(),
-					pEnemy->GetPosition(),
-					pEnemy->GetRadius()
-				))
-				{
-					pEnemy->EDamage(10);
-				}
+			   auto enemyList = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Enemy2D);
+				  for(int i = 0; i < enemyList.size(); i++)
+				  {
+				      auto pObj = enemyList[i];
+					  Enemy* pEnemy = dynamic_cast<Enemy*>(pObj);	
+					  if (pEnemy == nullptr)
+					  {
+				    	  continue;
+					  }
+
+					  if (Collision::CheckCircleToCircle(
+							mvPosition,
+							GetRadius(),
+							pEnemy->GetPosition(),
+							pEnemy->GetRadius()
+					     ))
+					  {
+						  pEnemy->EDamage(10);
+						  mHasHitThisAttack = true;
+						  break;
+					  }
+					
+		          }
 
 			}
-		}
+		
 
 		// 高速移動によるマップ外への突き抜けや描画の破綻を防ぐための最高速度制限
 		if (mVelocityX > (float)MOVE_SPEED * 1.5f) mVelocityX = (float)MOVE_SPEED * 1.5f;

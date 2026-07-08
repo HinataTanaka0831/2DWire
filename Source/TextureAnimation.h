@@ -54,7 +54,7 @@ private:
 	int mnAllNum;       
 	int mnSizeX;       
 	int mnSizeY;       
-	float mfRadius = 60.0f;
+	float mfRadius = 90.0f;
 	float mnScale;     
 	bool mbPlayerReverseX;    
 	bool mbEnemyReverseX;

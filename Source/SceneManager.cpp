@@ -103,6 +103,11 @@ void SceneManager::ChangeSceneIfNeeded()
 	case SCENE_TYPE::SCENE_GAME:
 		mpCurrentScene = new GameScene();
 		break;
+
+	case SCENE_TYPE::SCENE_GAME_STAGE2:
+		mpCurrentScene = new GameScene();
+		break;
+
 	case SCENE_TYPE::SCENE_RESULT:
 		mpCurrentScene = new ResultScene();
 		break;

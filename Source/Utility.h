@@ -13,3 +13,8 @@ public:  // 定数定義
 // グローバルなカメラX座標（スクロール用）とY座標（縦スクロール用）を定義
 extern float gCameraX;
 extern float gCameraY;
+
+// 今プレイ中のステージ番号
+extern int gCurrentStage;
+// 最終ステージ番号
+static const int MaxStage = 2;

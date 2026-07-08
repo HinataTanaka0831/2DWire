@@ -77,6 +77,7 @@ private:
 	const float Gauge_Frame = 3.0f; 
 
 	bool mbIsAttack = false;
+	bool mHasHitThisAttack = false;
 	int mnAttackTimer = 0;
 };
 
