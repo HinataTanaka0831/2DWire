@@ -158,7 +158,7 @@
     <ClCompile Include="Source\TitleScene.cpp" />
     <ClCompile Include="Source\WireTarget.cpp" />
     <ClCompile Include="Source\Goal.cpp" />
-    <ClCompile Include="Source\Map.cpp" />
+    <ClCompile Include="Source\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AnimationController.h" />
@@ -187,7 +187,7 @@
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\WireTarget.h" />
     <ClInclude Include="Source\Goal.h" />
-    <ClInclude Include="Source\Map.h" />
+    <ClInclude Include="Source\Stage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

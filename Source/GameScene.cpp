@@ -50,9 +50,9 @@ void GameScene::LoadStageData()
 	gCameraY = 0.0f;
 
 	// gCurrentStage を使用してステージを読み込む
-	mpMap = new Map();
-	mpMap->LoadStage(gCurrentStage);
-	mStageInfo = mpMap->GetStageInfo();
+	mpStage = new Stage();
+	mpStage->LoadStage(gCurrentStage);
+	mStageInfo = mpStage->GetStageInfo();
 
 	// ステージ設定からプレイヤーを生成
 	mpPlayer = new Player("Resource/Player/Anim_Player_Idle.png", VGet(mStageInfo.playerStartX, mStageInfo.playerStartY, 0.0f), 3, 3, 1, 20, 1.0f, true);

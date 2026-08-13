@@ -21,9 +21,9 @@ Player::Player(std::string filename, VECTOR initPos, int allNum, int numX, int n
 	mAnimController.RegisterAnimation(CharacterState::Idle,
 		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale,type));
 	mAnimController.RegisterAnimation(CharacterState::Moving,
-		new TextureAnimation("Resource/Player/Anim_Player_Walk.png", initPos, 4, 4, 1, 7, 1.0f,type));
+		new TextureAnimation("Resource/Player/anim_walk.png", initPos, 4, 4, 1, 7, 1.0f,type));
 	mAnimController.RegisterAnimation(CharacterState::Attacking,
-		new TextureAnimation("Resource/Player/Anim_Player_Attack.png", initPos, 8, 4, 2, 5, 1.0f,type));
+		new TextureAnimation("Resource/Player/anim_attack.png", initPos, 6, 3, 2, 5, 1.0f,type));
 
 	mAnimController.ChangeState(CharacterState::Idle);
 }

@@ -21,11 +21,11 @@ Enemy::Enemy(std::string filename, VECTOR initPos, int allNum, int numX, int num
 		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale, type));
 	
 	mAnimController.RegisterAnimation(CharacterState::Moving,
-		new TextureAnimation("Resource/Enemy/Anim_Monster01_Walk.png", initPos, 6, 6, 1, 8, scale, type));
+		new TextureAnimation("Resource/Enemy/anim_monster01walk.png", initPos, 6, 6, 1, 8, scale, type));
 
 	// 攻撃中はコマ送りを2倍速にし、攻撃の激しさを視覚的に演出
 	mAnimController.RegisterAnimation(CharacterState::Attacking,
-		new TextureAnimation("Resource/Enemy/Anim_Monster01_Attack.png", initPos, 4, 4, 1, 10, scale,type));
+		new TextureAnimation("Resource/Enemy/anim_monster01attack.png", initPos, 4, 4, 1, 10, scale,type));
 
 	mAnimController.ChangeState(CharacterState::Idle);
 }

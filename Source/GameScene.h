@@ -1,11 +1,11 @@
 ﻿#pragma once
 
 #include "Scene.h"
-#include "Map.h"
+#include "Stage.h"
 
 class Player;
 
-class Map;
+class Stage;
 
 class GameScene : public Scene
 {
@@ -32,7 +32,7 @@ private:
 	// 背景画像用ハンドル
 	int mBg_NightHandle;
 
-	Map* mpMap;
+	Stage* mpStage;
 	StageInfo mStageInfo;
 	bool mIsGoalReached = false;
 };

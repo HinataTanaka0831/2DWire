@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\BossEnemycpp.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\AnimationController.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -69,9 +66,6 @@
     <ClCompile Include="Source\SoundManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Statuscpp.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Texture.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -87,18 +81,15 @@
     <ClCompile Include="Source\Goal.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Ground.cpp">
+    <ClCompile Include="Source\Stage.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Map.cpp">
+    <ClCompile Include="Source\Loading.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AnimationController.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\BossEnemy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Bullet.h">
@@ -155,9 +146,6 @@
     <ClInclude Include="Source\SoundManagerh.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Status.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Texture.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -176,10 +164,10 @@
     <ClInclude Include="Source\Goal.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Ground.h">
+    <ClInclude Include="Source\Stage.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Map.h">
+    <ClInclude Include="Source\Loading.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
