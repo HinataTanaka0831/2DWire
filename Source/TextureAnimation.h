@@ -52,8 +52,8 @@ private:
 	int mnCurrentNum;   
 	int* mnHandleList;  
 	int mnAllNum;       
-	int mnSizeX;       
-	int mnSizeY;       
+	int mnSizeX = 0;       
+	int mnSizeY = 0;       
 	float mfRadius = 90.0f;
 	float mnScale;     
 	bool mbPlayerReverseX;    

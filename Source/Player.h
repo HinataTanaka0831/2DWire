@@ -36,6 +36,10 @@ public:
 	// 副作用：移動速度、座標、ワイヤー状態、アニメーション状態を更新
 	void Move();
 
+	// 攻撃アクションの開始と攻撃判定の処理
+	// 副作用：攻撃フラグの設定、攻撃判定の実行
+	void Attack();
+
 	// キャラクターの頭上に現在HPを示すUIゲージを描画
 	void HPGaugeDraw();
 
@@ -52,8 +56,6 @@ public:
 	bool IsWireActive() const { return mbIsWireActive; } 
 
 private:      
-	int mnBulletShotCounter;
-
 	bool mbIsWireActive = false;           
 	VECTOR mvWireTargetPos;                
 	float mPendulumAngle = 0.0f;           
@@ -79,5 +81,8 @@ private:
 	bool mbIsAttack = false;
 	bool mHasHitThisAttack = false;
 	int mnAttackTimer = 0;
+	int attackCooldown = 0; // 攻撃できるまでの残り時間
+	const int attackInterval = 18; // 攻撃の間隔（フレーム数）
+
 };
 

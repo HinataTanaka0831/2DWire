@@ -19,11 +19,11 @@ Player::Player(std::string filename, VECTOR initPos, int allNum, int numX, int n
 	SetTag(Object2D::Player2D);
 
 	mAnimController.RegisterAnimation(CharacterState::Idle,
-		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale,type));
+		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale, type));
 	mAnimController.RegisterAnimation(CharacterState::Moving,
 		new TextureAnimation("Resource/Player/anim_walk.png", initPos, 4, 4, 1, 7, 1.0f,type));
 	mAnimController.RegisterAnimation(CharacterState::Attacking,
-		new TextureAnimation("Resource/Player/anim_attack.png", initPos, 6, 3, 2, 5, 1.0f,type));
+		new TextureAnimation("Resource/Player/anim_attack.png", initPos, 6, 3, 2, 5, 1.0f, type));
 
 	mAnimController.ChangeState(CharacterState::Idle);
 }
@@ -37,6 +37,7 @@ void Player::Update()
 {
 	HPGaugeUpdate();
 	Move();
+	Attack();
 
 	if (mnAttackTimer > 0)
 	{
@@ -60,9 +61,9 @@ void Player::Update()
 	else {
 		mAnimController.ChangeState(CharacterState::Idle);
 	}
+
 	mAnimController.Update();
 
-	Object2D::Update();
 }
 
 void Player::Draw()
@@ -189,42 +190,13 @@ void Player::Move()
 			}
 		}
 
-		if (InputManager::CheckDownKey(KEY_INPUT_F))
+		if (InputManager::CheckDownKey(KEY_INPUT_G) && attackCooldown == 0)
 		{
 			mbIsAttack = true;
-			mnAttackTimer = 63; // 9 frames * 7 interval = 63 frames
 			mHasHitThisAttack = false;
+			mnAttackTimer = 30; // 6frame * 5interval = 30フレームの攻撃持続時間
+			attackCooldown = attackInterval;
 		}
-
-		// 攻撃中（最初の15フレームくらい）に当たり判定
-			if (mbIsAttack && !mHasHitThisAttack && mnAttackTimer > 48)
-			{
-			   auto enemyList = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Enemy2D);
-				  for(int i = 0; i < enemyList.size(); i++)
-				  {
-				      auto pObj = enemyList[i];
-					  Enemy* pEnemy = dynamic_cast<Enemy*>(pObj);	
-					  if (pEnemy == nullptr)
-					  {
-				    	  continue;
-					  }
-
-					  if (Collision::CheckCircleToCircle(
-							mvPosition,
-							GetRadius(),
-							pEnemy->GetPosition(),
-							pEnemy->GetRadius()
-					     ))
-					  {
-						  pEnemy->EDamage(10);
-						  mHasHitThisAttack = true;
-						  break;
-					  }
-					
-		          }
-
-			}
-		
 
 		// 高速移動によるマップ外への突き抜けや描画の破綻を防ぐための最高速度制限
 		if (mVelocityX > (float)MOVE_SPEED * 1.5f) mVelocityX = (float)MOVE_SPEED * 1.5f;
@@ -253,6 +225,45 @@ void Player::Move()
 		}
 	}
 
+}
+
+void Player::Attack()
+{
+
+	while (attackCooldown > 0)
+	{
+		attackCooldown--;
+		return;
+	}
+
+	// 攻撃中に当たり判定
+	if (mbIsAttack && !mHasHitThisAttack && mnAttackTimer < 16)
+	{
+		auto enemyList = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Enemy2D);
+		for (int i = 0; i < enemyList.size(); i++)
+		{
+			auto pObj = enemyList[i];
+			Enemy* pEnemy = dynamic_cast<Enemy*>(pObj);
+			if (pEnemy == nullptr)
+			{
+				continue;
+			}
+
+			if (Collision::CheckCircleToCircle(
+				mvPosition,
+				GetRadius(),
+				pEnemy->GetPosition(),
+				pEnemy->GetRadius()
+			))
+			{
+				pEnemy->EDamage(10);
+				mHasHitThisAttack = true;
+				break;
+			}
+
+		}
+
+	}
 }
 
 void Player::HPGaugeDraw()

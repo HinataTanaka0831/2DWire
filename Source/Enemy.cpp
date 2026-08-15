@@ -68,9 +68,9 @@ void Enemy::Update()
 			mAnimController.ChangeState(CharacterState::Idle);
 		}
 	}
+
 	mAnimController.Update();
 
-	Object2D::Update();
 }
 
 void Enemy::Draw()
@@ -98,7 +98,7 @@ void Enemy::Move()
 
 			if (mnAttackCooldown <= 0)
 			{
-				pPlayer->PDamage(5); // 1ヒットあたり5ダメージ与える (最大10回耐えられる)
+				pPlayer->PDamage(5); // 1ヒットあたり5ダメージ与える
 				mnAttackCooldown = ATTACK_INTERVAL;
 			}
 		}
@@ -121,7 +121,6 @@ void Enemy::Move()
 		{
 			// 索敵範囲から外れた場合は進行を停止し、Idle状態で待機
 			mvDirection.x = 0.0f;
-			mAnimController.SetEnemyReverse(false);
 		}
 	}
 }

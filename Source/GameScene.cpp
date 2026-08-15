@@ -55,7 +55,7 @@ void GameScene::LoadStageData()
 	mStageInfo = mpStage->GetStageInfo();
 
 	// ステージ設定からプレイヤーを生成
-	mpPlayer = new Player("Resource/Player/Anim_Player_Idle.png", VGet(mStageInfo.playerStartX, mStageInfo.playerStartY, 0.0f), 3, 3, 1, 20, 1.0f, true);
+	mpPlayer = new Player("Resource/Player/anim_idle.png", VGet(mStageInfo.playerStartX, mStageInfo.playerStartY, 0.0f), 3, 3, 1, 20, 1.0f, true);
 
 }
 
@@ -222,10 +222,10 @@ void GameScene::Finalize()
 	mpPlayer = nullptr;
 
 	// Map の解放
-	if (mpMap != nullptr)
+	if (mpStage != nullptr)
 	{
-		delete mpMap;
-		mpMap = nullptr;
+		delete mpStage;
+		mpStage = nullptr;
 	}
 
 }
