@@ -30,7 +30,7 @@ public:
 private:
 	Player* mpPlayer;
 	// 背景画像用ハンドル
-	int mBg_NightHandle;
+	int mnBackGroundHandle;
 
 	Stage* mpStage;
 	StageInfo mStageInfo;

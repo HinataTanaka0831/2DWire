@@ -120,13 +120,31 @@ float Object2D::GetRadius()
 
 int Object2D::GetSizeX()
 {
-	if (mpTexture != nullptr) return mpTexture->GetSizeX();
+	if (mpTexture != nullptr)
+	{
+		return mpTexture->GetSizeX();
+	}
+
+	if (mpTextureAnimation != nullptr)
+	{
+		return mpTextureAnimation->GetSizeX();
+	}
+
 	return 0;
 }
 
 // 画像の横サイズを取得
 int Object2D::GetSizeY()
 {
-	if (mpTexture != nullptr) return mpTexture->GetSizeY();
+	if (mpTexture != nullptr)
+	{
+		return mpTexture->GetSizeY();
+	}
+
+	if (mpTextureAnimation != nullptr)
+	{
+		return mpTextureAnimation->GetSizeY();
+	}
+
 	return 0;
 }

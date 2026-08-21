@@ -46,10 +46,6 @@ void AnimationController::ChangeState(CharacterState newState)
     mPrevState = mCurrentState;
     mCurrentState = newState;
     mIsInitialized = true;
-
-    if (mAnimations.count(mCurrentState)) {
-        mAnimations[mCurrentState]->Reset();
-    }
 }
 
 

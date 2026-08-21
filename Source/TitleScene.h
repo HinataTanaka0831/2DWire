@@ -1,11 +1,14 @@
 #pragma once
 
 #include "Scene.h"
+#include "Utility.h"
+
+class Button;
 
 class TitleScene : public Scene
 {
 public:
-	enum {
+	enum{
 		select_Play,
 		select_PlayRule,
 
@@ -30,9 +33,11 @@ public:
 
 
 private:
-	static const int Play_Y = 260;
-	static const int PlayRule_Y = 310;
+	Button* mpPlayButton;
+	Button* mpPlayRuleButton;
 	int NowSelect3 = select_Play;
-	int y = 0;
-
+	const int stringX = Utility::SCREEN_WIDTH / 2 - 150;   // 文字列のX座標
+	const int PlayY = 600;       // プレイボタンの高さ
+    const int PlayRuleY = 750;   // 操作方法ボタンの高さ
+	int mnBackGroundHandle;
 };

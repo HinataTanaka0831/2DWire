@@ -46,36 +46,42 @@ public:
 	// 入力：damage（被弾ダメージ量） / 副作用：mnHpの減算およびdeleteFlagの設定
 	void EDamage(int damage);
 
-	// プレイヤーとの衝突判定を行い、接触時にプレイヤーへ被弾ダメージを適用する処理
-	// 副作用：接触したプレイヤーのHPを減算
-	void Calcdamage();
+	// 重なった敵どうしを少しずつ離して、同じ場所に積み重ならないようにする
+	void ResolveEnemyOverlap();
 
 	VECTOR GetDirection() const { return mvDirection; }
 
 private:
 	VECTOR mvDirection;  
-	int StartTime = GetNowCount();  
-	static const int MOVE_SPEED = 3; // プレイヤーの移動速度（5）に対して、ゲームバランス上追跡を可能にするため適度に遅い速度（3）に調整
+	int startTime = GetNowCount();  
+	static const int MoveSpeed = 3; // プレイヤーの移動速度（5）に対して、ゲームバランス上追跡を可能にするため適度に遅い速度（3）に調整
 	int time = 0;
 	int type;
 
 	// AI意思決定用のパラメータ定数
-	static constexpr float SEARCH_RANGE = 700.0f; // プレイヤーを検知して追跡を開始するワールド座標系での閾値
-	static constexpr float ATTACK_RANGE = 100.0f;  // 攻撃アニメーションに切り替え、定期ダメージ判定を行う距離
-	static constexpr int ATTACK_INTERVAL = 60;     // 攻撃が毎フレーム多重ヒットしてプレイヤーが瞬殺されるバグを防ぐためのクールダウン時間 (90フレーム = 1.5秒)
+	static constexpr float Search_Range = 700.0f; // プレイヤーを検知して追跡を開始するワールド座標系での閾値
+	static constexpr float Attack_Range = 230.0f;  // 攻撃アニメーションに切り替え、定期ダメージ判定を行う距離
+	static constexpr int Attack_Interval = 60;     // 攻撃が毎フレーム多重ヒットしてプレイヤーが瞬殺されるバグを防ぐためのクールダウン時間 (90フレーム = 1.5秒)
 
 	int mnAttackCooldown = 0; // 攻撃の実行周期を制御するクールダウンカウンター
 
-	int Hp = 100;
-	int maxHp = 100;
+	int hp = 100;
+	int maxHP = 100;
 	int width = 250;
 	int gaugeWidth = 0;
 	int gaugeHeight = 20;
 	int damageWidth = 0;
 	int minWidth = 5;
 	int displayDamage;
-	int Timer = 0;
-	const float Gauge_Frame = 3.0f;
+	int hpGaugeTimer = 0;
+	int mnHitFlashTimer = 0;
+
+	static const int HitFlashDuration = 60;
+	static const int HitFlashInterval = 6;
+
+	const float GaugeFrame = 3.0f;
+
+	bool isCollidingWithPlayer;
 
 };
 

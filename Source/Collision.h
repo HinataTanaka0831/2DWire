@@ -4,6 +4,14 @@
 class Collision
 {
 public:
+	struct Rect{
+		float X;
+		float Y;
+		float Width;
+		float Height;
+	};
+
+public:
 	// コンストラクタ
 	Collision() 
 	{
@@ -36,5 +44,15 @@ public:
 		const VECTOR& pointPos,
 		const VECTOR& centerPos,
 		const float& radius
+	);
+
+	// 短形と短形の当たり判定をしてくれる関数
+	static bool CheckRectToRect(
+		const VECTOR& rectPositionA,
+		const float& rectWidthA,
+		const float& rectHeightA,
+		const VECTOR& rectPositionB,
+		const float& rectWidthB,
+		const float& rectHeightB
 	);
 };

@@ -36,8 +36,6 @@ void GameRuleScene::Update()
 
 void GameRuleScene::Draw()
 {
-	// ”wŒi‚Ì•\Ž¦
-	DrawGraph(0, 0, grHandle, false);
 	// ŽlŠpŒ`‚Ì•\Ž¦
 	DrawBox(Utility::SCREEN_WIDTH / 2 - 200, 50, Utility::SCREEN_WIDTH / 2 + 200, 350, GetColor(255, 255, 255), false);
 	// •¶Žš—ñ‚Ì•\Ž¦

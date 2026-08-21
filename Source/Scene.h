@@ -34,8 +34,7 @@ public:
 	ObjectManager* GetObjectManager() { return mpObjectManager; }
 
 protected:
-	int grHandle = LoadGraph("Resource/haikei.jpg");
-	int icHandle = LoadGraph("Resource/Player.png");
+	int FontSize20 = CreateFontToHandle(NULL, 20, -1, -1);
 
 private:
 	ObjectManager* mpObjectManager;        // オブジェクト管理クラスのポインタ

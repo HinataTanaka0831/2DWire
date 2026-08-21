@@ -39,8 +39,6 @@ void ResultScene::Update()
 
 void ResultScene::Draw()
 {
-	// ”wŒi‚Ì•\Ž¦
-	DrawGraph(0, 0, grHandle, false);
 	// •¶Žš—ñ‚Ì•\Ž¦
 	DrawString(Utility::SCREEN_WIDTH / 2 - 100, Utility::SCREEN_HEIGHT / 2 , "Thank you for Playing", GetColor(255, 255, 255));
 

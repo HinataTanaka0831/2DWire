@@ -7,6 +7,7 @@
 #include "Master.h"
 #include "ObjectManager.h"
 #include "Scene.h"
+#include "MouseManager.h"
 #include "Loading.h"
 #include <memory>
 #include <math.h>
@@ -18,8 +19,7 @@
 // Master クラスの静的メンバ変数定義
 SceneManager* Master::mpSceneManager = new SceneManager();
 SoundManager* Master::mpSoundManager = new SoundManager();
-
-
+MouseManager gMouseManager; // グローバルなマウスマネージャーのインスタンス
 
 /**
 * @fn WinMain
@@ -73,17 +73,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 		int time = GetNowCount();
 
-
-
 		 // 更新
-		//Update();
 		Master::mpSceneManager->Update();
 
-
 		// 描画
-		//Draw();
 		Master::mpSceneManager->Draw();
 		
+		// マウスの状態を更新する
+		gMouseManager.MouseClick();
 
 		// 裏画面の内容を表画面に映す
 		ScreenFlip();

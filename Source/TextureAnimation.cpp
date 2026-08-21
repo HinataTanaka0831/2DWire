@@ -68,8 +68,8 @@ void TextureAnimation::Update()
 
 		if (pPlayer != nullptr)
 		{
-			// 意図しない反転挙動のバグを防ぐため、演算子の優先順位を括弧で明示
-			mbPlayerReverseX = (pPlayer->GetVelocityX() < 0.0f || (pPlayer->GetAngularAcceleration() < 0.0f && pPlayer->IsWireActive()));
+			// プレイヤーが記録している「最後に向いていた方向」を使う（速度ゼロでも向きが保たれる）
+			mbPlayerReverseX = (pPlayer->IsFacingLeft() || pPlayer->GetAngularAcceleration() < 0.0f && pPlayer->IsWireActive());
 		}
 	}
 

@@ -3,11 +3,14 @@
 #include "Utility.h"
 #include "Master.h"
 #include "InputManager.h"
+#include "Button.h"
+#include "MouseManager.h"
 
 
 
 TitleScene::TitleScene() 
 : Scene()     // 基底クラスのコンストラクタを呼び出す
+, mnBackGroundHandle(-1)
 {
 
 }
@@ -23,7 +26,19 @@ void TitleScene::Initialize()
 	// プレイヤーの生成
 	// などをここで行う
 	// ->タイトル画面で必要なオブジェクトをここで生成する
+	if (mnBackGroundHandle == -1)
+	{
+		mnBackGroundHandle = LoadGraph("Resource/BackGround/bg_night.png");
+	}
 
+	if (mpPlayButton == nullptr)
+	{
+		mpPlayButton = new Button(stringX, PlayY - 10, stringX + 250, PlayY + 60, "　プレイ　", GetColor(255, 126, 115), GetColor(250, 250, 250), FontSize20);
+	}
+	if (mpPlayRuleButton == nullptr)
+	{
+		mpPlayRuleButton = new Button(stringX, PlayRuleY - 10, stringX + 250, PlayRuleY + 60, "操作説明", GetColor(255, 126, 115), GetColor(250, 250, 250), FontSize20);
+	}
 	// BGM再生
 	//Master::mpSoundManager->PlayBGM(SoundManager::BGM_TITLE);
 
@@ -31,32 +46,40 @@ void TitleScene::Initialize()
 
 void TitleScene::Update()
 {
-	// Sキーが押されたら下に下がる
-	if (InputManager::CheckDownKey(KEY_INPUT_S))
-	{
-		// SE再生
-		 Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
+	// SE再生
+	Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
 
-		NowSelect3 = (NowSelect3 + 1) % select_Now3;
+	// Sキーが押されたら下に下がる
+	if (mpPlayButton)
+	{
+		mpPlayButton->Update();
+
+		if (mpPlayButton->IsClick())
+		{
+
+			NowSelect3 = select_Play;
+		}
+
 	}
 	// Wキーが押されたら上に上がる
-	if (InputManager::CheckDownKey(KEY_INPUT_W))
+	if (mpPlayRuleButton)
 	{
-		// SE再生
-		Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
+		mpPlayRuleButton->Update();
 
-		NowSelect3 = (NowSelect3 + (select_Now3 - 1)) % select_Now3;
+		if (mpPlayRuleButton->IsClick())
+		{
+			NowSelect3 = select_PlayRule;
+		}
 	}
-	// エンターキーが押されたら画面の切り替え処理
-	if (InputManager::CheckDownKey(KEY_INPUT_RETURN))
-	{
-		// SE再生
-		Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
 
+	bool isLeftTrigger = MouseManager::IsLeftTrigger();
+
+	if (isLeftTrigger)
+	{
 		switch (NowSelect3)
 		{
 		case select_Play:  // プレイ画面へ
-		    gCurrentStage = 1;
+			gCurrentStage = 1;
 			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_GAME);
 			break;
 
@@ -67,26 +90,51 @@ void TitleScene::Update()
 
 	}
 
+
 	// 基底クラスの更新処理を呼び出す
 	Scene::Update();
 }
 
 void TitleScene::Draw()
 {
-	switch (NowSelect3)
-	{
-	case select_Play:  // 選択肢（プレイ）が選択されている場合はプレイのY座標を設定する
-		y = Play_Y;
-		break;
+	// 2. 都市背景をgCameraY分下にシフトして描画
+	int bgWidth, bgHeight;
+	GetGraphSize(mnBackGroundHandle, &bgWidth, &bgHeight);
 
-	case select_PlayRule:  // 選択肢（遊び方）が選択されている場合には遊び方のY座標を設定する
-		y = PlayRule_Y;
-		break;
+	if (bgWidth > 0)
+	{
+		// カメラXに合わせて背景をスクロール
+		float scrollSpeed = 0.5f;
+		int offsetX = (int)(gCameraX * scrollSpeed) % bgWidth;
+
+		// offsetXが負になる場合の対策
+		if (offsetX < 0)
+		{
+			offsetX += bgWidth;
+		}
+
+		// gCameraY分下にシフトして描画（上へ飛ぶとスカイラインが触れます）
+		int bgOffsetY = (int)gCameraY;
+
+		const int Bg_Y_Offset = 0;
+
+		// スクロールしたら背景をループさせて描画
+		for (int x = -offsetX; x < Utility::SCREEN_WIDTH; x += bgWidth)
+		{
+			DrawGraph(x, -bgOffsetY + Bg_Y_Offset, mnBackGroundHandle, TRUE);
+		}
 	}
 
+	// ボタンの表示
+	if (mpPlayButton)
+	{
+		mpPlayButton->Draw();
+	}
 
-	// 画像の表示
-	DrawGraph(Utility::SCREEN_WIDTH / 2 - 110, y, icHandle, true);
+	if (mpPlayRuleButton)
+	{
+		mpPlayRuleButton->Draw();
+	}
 
 
 	// 基底クラスの描画処理を呼び出す

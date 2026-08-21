@@ -17,7 +17,7 @@ int gCurrentStage = 1;
 
 GameScene::GameScene()
 	: Scene()     // 基底クラスのコンストラクタを呼び出す
-	, mBg_NightHandle(-1)
+	, mnBackGroundHandle(-1)
 	, mpPlayer(nullptr)
 {
 
@@ -40,9 +40,9 @@ void GameScene::Initialize()
 void GameScene::LoadStageData()
 {
 	// 背景の読み込み
-	if (mBg_NightHandle == -1)
+	if (mnBackGroundHandle == -1)
 	{
-		mBg_NightHandle = LoadGraph("Resource/BackGround/bg_night.png");
+		mnBackGroundHandle = LoadGraph("Resource/BackGround/bg_night.png");
 	}
 
 	// カメラを初期位置にリセット
@@ -175,7 +175,7 @@ void GameScene::Draw()
 
 	// 2. 都市背景をgCameraY分下にシフトして描画
 	int bgWidth, bgHeight;
-	GetGraphSize(mBg_NightHandle, &bgWidth, &bgHeight);
+	GetGraphSize(mnBackGroundHandle, &bgWidth, &bgHeight);
 	
 	if (bgWidth > 0)
 	{
@@ -197,7 +197,7 @@ void GameScene::Draw()
 		// スクロールしたら背景をループさせて描画
 		for (int x = -offsetX; x < Utility::SCREEN_WIDTH; x += bgWidth)
 		{
-			DrawGraph(x, -bgOffsetY + Bg_Y_Offset, mBg_NightHandle, TRUE);
+			DrawGraph(x, -bgOffsetY + Bg_Y_Offset, mnBackGroundHandle, TRUE);
 		}
 	}
 
@@ -211,10 +211,10 @@ void GameScene::Draw()
 void GameScene::Finalize()
 {
 	// 背景の削除
-	if (mBg_NightHandle != -1)
+	if (mnBackGroundHandle != -1)
 	{
-		DeleteGraph(mBg_NightHandle);
-		mBg_NightHandle = -1;
+		DeleteGraph(mnBackGroundHandle);
+		mnBackGroundHandle = -1;
 	}
 
 	Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->DeleteAll2D();

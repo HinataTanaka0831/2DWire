@@ -12,8 +12,8 @@ public:
 	void Update() override;
 	void Draw() override;
 
-	int GetSizeX() override { return mWidth; }
-	int GetSizeY() override { return mHeight; }
+	int GetSizeX() { return mWidth; }
+	int GetSizeY() { return mHeight; }
 
 private:
 	int mWidth;

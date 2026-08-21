@@ -8,10 +8,7 @@
 class Player : public Object2D
 {
 private:
-	static const int MOVE_SPEED = 5;
-	static const int BULLET_MAX = 10;
-	static const int BULLET_SHOT_INTERVAL = 10;
-
+	static const int MoveSpeed = 5;
 
 private:
 	
@@ -51,38 +48,41 @@ public:
 	// 入力：damage（被弾ダメージ量） / 副作用：HP減算、およびゲームオーバーへのシーン遷移
 	void PDamage(int damage);
 
-	float GetVelocityX() const { return mVelocityX; } 
-	float GetAngularAcceleration() const { return angularAcceleration; } 
+	float GetVelocityX() const { return mfVelocityX; }
+	bool IsFacingLeft() const { return mbFacingLeft; }
+	float GetAngularAcceleration() const { return mfAngularAcceleration; } 
 	bool IsWireActive() const { return mbIsWireActive; } 
 
 private:      
 	bool mbIsWireActive = false;           
 	VECTOR mvWireTargetPos;                
-	float mPendulumAngle = 0.0f;           
-	float mPendulumAngularVelocity = 0.0f; 
-	float mWireLength = 0.0f;              
+	float mfPendulumAngle = 0.0f;           
+	float mfPendulumAngularVelocity = 0.0f; 
+	float mfWireLength = 0.0f;              
 	
-	float mVelocityY = 0.0f;               
-	float mVelocityX = 0.0f;               
-	float angularAcceleration = 0.0f;		       
-	static constexpr float GRAVITY = 0.5f; 
+	float mfVelocityY = 0.0f;               
+	float mfVelocityX = 0.0f;
+	// 最後に向いていた方向を保持（true = 左向き）
+	bool mbFacingLeft = false;
+	float mfAngularAcceleration = 0.0f;		       
+	static constexpr float Gravity = 0.5f; 
 
-	int Hp = 100;  
-	int maxHp = 100; 
-	int width = 250; 
-	int gaugeWidth = 0; 
-	int gaugeHeight = 20; 
-	int damageWidth = 0; 
-	int minWidth = 5; 
-	int displayDamage; 
-	int Timer = 0;
-	const float Gauge_Frame = 3.0f; 
+	int mnHP = 100;  
+	int mnMaxHP = 100; 
+	int mnWidth = 250; 
+	int mnGaugeWidth = 0; 
+	int mnGaugeHeight = 20; 
+	int mnDamageWidth = 0; 
+	int mnMinWidth = 5; 
+	int mnDisplayDamage; 
+	int mnHPGaugeTimer = 0;
+	const float GaugeFrame = 3.0f; 
 
 	bool mbIsAttack = false;
 	bool mHasHitThisAttack = false;
 	int mnAttackTimer = 0;
-	int attackCooldown = 0; // 攻撃できるまでの残り時間
-	const int attackInterval = 18; // 攻撃の間隔（フレーム数）
+	int mnAttackCooldown = 0; // 攻撃できるまでの残り時間
+	const int AttackInterval = 16; // 攻撃の間隔（フレーム数）
 
 };
 

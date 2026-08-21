@@ -1,4 +1,5 @@
 #include "Collision.h"
+#include <cmath>
 
 bool Collision::CheckCircleToCircle(
 	const VECTOR& centerPosA,
@@ -6,23 +7,23 @@ bool Collision::CheckCircleToCircle(
 	const VECTOR& centerPosB,
 	const float& radiusB)
 {
-	// “–‚½‚è”»’è‚ğ‘‚­@O•½•û‚Ì’è—(a^2 + b^2 = c^2)
+	// ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Ì’è—(a^2 + b^2 = c^2)
 
-	// X²‚Ì‹——£i—Î‚Ì‰¡üj
+	// Xï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½ï¿½iï¿½Î‚Ì‰ï¿½ï¿½ï¿½ï¿½j
 	float distanceX = centerPosA.x - centerPosB.x;
-	// Y²‚Ì‹——£i—Î‚Ìcüj
+	// Yï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½ï¿½iï¿½Î‚Ìcï¿½ï¿½ï¿½j
 	float distanceY = centerPosA.y - centerPosB.y;
 
-	// ğŒ
-	float powX = distanceX * distanceX; // ‰¡ü‚Ì2æ
-	float powY = distanceY * distanceY; // cü‚Ì‚Qæ
-	float powR = (radiusA + radiusB) * (radiusA + radiusB);  // ‚»‚ê‚¼‚ê‚Ì”¼Œa‚ğ‘«‚µ‚½‚à‚Ì‚Ì‚Qæ
+	// ï¿½ï¿½ï¿½ï¿½
+	float powX = distanceX * distanceX; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½
+	float powY = distanceY * distanceY; // ï¿½cï¿½ï¿½ï¿½Ì‚Qï¿½ï¿½
+	float powR = (radiusA + radiusB) * (radiusA + radiusB);  // ï¿½ï¿½ï¿½ê‚¼ï¿½ï¿½Ì”ï¿½ï¿½aï¿½ğ‘«‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚Ì‚Qï¿½ï¿½
 	if ((powX + powY) <= powR)
 	{
-		return true;       // ¬Œ÷
+		return true;       // ï¿½ï¿½ï¿½ï¿½
 	}
 
-	// ğŒ‚ğ–‚½‚³‚È‚¢‚Ì‚Å‚ ‚ê‚Î¸”s
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ğ–‚ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½Ì‚Å‚ï¿½ï¿½ï¿½Îï¿½ï¿½s
 	return false;
 }
 
@@ -32,21 +33,68 @@ bool Collision::CheckPointToCircle(
 	const float& radius
 )
 {
-	// X²‚Ì‹——£
+	// Xï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
 	float distanceX = centerPos.x - pointPos.x;
-	// Y²‚Ì‹——£
+	// Yï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½
 	float distanceY = centerPos.y - pointPos.y;
 
-	// ”»’è
-	float powX = distanceX * distanceX;   // ‰¡ü‚Ì‚Qæ
-	float powY = distanceY * distanceY;   // cü‚Ì‚Qæ
-	float powR = radius * radius;         // ”¼Œa‚Ì‚Qæ
+	// ï¿½ï¿½ï¿½ï¿½
+	float powX = distanceX * distanceX;   // ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚Qï¿½ï¿½
+	float powY = distanceY * distanceY;   // ï¿½cï¿½ï¿½ï¿½Ì‚Qï¿½ï¿½
+	float powR = radius * radius;         // ï¿½ï¿½ï¿½aï¿½Ì‚Qï¿½ï¿½
 
 	if ((powX + powY) <= powR)
 	{
-		return true;    // “–‚½‚Á‚Ä‚¢‚é
+		return true;    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½
 	}
 
-	// ğŒ‚ğ–‚½‚³‚È‚¢‚Ì‚Å‚ ‚ê‚Î¸”s
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ğ–‚ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½Ì‚Å‚ï¿½ï¿½ï¿½Îï¿½ï¿½s
+	return false;
+}
+
+bool Collision::CheckRectToRect(
+	const VECTOR& rectPositionA,
+	const float& rectWidthA,
+	const float& rectHeightA,
+	const VECTOR& rectPositionB,
+	const float& rectWidthB,
+	const float& rectHeightB
+)
+{
+	VECTOR leftTopA = rectPositionA;
+	VECTOR rightBottomA = VGet(rectPositionA.x + rectWidthA, rectPositionA.y + rectHeightA, 0.0f);
+
+	VECTOR leftTopB = rectPositionB;
+	VECTOR rightBottomB = VGet(rectPositionB.x + rectWidthB, rectPositionB.y + rectHeightB, 0.0f);
+
+	bool isLeftLessRight = false;
+	if (leftTopA.x <= rightBottomB.x)
+	{
+		isLeftLessRight = true;
+	}
+
+	bool isRightGreaterLeft = false;
+	if (rightBottomA.x >= leftTopB.x)
+	{
+		isRightGreaterLeft = true;
+	}
+
+	bool isTopLessBottom = false;
+	if (leftTopA.y <= rightBottomB.y)
+	{
+		isTopLessBottom = true;
+	}
+
+	bool isBottomGreaterTop = false;
+	if (rightBottomA.y >= leftTopB.y)
+	{
+		isBottomGreaterTop = true;
+	}
+
+	if (isLeftLessRight && isRightGreaterLeft && isTopLessBottom && isBottomGreaterTop)
+	{
+		return true; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½
+	}
+
 	return false;
 }

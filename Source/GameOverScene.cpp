@@ -43,8 +43,6 @@ void GameOverScene::Update()
 
 void GameOverScene::Draw()
 {
-	// 背景の表示
-	DrawGraph(0, 0, grHandle, false);
 	// 文字のフォントサイズ変更
 	SetFontSize(50);
 	// 文字列の表示

@@ -71,9 +71,9 @@ public:      // ゲッター・セッター
 	Tag GetTag() { return mnTag; }          // タグ取得
 
 
-	virtual float GetRadius();   // 半径の取得
-	virtual int GetSizeX();
-	virtual int GetSizeY();
+	float GetRadius();   // 半径の取得
+	int GetSizeX();
+	int GetSizeY();
 
 protected:
 	Texture* mpTexture;     // 画像
