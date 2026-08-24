@@ -1,29 +1,23 @@
-#pragma once
+﻿#pragma once
 #include "Bullet.h"
 #include "Object2D.h"
 
-// �N���X�̑O���錾
-// include �����ɑ��݂�����m�点��錾
-// Enemy�N���X�̒��̃����o�֐��Ȃǂ͌ĂׂȂ�
-//class Enemy;
-
+// 最寄りの敵を検知して角度を自動補正・追従する誘導弾クラス
 class HomingBullet : public Object2D
 {
 public:
-	// �R���X�g���N�^
+	// 誘導弾オブジェクトの生成
+	// 入力: initPos(初期座標), filename(画像パス) / 出力: なし / 副作用: HomingBullet2Dタグの設定
 	HomingBullet(VECTOR initPos, std::string filename);
-	// �f�X�g���N�^
 	virtual ~HomingBullet();
 
-	// �X�V
+	// 誘導方向の再計算と移動
+	// 入力: なし / 出力: なし / 副作用: 進行方向および座標の更新
 	void Update() override;
 
-	// �`��
 	void Draw() override;
 
-	//�����v�Z
+	// ターゲット（敵）との相対ベクトルから追尾角度を補正
+	// 入力: なし / 出力: なし / 副作用: mvDirectionの更新
 	void CalcDirection();
-
-private:
-
 };

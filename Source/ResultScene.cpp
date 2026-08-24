@@ -1,53 +1,42 @@
-#include "ResultScene.h"
+ï»¿#include "ResultScene.h"
 #include "DxLib.h"
 #include "Utility.h"
 #include "Master.h"
 #include "InputManager.h"
 
 ResultScene::ResultScene()
-	: Scene()     // Šî’êƒNƒ‰ƒX‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğŒÄ‚Ño‚·
+	: Scene()
 {
-
 }
 
 ResultScene::~ResultScene()
 {
-
 }
 
 void ResultScene::Initialize()
 {
-
 }
 
+// æ±ºå®šã‚­ãƒ¼å…¥åŠ›ã«ã‚ˆã‚‹ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã¸ã®å¾©å¸°
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: SCENE_TITLEã¸ã®é·ç§»è¦æ±‚
 void ResultScene::Update()
 {
-
-	// ƒGƒ“ƒ^[ƒL[‚ª‰Ÿ‚³‚ê‚½‚çƒQ[ƒ€‰æ–Ê‚ÖˆÚ“®
 	if (InputManager::CheckDownKey(KEY_INPUT_RETURN))
 	{
-		// SEÄ¶
 		Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
-
 		Master::mpSceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_TITLE);
 	}
-
-	// Šî’êƒNƒ‰ƒX‚ÌXVˆ—‚ğŒÄ‚Ño‚·
 	Scene::Update();
-
 }
 
+// ã‚¯ãƒªã‚¢è¬è¾ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®æç”»
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã¸ã®æç”»
 void ResultScene::Draw()
 {
-	// •¶š—ñ‚Ì•\¦
-	DrawString(Utility::SCREEN_WIDTH / 2 - 100, Utility::SCREEN_HEIGHT / 2 , "Thank you for Playing", GetColor(255, 255, 255));
-
-	// Šî’êƒNƒ‰ƒX‚Ì•`‰æˆ—‚ğŒÄ‚Ño‚·
+	DrawString(Utility::SCREEN_WIDTH / 2 - 100, Utility::SCREEN_HEIGHT / 2, "Thank you for Playing", GetColor(255, 255, 255));
 	Scene::Draw();
-
 }
 
 void ResultScene::Finalize()
 {
-
 }

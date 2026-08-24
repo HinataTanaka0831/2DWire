@@ -1,4 +1,4 @@
-#include "WireTarget.h"
+﻿#include "WireTarget.h"
 
 WireTarget::WireTarget(std::string filename, VECTOR initPos)
 	: Object2D(filename, initPos)
@@ -8,7 +8,6 @@ WireTarget::WireTarget(std::string filename, VECTOR initPos)
 
 WireTarget::~WireTarget()
 {
-
 }
 
 void WireTarget::Update()

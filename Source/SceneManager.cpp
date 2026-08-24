@@ -1,4 +1,4 @@
-#include "SceneManager.h"
+ï»¿#include "SceneManager.h"
 #include "Scene.h"
 #include "TitleScene.h"
 #include "GameScene.h"
@@ -6,7 +6,7 @@
 #include "GameRuleScene.h"
 #include "GameOverScene.h"
 #include "Utility.h"
-#include <cstdlib> // rand()—p
+#include <cstdlib>
 
 SceneManager::SceneManager()
 	: mnSceneType(SCENE_TYPE::SCENE_NONE)
@@ -20,25 +20,22 @@ SceneManager::SceneManager()
 
 SceneManager::~SceneManager()
 {
-	// ì¬‚µ‚½ƒXƒNƒŠ[ƒ“ƒoƒbƒtƒ@‚ğíœ
-	if (mWorkScreenHandle != -1)
-	{
-		DeleteGraph(mWorkScreenHandle);
-	}
 }
 
+// ä¸€æ™‚æç”»ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆã¨åˆæœŸã‚·ãƒ¼ãƒ³ï¼ˆã‚¿ã‚¤ãƒˆãƒ«ï¼‰ã®è¨­å®š
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: mWorkScreenHandleã®ç”Ÿæˆ
 void SceneManager::Initialize()
 {
-	// --- y’Ç‰ÁzƒVƒFƒCƒN‚È‚Ç‚Ì‰‰o—p‚ÉA— ‚Å•`‰æ‚·‚é‚½‚ß‚ÌƒXƒNƒŠ[ƒ“‚ğì¬ (1920 * 1080) ---
-	// ¦ ‘æ3ˆø”‚ğTRUE‚É‚·‚é‚±‚Æ‚ÅƒAƒ‹ƒtƒ@ƒ`ƒƒƒ“ƒlƒ‹•t‚«‚Ì‰æ‘œƒoƒbƒtƒ@‚É‚È‚è‚Ü‚·
+	// ç”»é¢ã‚·ã‚§ã‚¤ã‚¯ã‚„å…¨ç”»é¢ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆåˆæˆç”¨ã®ä¸­é–“ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ãƒãƒƒãƒ•ã‚¡ã‚’ç”Ÿæˆ
 	mWorkScreenHandle = MakeScreen(Utility::SCREEN_WIDTH, Utility::SCREEN_HEIGHT, TRUE);
 	mnNextSceneType = SCENE_TYPE::SCENE_TITLE;
 	ChangeSceneIfNeeded();
 }
 
+// ç¾åœ¨ã‚·ãƒ¼ãƒ³ã®æ›´æ–°ãŠã‚ˆã³é·ç§»æ¼”å‡ºã‚¿ã‚¤ãƒãƒ¼ã®é€²è¡Œ
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: ã‚·ãƒ¼ãƒ³UpdateãŠã‚ˆã³ç”»é¢æºã‚Œè¨ˆç®—
 void SceneManager::Update()
 {
-	// ƒV[ƒ“‚ÌXVi‘JˆÚ’†‚à’ÊíXV‚·‚é‚©‚ÍƒQ[ƒ€ƒfƒUƒCƒ“‚É‚æ‚è‚Ü‚·‚ªAŠù‘¶‚Ì\‘¢‚ğˆÛj
 	if (mpCurrentScene != nullptr)
 	{
 		mpCurrentScene->Update();
@@ -50,35 +47,42 @@ void SceneManager::Update()
 	}
 }
 
+// ã‚ªãƒ•ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ãƒãƒƒãƒ•ã‚¡çµŒç”±ã§ã®ã‚·ãƒ¼ãƒ³æç”»ã¨ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆï¼ˆã‚·ã‚§ã‚¤ã‚¯ãƒ»ãƒ•ã‚§ãƒ¼ãƒ‰ï¼‰åˆæˆ
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã¸ã®æç”»
 void SceneManager::Draw()
 {
 	if (mpCurrentScene == nullptr) return;
-	// 1. •`‰ææ‚ğˆêƒXƒNƒŠ[ƒ“(mWorkScreenHandle)‚É•ÏX‚·‚é
+
+	// ã‚·ã‚§ã‚¤ã‚¯æ¼”å‡ºã‚’é©ç”¨ã™ã‚‹ãŸã‚ä¸€æ—¦ãƒ¯ãƒ¼ã‚¯ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã¸å…¨æç”»
 	SetDrawScreen(mWorkScreenHandle);
 	ClearDrawScreen();
 
-	// 2. ’Êí’Ê‚èƒV[ƒ“‚ğ•`‰æ‚·‚éiŠeƒV[ƒ“‚Í’Êí’Ê‚è(0,0)Šî€‚Å•`‰æ‚µ‚ÄOKj
 	mpCurrentScene->Draw();
 
-	// 3. •`‰ææ‚ğ–{—ˆ‚Ì— ‰æ–Ê(DX_SCREEN_BACK)‚É–ß‚·
 	SetDrawScreen(DX_SCREEN_BACK);
 
-	// 4. ˆêƒXƒNƒŠ[ƒ“‚Ì“à—e‚ğAƒVƒFƒCƒNƒIƒtƒZƒbƒg‚ğ‰Á‚¦‚Ä— ‰æ–Ê‚É•`‰æ‚·‚é
-	// ¦ ‰æ–ÊŠO‚Ì•‚¢Œ„ŠÔ‚ªŒ©‚¦‚È‚¢‚æ‚¤‚É­‚µŠg‘å‚µ‚Ä•`‰æ‚·‚é‚©A‚»‚Ì‚Ü‚Ü“™”{‚Å‚¸‚ç‚µ‚Ä•`‰æ‚µ‚Ü‚·B
-	// ‚±‚±‚Å‚ÍƒVƒ“ƒvƒ‹‚É‚»‚Ì‚Ü‚Ü•`‰æ‚µ‚Ü‚·B
+	// ã‚·ã‚§ã‚¤ã‚¯ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’åŠ ç®—ã—ã¦æœ¬æ¥ã®ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã¸è»¢é€
 	DrawGraph(mShakeOffsetX, mShakeOffsetY, mWorkScreenHandle, FALSE);
 
-	// 5. ‘JˆÚƒtƒF[ƒh/ƒtƒ‰ƒbƒVƒ…‰‰o‚ğ•`‰æiƒtƒ‰ƒbƒVƒ…©‘Ì‚Í‰æ–Ê‚Ì—h‚ê‚É‰e‹¿‚³‚ê‚È‚¢‚æ‚¤ÅŒã‚É•`‰æj
 	if (mIsTransition)
 	{
 		DrawTransitionEffects();
 	}
 }
 
+// ä¸€æ™‚ãƒãƒƒãƒ•ã‚¡ã®è§£æ”¾
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: DxLibã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ³ãƒ‰ãƒ«ã®å‰Šé™¤
 void SceneManager::Finalize()
 {
+	if (mWorkScreenHandle != -1)
+	{
+		DeleteGraph(mWorkScreenHandle);
+		mWorkScreenHandle = -1;
+	}
 }
 
+// ãƒ«ãƒ¼ãƒ—å®‰å…¨ãªã‚¿ã‚¤ãƒŸãƒ³ã‚°ã§ç¾åœ¨ã‚·ãƒ¼ãƒ³ã‚’ç ´æ£„ã—æ¬¡ã‚·ãƒ¼ãƒ³ã‚’åˆæœŸåŒ–
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: mpCurrentSceneã®ç ´æ£„ã¨å†ç”Ÿæˆ
 void SceneManager::ChangeSceneIfNeeded()
 {
 	if (mnSceneType == mnNextSceneType)
@@ -101,13 +105,9 @@ void SceneManager::ChangeSceneIfNeeded()
 		mpCurrentScene = new TitleScene();
 		break;
 	case SCENE_TYPE::SCENE_GAME:
-		mpCurrentScene = new GameScene();
-		break;
-
 	case SCENE_TYPE::SCENE_GAME_STAGE2:
 		mpCurrentScene = new GameScene();
 		break;
-
 	case SCENE_TYPE::SCENE_RESULT:
 		mpCurrentScene = new ResultScene();
 		break;
@@ -127,25 +127,26 @@ void SceneManager::ChangeSceneIfNeeded()
 	}
 }
 
-// --- yC³zSetNextScene(): ‘JˆÚæƒV[ƒ“‚É‰‚¶‚Ä‰‰oƒ^ƒCƒv‚ğØ‚è‘Ö‚¦‚é ---
+// æ¬¡ã«é·ç§»ã™ã¹ãã‚·ãƒ¼ãƒ³ã‚’è¨­å®šã—ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³æ¼”å‡ºã‚’é–‹å§‹
+// å…¥åŠ›: next(é·ç§»å…ˆã‚·ãƒ¼ãƒ³ç¨®åˆ¥) / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: é·ç§»æ¼”å‡ºãƒ•ãƒ©ã‚°ã¨ã‚¿ã‚¤ãƒãƒ¼ã®é–‹å§‹
 void SceneManager::SetNextScene(SCENE_TYPE next)
 {
 	if (mnSceneType == next) return;
 
 	mnNextSceneType = next;
 
-	// ‘JˆÚ‰‰oƒ^ƒCƒv‚Ì”»’è
+	// ã‚·ãƒ¼ãƒ³ã®æ¼”å‡ºæ„å›³ã«å¿œã˜ã¦ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³ç¨®åˆ¥ã‚’åˆ†å²
 	if (next == SCENE_TYPE::SCENE_GAME)
 	{
-		mTransitionType = TransitionType::WHITE_FLASH;     // GameScene‚Ö‚Í”’ƒtƒ‰ƒbƒVƒ…
+		mTransitionType = TransitionType::WHITE_FLASH;
 	}
 	else if (next == SCENE_TYPE::SCENE_GAMEOVER)
 	{
-		mTransitionType = TransitionType::RED_FLASH_SHAKE; // GameOverScene‚Ö‚ÍÔƒtƒ‰ƒbƒVƒ… + ƒVƒFƒCƒN
+		mTransitionType = TransitionType::RED_FLASH_SHAKE;
 	}
 	else
 	{
-		mTransitionType = TransitionType::NORMAL_BLACK;    // ‚»‚Ì‘¼‚Í’Êí‚Ì•ƒtƒF[ƒh
+		mTransitionType = TransitionType::NORMAL_BLACK;
 	}
 
 	mIsTransition = true;
@@ -155,23 +156,21 @@ void SceneManager::SetNextScene(SCENE_TYPE next)
 	mShakeOffsetY = 0;
 }
 
-// --- yC³zUpdateTransition(): ‘JˆÚó‘Ô‚ÌXV‚ÆƒVƒFƒCƒNˆ—‚Ì’Ç‰Á ---
+// é·ç§»æ¼”å‡ºã®ãƒ•ã‚§ãƒ¼ãƒ‰ãƒ»ã‚·ã‚§ã‚¤ã‚¯é€²è¡Œè¨ˆç®—
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: mShakeOffsetX/YãŠã‚ˆã³ã‚¢ãƒ«ãƒ•ã‚¡å€¤ã®æ›´æ–°
 void SceneManager::UpdateTransition()
 {
 	mTransitionTimer++;
 
-	// ƒVƒFƒCƒNˆ—iÔƒtƒ‰ƒbƒVƒ…+ƒVƒFƒCƒN‚Ì‚İj
 	if (mTransitionType == TransitionType::RED_FLASH_SHAKE)
 	{
 		if (mPhase == TransitionPhase::TRANS_FADEOUT)
 		{
-			// ƒtƒF[ƒhƒAƒEƒgiƒ_ƒ[ƒWEƒQ[ƒ€ƒI[ƒo[”­¶’¼Œãj‚ÉŒƒ‚µ‚­ƒVƒFƒCƒN
-			// ƒ^ƒCƒ}[‚ªi‚Ş‚É‚Â‚ê‚ÄƒVƒFƒCƒN‚Ì‹­‚³‚ğŒ¸Š‚³‚¹‚é
+			// è¢«å¼¾ãƒ»æ­»äº¡ã®è¡æ’ƒã‚’è¡¨ç¾ã™ã‚‹ãŸã‚æ™‚é–“çµŒéã¨ã¨ã‚‚ã«æ¸›è¡°ã™ã‚‹ãƒ©ãƒ³ãƒ€ãƒ æŒ¯å‹•ã‚’ç”Ÿæˆ
 			int currentTime = mTransitionTimer;
 			int limitTime = TRANSITION_TIME;
-			int maxShakeAmount = 15; // Å‘åƒVƒFƒCƒN•iƒsƒNƒZƒ‹j
+			int maxShakeAmount = 15;
 
-			// c‚èŠÔ‚É‰‚¶‚½ƒVƒFƒCƒN—Ê‚ÌŒ¸ŠŒvZ
 			int shakeRange = maxShakeAmount * (limitTime - currentTime) / limitTime;
 			if (shakeRange > 0)
 			{
@@ -186,7 +185,6 @@ void SceneManager::UpdateTransition()
 		}
 		else
 		{
-			// ƒtƒF[ƒhƒCƒ“‚Í—h‚ç‚³‚È‚¢
 			mShakeOffsetX = 0;
 			mShakeOffsetY = 0;
 		}
@@ -197,9 +195,7 @@ void SceneManager::UpdateTransition()
 	case TransitionPhase::TRANS_FADEOUT:
 		if (mTransitionTimer >= TRANSITION_TIME)
 		{
-			// ƒtƒF[ƒhƒAƒEƒgŠ®—¹‚ÉƒV[ƒ“Ø‚è‘Ö‚¦‚ğs‚¤
 			ChangeSceneIfNeeded();
-
 			mPhase = TransitionPhase::TRANS_FADEIN;
 			mTransitionTimer = 0;
 		}
@@ -217,10 +213,10 @@ void SceneManager::UpdateTransition()
 	}
 }
 
-// --- yV‹K’Ç‰ÁzDrawTransitionEffects(): ƒtƒ‰ƒbƒVƒ…‚¨‚æ‚ÑƒtƒF[ƒh•`‰æ ---
+// ãƒˆãƒ©ãƒ³ã‚¸ã‚·ãƒ§ãƒ³ç”¨ãƒã‚¹ã‚¯ãƒ»ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ã®æç”»
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã¸ã®ã‚¢ãƒ«ãƒ•ã‚¡æç”»
 void SceneManager::DrawTransitionEffects()
 {
-	// ‘JˆÚƒ^ƒCƒ}[”ä—¦‚©‚ç“§–¾“x(ƒAƒ‹ƒtƒ@’l)‚ğZo (0`255)
 	int alpha = 0;
 	if (mPhase == TransitionPhase::TRANS_FADEOUT)
 	{
@@ -231,26 +227,22 @@ void SceneManager::DrawTransitionEffects()
 		alpha = ((TRANSITION_TIME - mTransitionTimer) * 255) / TRANSITION_TIME;
 	}
 
-	// ‰‰oƒ^ƒCƒv‚É‰‚¶‚½F‚ğŒˆ’è
-	unsigned int color = GetColor(0, 0, 0); // ƒfƒtƒHƒ‹ƒg‚Í•
+	unsigned int color = GetColor(0, 0, 0);
 
 	switch (mTransitionType)
 	{
 	case TransitionType::WHITE_FLASH:
-		color = GetColor(255, 255, 255); // ”’ƒtƒ‰ƒbƒVƒ…
+		color = GetColor(255, 255, 255);
 		break;
-
 	case TransitionType::RED_FLASH_SHAKE:
-		color = GetColor(255, 0, 0);     // Ôƒtƒ‰ƒbƒVƒ…
+		color = GetColor(255, 0, 0);
 		break;
-
 	case TransitionType::NORMAL_BLACK:
 	default:
-		color = GetColor(0, 0, 0);       // •ƒtƒF[ƒh
+		color = GetColor(0, 0, 0);
 		break;
 	}
 
-	// ƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒh‚ğ—LŒø‚É‚µ‚Ä‰æ–Ê‘S‘Ì‚É’ZŒ`‚ğ•`‰æ (‰ğ‘œ“x: 1280x720)
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	DrawBox(0, 0, Utility::SCREEN_WIDTH, Utility::SCREEN_HEIGHT, color, TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);

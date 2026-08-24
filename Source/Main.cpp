@@ -10,110 +10,76 @@
 #include "MouseManager.h"
 #include "Loading.h"
 #include <memory>
-#include <math.h>
+#include <cmath>
 
-
-/* @note リファレンス https://dxlib.xsrv.jp/dxfunc.html
-*/
-
-// Master クラスの静的メンバ変数定義
+// 全システムから参照されるシングルトン的マネージャーの静的インスタンス
 SceneManager* Master::mpSceneManager = new SceneManager();
 SoundManager* Master::mpSoundManager = new SoundManager();
-MouseManager gMouseManager; // グローバルなマウスマネージャーのインスタンス
+// マウス入力状態を全シーンで共有するためのグローバルインスタンス
+MouseManager gMouseManager;
 
-/**
-* @fn WinMain
-* @brief Main関数
-* @param[in] HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow
-* @return int 0 正常終了／-1 エラー
-* @details Main関数
-*/
+// アプリケーションのエントリーポイントおよびメインループ制御
+// 入力: hInstance, hPrevInstance, lpCmdLine, nCmdShow / 出力: 0(正常終了), -1(初期化失敗) / 副作用: ウィンドウ生成、DXライブラリ初期化・終了、全リソース破棄
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	LPSTR lpCmdLine, int nCmdShow)
 {
-	// ウインドウモードで起動
+	// デバッグ・操作性確保のためウィンドウモードで起動
 	ChangeWindowMode(true);
 
-	// 画面サイズの設定
+	// ゲーム描画解像度を固定仕様（1920x1080）に設定
 	SetGraphMode(Utility::SCREEN_WIDTH, Utility::SCREEN_HEIGHT, 32);
 
-	// DXライブラリ初期化
+	// DXライブラリ初期化失敗時はプロセスを終了し後続の不正アクセスを防ぐ
 	if(DxLib_Init() == -1)
 	{
 		return -1;
 	}
 
-	// ローディングマネージャーの作成
+	// 起動時の初期化負荷を管理するためのローダー
 	LoadingManager loader;
-
-	// タスクを追加
-	// サウンドマネージャーの初期化
 	loader.AddTask(std::make_unique<InitializeSoundManagerTask>());
-	// シーンマネージャーの初期化
 	loader.AddTask(std::make_unique<InitializeSceneManagerTask>());
-
-	// ローディング実行
 	loader.ExecuteAll();
 
-
-	// 描画先画面を裏画面に設定する
+	// 画面チラつき（ティアリング）防止のため描画先をバックバッファに指定
 	SetDrawScreen(DX_SCREEN_BACK);
 
-
-
-	// ゲームのメインループ
-	// ProcessMessage() == 0 -> ウィンドウの×ボタンを押されていないかどうか
-	// CheckHitKey(KEY_INPUT_ESCAPE) == 0 -> エスケープキーが押されていないかどうか
+	// ウィンドウ破棄またはESCキー押下までフレーム処理を継続
 	int animationCounter = 0;
 	int textureCurrentNum = 0;
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
-		// 画面を初期化する
 		ClearDrawScreen();
 
 		int time = GetNowCount();
 
-		 // 更新
 		Master::mpSceneManager->Update();
-
-		// 描画
 		Master::mpSceneManager->Draw();
 		
-		// マウスの状態を更新する
+		// 毎フレームのクリック・リリース状態を検知するため入力状態を更新
 		gMouseManager.MouseClick();
 
-		// 裏画面の内容を表画面に映す
 		ScreenFlip();
 
-		// 17ミリ秒（秒間約60フレームだった場合の1フレーム当たりの経過時間）
-		// 経過するまでここで待つ
+		// 秒間60フレーム（約16.6ms/frame）の動作速度を一定に保つための同期待機
 		while (GetNowCount() - time < 17)
 		{
-			// 待つだけなのでここでは何も処理はしない
 		}
 
-		// 削除する必要のあるオブジェクトがあれば削除する
+		// イテレーション中の削除による不整合を防ぐため、フレーム終了時に不要オブジェクトを一括安全削除
 		Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->DeleteAll2DIfNeeded();
 
-		// ループする直前にシーン遷移チェックを入れておく
+		// 更新・描画完了後に安全に次フレーム用シーンへの切り替えを行う
 		Master::mpSceneManager->ChangeSceneIfNeeded();
-
 	}
 
-	
-
-	// 終了処理
-	//Finalize();
+	// 静的マネージャーのメモリ解放およびDXライブラリリソースの破棄
 	Master::mpSceneManager->Finalize();
 	delete Master::mpSceneManager;
 	Master::mpSoundManager->Finalize();
 	delete Master::mpSoundManager;
 
-	// DXライブラリ使用の終了
 	DxLib_End();
 
-	// ソフトの終了
 	return 0;
 }
-
-

@@ -1,119 +1,148 @@
-#include "TitleScene.h"
+ï»¿#include "TitleScene.h"
 #include "DxLib.h"
 #include "Utility.h"
 #include "Master.h"
 #include "InputManager.h"
-
-
+#include "Button.h"
+#include "MouseManager.h"
+#include "TitleDemo.h"
 
 TitleScene::TitleScene() 
-: Scene()     // Šî’êƒNƒ‰ƒX‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğŒÄ‚Ño‚·
+	: Scene()
+	, mpPlayButton(nullptr)
+	, mpPlayRuleButton(nullptr)
+	, mnBackGroundHandle(-1)
+	, mpTitleDemo(nullptr)
 {
-
 }
 
 TitleScene::~TitleScene()
 {
-	
 }
 
+// ã‚¿ã‚¤ãƒˆãƒ«èƒŒæ™¯ã€ãƒœã‚¿ãƒ³UIã€è‡ªå‹•ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ãƒ‡ãƒ¢ã®åˆæœŸåŒ–
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: ç”»åƒãƒ­ãƒ¼ãƒ‰ã€Button/TitleDemoã®ç”Ÿæˆ
 void TitleScene::Initialize()
 {
-	// ƒ^ƒCƒgƒ‹ƒƒS‚ÌƒNƒ‰ƒX‚Ìì¬
-	// ƒvƒŒƒCƒ„[‚Ì¶¬
-	// ‚È‚Ç‚ğ‚±‚±‚Ås‚¤
-	// ->ƒ^ƒCƒgƒ‹‰æ–Ê‚Å•K—v‚ÈƒIƒuƒWƒFƒNƒg‚ğ‚±‚±‚Å¶¬‚·‚é
+	if (mnBackGroundHandle == -1)
+	{
+		mnBackGroundHandle = LoadGraph("Resource/BackGround/bg_night.png");
+	}
 
-	// BGMÄ¶
-	Master::mpSoundManager->PlayBGM(SoundManager::BGM_TITLE);
+	if (mpPlayButton == nullptr)
+	{
+		mpPlayButton = new Button(stringX, PlayY - 10, stringX + 250, PlayY + 60, " ãƒ—ãƒ¬ã‚¤ ", GetColor(255, 126, 115), GetColor(250, 250, 250), FontSize20);
+	}
+	if (mpPlayRuleButton == nullptr)
+	{
+		mpPlayRuleButton = new Button(stringX, PlayRuleY - 10, stringX + 250, PlayRuleY + 60, "ã‚ãã³ã‹ãŸ", GetColor(255, 126, 115), GetColor(250, 250, 250), FontSize20);
+	}
 
+	gCameraX = 0.0f;
+	gCameraY = 0.0f;
+
+	if (mpTitleDemo == nullptr)
+	{
+		mpTitleDemo = new TitleDemo();
+	}
 }
 
+// ãƒœã‚¿ãƒ³å…¥åŠ›æ¤œçŸ¥ã¨ã‚²ãƒ¼ãƒ æœ¬ç·¨/ãƒ«ãƒ¼ãƒ«ç”»é¢ã¸ã®é·ç§»åˆ¶å¾¡
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: ã‚·ãƒ¼ãƒ³é·ç§»è¦æ±‚ã€ãƒ‡ãƒ¢ã®é€²è¡Œ
 void TitleScene::Update()
 {
-	// SƒL[‚ª‰Ÿ‚³‚ê‚½‚ç‰º‚É‰º‚ª‚é
-	if (InputManager::CheckDownKey(KEY_INPUT_S))
-	{
-		// SEÄ¶
-		 Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
+	Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
 
-		NowSelect = (NowSelect + 1) % select_Now;
-	}
-	// WƒL[‚ª‰Ÿ‚³‚ê‚½‚çã‚Éã‚ª‚é
-	if (InputManager::CheckDownKey(KEY_INPUT_W))
+	if (mpPlayButton)
 	{
-		// SEÄ¶
-		Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
-
-		NowSelect = (NowSelect + (select_Now - 1)) % select_Now;
-	}
-	// ƒGƒ“ƒ^[ƒL[‚ª‰Ÿ‚³‚ê‚½‚ç‰æ–Ê‚ÌØ‚è‘Ö‚¦ˆ—
-	if (InputManager::CheckDownKey(KEY_INPUT_RETURN))
-	{
-		// SEÄ¶
-		Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
-
-		switch (NowSelect)
+		mpPlayButton->Update();
+		if (mpPlayButton->IsClick())
 		{
-		case select_Play:  // ƒvƒŒƒC‰æ–Ê‚Ö
-			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_SELECT);
+			NowSelect3 = select_Play;
+		}
+	}
+
+	if (mpPlayRuleButton)
+	{
+		mpPlayRuleButton->Update();
+		if (mpPlayRuleButton->IsClick())
+		{
+			NowSelect3 = select_PlayRule;
+		}
+	}
+
+	bool isLeftTrigger = MouseManager::IsLeftTrigger();
+	if (isLeftTrigger)
+	{
+		switch (NowSelect3)
+		{
+		case select_Play:
+			gCurrentStage = 1;
+			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_GAME);
 			break;
 
-		case select_PlayRule:  // —V‚Ñ•û‚Ö
-			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_GAMERULE);
+		case select_PlayRule:
+			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_GAME_RULE);
 			break;
 		}
-
 	}
 
-	// Šî’êƒNƒ‰ƒX‚ÌXVˆ—‚ğŒÄ‚Ño‚·
+	if (mpTitleDemo != nullptr)
+	{
+		mpTitleDemo->Update();
+	}
+
 	Scene::Update();
 }
 
+// èƒŒæ™¯ã€ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ãƒ‡ãƒ¢ã€UIãƒœã‚¿ãƒ³ã®æç”»
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã¸ã®æç”»
 void TitleScene::Draw()
 {
-	// ”wŒi‚Ì•\¦
-	DrawGraph(0, 0, grHandle, false);
-	// •¶š‚ÌƒtƒHƒ“ƒgƒTƒCƒY•ÏX
-	SetFontSize(40);
-	// •¶š—ñ‚Ì•\¦
-	DrawString(Utility::SCREEN_WIDTH / 2 - 120, Utility::SCREEN_HEIGHT / 2 - 100, "2D shooting", GetColor(255, 255, 255));
+	int bgWidth, bgHeight;
+	GetGraphSize(mnBackGroundHandle, &bgWidth, &bgHeight);
 
-	SetFontSize(20);
-
-	DrawString(Utility::SCREEN_WIDTH / 2 - 100, 200, "W:ã@S:‰º@ENTER:Œˆ’è", GetColor(255, 255, 255));
-
-	DrawString(Utility::SCREEN_WIDTH / 2 - 60, Play_Y, "@ƒvƒŒƒC@", GetColor(255, 255, 255));
-
-	DrawString(Utility::SCREEN_WIDTH / 2 - 60, PlayRule_Y, "@—V‚Ñ•û@", GetColor(255, 255, 255));
-
-
-	switch (NowSelect)
+	if (bgWidth > 0)
 	{
-	case select_Play:  // ‘I‘ğˆiƒvƒŒƒCj‚ª‘I‘ğ‚³‚ê‚Ä‚¢‚éê‡‚ÍƒvƒŒƒC‚ÌYÀ•W‚ğİ’è‚·‚é
-		y = Play_Y;
-		break;
+		float scrollSpeed = 0.5f;
+		int offsetX = (int)(gCameraX * scrollSpeed) % bgWidth;
 
-	case select_PlayRule:  // ‘I‘ğˆi—V‚Ñ•ûj‚ª‘I‘ğ‚³‚ê‚Ä‚¢‚éê‡‚É‚Í—V‚Ñ•û‚ÌYÀ•W‚ğİ’è‚·‚é
-		y = PlayRule_Y;
-		break;
+		if (offsetX < 0)
+		{
+			offsetX += bgWidth;
+		}
+
+		int bgOffsetY = (int)gCameraY;
+		const int Bg_Y_Offset = 0;
+
+		for (int x = -offsetX; x < Utility::SCREEN_WIDTH; x += bgWidth)
+		{
+			DrawGraph(x, -bgOffsetY + Bg_Y_Offset, mnBackGroundHandle, TRUE);
+		}
 	}
 
-	// ‰æ‘œ‚Ì•\¦
-	DrawGraph(Utility::SCREEN_WIDTH / 2 - 70, y, icHandle, false);
+	if (mpTitleDemo != nullptr)
+	{
+		mpTitleDemo->Draw();
+	}
 
-	// Šî’êƒNƒ‰ƒX‚Ì•`‰æˆ—‚ğŒÄ‚Ño‚·
+	if (mpPlayButton)
+	{
+		mpPlayButton->Draw();
+	}
+
+	if (mpPlayRuleButton)
+	{
+		mpPlayRuleButton->Draw();
+	}
+
 	Scene::Draw();
 }
 
+// ãƒ‡ãƒ¢ãŠã‚ˆã³ãƒªã‚½ãƒ¼ã‚¹ã®è§£æ”¾
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: mpTitleDemoã®ç ´æ£„
 void TitleScene::Finalize()
 {
-	// BGM’â~
-	Master::mpSoundManager->StopBGM();
+	delete mpTitleDemo;
+	mpTitleDemo = nullptr;
 }
-
-
-		// SEÄ¶
-//Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
-//
-//Master::mpSceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_SELECT);

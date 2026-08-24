@@ -1,4 +1,4 @@
-#include "Bullet.h"
+ï»¿#include "Bullet.h"
 #include "Collision.h"
 #include "Enemy.h"
 #include "Master.h"
@@ -6,37 +6,31 @@
 #include "Scene.h"
 #include "Player.h"
 
-
-
 Bullet::Bullet(VECTOR initPos, std::string filename)
 	: Object2D(filename, initPos)
-	, mvDirection(VGet(1.0f, 0.0f, 0.0f))  // ƒfƒtƒHƒ‹ƒg‚Å‚Í‰E•ûŒü‚Éi‚Ş‚æ‚¤‚É‚·‚é
+	, mvDirection(VGet(1.0f, 0.0f, 0.0f))
 	, mfAngle(0.0f)
 	, mfspeed(50.0f)
-	
 {
 	SetTag(Object2D::Bullet2D);
-
 }
 
 Bullet::~Bullet()
 {
-
 }
 
+// ç§»å‹•ã€æ•µã¨ã®å½“ãŸã‚Šåˆ¤å®šã€ç”»é¢å¤–ç ´æ£„åˆ¤å®šã®å®Ÿè¡Œ
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: åº§æ¨™æ›´æ–°ã€è¡çªæ™‚ã®ç›¸æ‰‹ã¸ã®ãƒ€ãƒ¡ãƒ¼ã‚¸é©ç”¨ã€å‰Šé™¤ãƒ•ãƒ©ã‚°è¨­å®š
 void Bullet::Update()
 {
-	// ˆÚ“®ˆ—
 	Move();
-
 	CalcCollision();
 
-	// ‰æ–ÊŠO‚Éo‚½‚çíœ‚·‚é
+	// ãƒ¡ãƒ¢ãƒªç¯€ç´„ã¨ãƒ‘ãƒ•ã‚©ãƒ¼ãƒãƒ³ã‚¹ç¶­æŒã®ãŸã‚ç”»é¢å¤–ã«å‡ºãŸå¼¾ã‚’è‡ªå‹•æ¶ˆæ»…ã•ã›ã‚‹
 	if (IsScreenOut())
 	{
-		SetDeleteFlag(true);   // íœƒtƒ‰ƒO‚ğ—§‚Ä‚ÄAŒã‚ÅÁ‚µ‚Ä‚à‚ç‚¤
+		SetDeleteFlag(true);
 	}
-
 
 	Object2D::Update();
 }
@@ -46,79 +40,47 @@ void Bullet::Draw()
 	Object2D::Draw();
 }
 
+// ç›´ç·šç§»å‹•è¨ˆç®—
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: åº§æ¨™ã®æ›´æ–°
 void Bullet::Move()
 {
-	// À•WˆÚ“®i‰æ–Ê‚Ìã‚Ì‚Ù‚¤‚ÉŒü‚©‚Á‚ÄˆÚ“®j
-	// VAdd() ... VECTOR “¯m‚Ì‘«‚µZ‚ğs‚¤ŠÖ”
-	// VScale() ... VECTOR ‚É float ’l‚ğ‚©‚¯‚éŠÖ”
+	// æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã«é€Ÿåº¦ã‚’ä¹—ç®—ã—ã¦ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã‚’é€²è¡Œ
 	mvPosition = VAdd(mvPosition, VScale(mvDirection, mfspeed));
-
-	// ƒeƒNƒXƒ`ƒƒ‚ÉÀ•W‚ğ“`‚¦‚é
 	mpTexture->SetPosition(mvPosition);
 }
 
+// ç”»é¢å¤–ï¼ˆæœ‰åŠ¹æç”»é ˜åŸŸå¤–ï¼‰ã¸åˆ°é”ã—ãŸã‹ã®åˆ¤å®š
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ç”»é¢å¤–ãªã‚‰true / å‰¯ä½œç”¨: ãªã—
 bool Bullet::IsScreenOut()
 {
-	//return mvPosition.y < 0.0f - mpTexture->GetSizeY() / 2;
 	return (mvPosition.x + mpTexture->GetSizeX() / 2) > 640.0f;
-
 }
 
-
-
+// æ•µã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä¸€è¦§ã¨ã®äº¤å·®åˆ¤å®šãŠã‚ˆã³ãƒ€ãƒ¡ãƒ¼ã‚¸é©ç”¨
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: è¡çªæ™‚ã«å¼¾è‡ªèº«ã®å‰Šé™¤ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 void Bullet::CalcCollision()
 {
-	
-	// “Gî•ñ‚ğæ“¾
 	auto pTargetList = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Enemy2D);
 
-
-	for (int i = 0; i < pTargetList.size(); i++)
+	for (size_t i = 0; i < pTargetList.size(); i++)
 	{
 		auto pTarget = pTargetList[i];
-
-		// æ“¾‚µ‚½î•ñ‚ª‘¶İ‚µ‚Ä‚¢‚ê‚Î
 		if (pTarget != nullptr)
 		{
-
-			// “–‚½‚è”»’è
 			if (Collision::CheckCircleToCircle(
 				mvPosition,
 				GetRadius(),
 				pTarget->GetPosition(),
-				pTarget->GetRadius())
-				)
+				pTarget->GetRadius()))
 			{
-
-				// “–‚½‚Á‚½’e‚ğíœ
+				// å¤šé‡ãƒ’ãƒƒãƒˆã‚’é˜²ããŸã‚ç€å¼¾ã¨åŒæ™‚ã«å¼¾ã®å‰Šé™¤ãƒ•ãƒ©ã‚°ã‚’æœ‰åŠ¹åŒ–
 				this->SetDeleteFlag(true);
 
-
 				Enemy* pEnemy = dynamic_cast<Enemy*>(pTarget);
-
-
-				if (pEnemy != nullptr)     // dynamic_cast ‚ğ‚µ‚½Œã‚Í•K‚¸nullƒ`ƒFƒbƒN‚ğs‚¤
+				if (pEnemy != nullptr)
 				{
-
-					
-					
-
 				}
-
-				
-
 			}
-
-
-
-			
-
 		}
-
 	}
-
 }
-
-
-
-

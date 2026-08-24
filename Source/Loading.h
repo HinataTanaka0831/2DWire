@@ -1,12 +1,10 @@
-#pragma once
+﻿#pragma once
 #include <string>
 #include <vector>
 #include <memory>
 #include "DxLib.h"
 
-
-// ========== ILoadTask�C���^�t�F�[�X ==========
-// ILoadTask �̓^�X�N�̊��N���X�i��j
+// ローディング処理を分割実行するためのタスク基底インターフェース
 class ILoadTask {
 public:
     virtual ~ILoadTask() = default;
@@ -15,9 +13,7 @@ public:
     virtual int GetHandle() const { return -1; }
 };
 
-
-
-// ========== �T�E���h�ǂݍ��݃^�X�N ==========
+// サウンドリソースをロードするタスク
 class LoadSoundTask : public ILoadTask {
 public:
     explicit LoadSoundTask(const char* path);
@@ -29,8 +25,7 @@ private:
     int m_handle;
 };
 
-
-// ========== �������^�X�N ==========
+// サウンドマネージャー初期化タスク
 class InitializeSoundManagerTask : public ILoadTask {
 public:
     InitializeSoundManagerTask();
@@ -38,6 +33,7 @@ public:
     const char* GetTaskName() const override;
 };
 
+// シーンマネージャー初期化タスク
 class InitializeSceneManagerTask : public ILoadTask {
 public:
     InitializeSceneManagerTask();
@@ -45,9 +41,7 @@ public:
     const char* GetTaskName() const override;
 };
 
-
-
-// ========== ������GameScene�^�X�N ==========
+// ゲームステージデータ読み込みタスク
 class InitializeLoadStageData : public ILoadTask {
 public:
     InitializeLoadStageData();
@@ -55,12 +49,7 @@ public:
     const char* GetTaskName() const override;
 };
 
-
-
-
-
-
-// ========== ���[�f�B���O�}�l�[�W���[ ==========
+// 分割ロードタスクを順次実行し進捗UIを表示する管理クラス
 class LoadingManager {
 private:
     std::vector<std::unique_ptr<ILoadTask>> tasks;
@@ -69,13 +58,18 @@ private:
     int FontSize = CreateFontToHandle(NULL, 30, -1, -1);
 
 public:
+    // 実行キューにロードタスクを追加
+    // 入力: task(ロードタスク) / 出力: なし / 副作用: 内部タスクリストに追加
     void AddTask(std::unique_ptr<ILoadTask> task);
 
+    // 全タスクを順次実行しながら進捗プログレスバーを描画
+    // 入力: なし / 出力: なし / 副作用: 画面描画、各タスクのExecute呼び出し
     void ExecuteAll();
 
+    // ゲームシーン用のステージ画像付きローディングを実行
+    // 入力: なし / 出力: なし / 副作用: 画面描画、各タスクのExecute呼び出し
     void ExecuteGameScene();
 
-    // ������ǉ�
     const std::vector<std::unique_ptr<ILoadTask>>& GetTasks() const {
         return tasks;
     }

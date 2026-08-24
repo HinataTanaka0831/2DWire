@@ -5,37 +5,37 @@
 #include "Scene.h"
 #include "Collision.h"
 #include "Player.h"
+#include "Texture.h"
 
 static bool gCurrentEnemyFlip = false;
-extern bool gEnemyReverseX; // Global flag for enemy flip direction
-
+extern bool gEnemyReverseX;
 
 Enemy::Enemy(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool type)
 	: Object2D(filename, initPos, allNum, numX, numY, interval, scale, type)
-	, mvDirection(VGet(-1.0f, 0.0f, 0.0f))
 	, displayDamage(maxHP)
 {
+	mvDirection = VGet(-1.0f, 0.0f, 0.0f);
 	SetTag(Object2D::Enemy2D);
 
 	mAnimController.RegisterAnimation(CharacterState::Idle,
-		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale, type));
+		std::make_unique<TextureAnimation>(filename, initPos, allNum, numX, numY, interval, scale, type));
 	
 	mAnimController.RegisterAnimation(CharacterState::Moving,
-		new TextureAnimation("Resource/Enemy/anim_monster01walk.png", initPos, 6, 6, 1, 8, scale, type));
+		std::make_unique<TextureAnimation>("Resource/Enemy/anim_monster01walk.png", initPos, 6, 6, 1, 8, scale, type));
 
-	// 攻撃中はコマ送りを2倍速にし、攻撃の激しさを視覚的に演出
+	// 攻撃モーションの俊敏さを演出するため再生速度を調整して登録
 	mAnimController.RegisterAnimation(CharacterState::Attacking,
-		new TextureAnimation("Resource/Enemy/anim_monster01attack.png", initPos, 4, 4, 1, 10, scale,type));
+		std::make_unique<TextureAnimation>("Resource/Enemy/anim_monster01attack.png", initPos, 4, 4, 1, 10, scale, type));
 
 	mAnimController.ChangeState(CharacterState::Idle);
 }
 
-
 Enemy::~Enemy()
 {
-	
 }
 
+// 毎フレームのAI思考、移動、被弾点滅、HP更新
+// 入力: なし / 出力: なし / 副作用: 座標・アニメーション・HPの更新
 void Enemy::Update()
 {
 	HPGaugeUpdate();
@@ -56,7 +56,7 @@ void Enemy::Update()
 			VECTOR diff = VSub(pPlayer->GetPosition(), mvPosition);
 			float distance = VSize(diff);
 
-			// プレイヤーとの距離関係に基づき、アニメーションステートを動的に制御
+			// プレイヤーとの距離閾値に応じてアニメーション状態を自動遷移
 			if (distance <= Attack_Range) {
 				mAnimController.ChangeState(CharacterState::Attacking);
 			}
@@ -72,23 +72,26 @@ void Enemy::Update()
 		}
 	}
 
-	mAnimController.Update();
-
+	mAnimController.Update(mvPosition.x, mvPosition.y);
 }
 
+// カメラ座標を加味した敵スプライト（被弾フラッシュ含む）とHPゲージの描画
+// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void Enemy::Draw()
 {
-	// 被弾直後は赤く点滅させて、「今ダメージを受けた」と見てわかるようにする
+	// 被弾フィードバックとして一定周期で赤色点滅表示
 	if (mnHitFlashTimer > 0 && ((mnHitFlashTimer / HitFlashInterval) % 2 == 0))
 	{
 		SetDrawBright(255, 96, 96);
 	}
 
-	mAnimController.Draw(mvPosition.x, mvPosition.y, gCameraX, gCameraY);
+	mAnimController.Draw(gCameraX, gCameraY);
 	SetDrawBright(255, 255, 255);
 	HPGaugeDraw();
 }
 
+// プレイヤーとの距離に応じた追跡・攻撃AIルーチンおよび他敵との重なり分離
+// 入力: なし / 出力: なし / 副作用: mvPosition, mvDirection, mnAttackCooldownの更新
 void Enemy::Move()
 {
 	auto pTarget = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
@@ -96,7 +99,6 @@ void Enemy::Move()
 
 	if (pPlayer != nullptr)
 	{
-		// プレイヤーと衝突していないときだけ移動する（衝突中はその場にとどまる）
 		isCollidingWithPlayer = Collision::CheckCircleToCircle(
 			mvPosition, GetRadius(),
 			pPlayer->GetPosition(), pPlayer->GetRadius());
@@ -108,25 +110,23 @@ void Enemy::Move()
 
 		if (distance <= Attack_Range)
 		{
-			// 立ち止まって攻撃動作に専念させるため、移動成分をゼロにリセット
 			mvDirection.x = 0.0f;
 
+			// クールダウン満了時にプレイヤーへダメージ適用
 			if (mnAttackCooldown <= 0)
 			{
-				pPlayer->PDamage(5); // 1ヒットあたり5ダメージ与える
+				pPlayer->PDamage(5);
 				mnAttackCooldown = Attack_Interval;
 			}
-
 		}
 		else if (distance <= Search_Range)
 		{
-			// プレイヤーの居場所へ向けて追跡するための方向決定
+			// プレイヤーの方向へ追従移動
 			mvDirection.x = (diff.x > 0.0f) ? 1.0f : -1.0f;
 			mvPosition.x += (float)MoveSpeed * mvDirection.x;
-			// この敵だけの向きで、この敵のアニメーションだけ反転
 			mAnimController.SetEnemyReverse(mvDirection.x > 0.0f);
 
-			// 接近した瞬間の一発目を即時被弾させず、プレイヤーがワイヤーで退避する隙を作る初期化
+			// 接近直後の初撃猶予時間を与え、プレイヤーの回避猶予を確保
 			if (mnAttackCooldown <= 0)
 			{
 				mnAttackCooldown = Attack_Interval;
@@ -134,20 +134,21 @@ void Enemy::Move()
 		}
 		else
 		{
-			// 索敵範囲から外れた場合は進行を停止し、Idle状態で待機
 			mvDirection.x = 0.0f;
 		}
 	}
 
-	// 最後に重なりだけをほどくことで、敵が同じ一点に固まり続けるのを防ぐ
+	// 敵同士の物理的なめり込み・重なりを解消
 	ResolveEnemyOverlap();
 }
 
 bool Enemy::IsScreenOut()
 {
-	return(mvPosition.x + mpTexture->GetSizeX() / 2) < 0.0f;
+	return (mvPosition.x + mpTexture->GetSizeX() / 2) < 0.0f;
 }
 
+// プレイヤーからの被弾処理と死亡時削除フラグ設定
+// 入力: damage(ダメージ量) / 出力: なし / 副作用: hp減算、被弾点滅タイマー開始、SetDeleteFlag
 void Enemy::EDamage(int damage)
 {
 	hp -= damage;
@@ -158,6 +159,8 @@ void Enemy::EDamage(int damage)
 	}
 }
 
+// 敵同士が同じ座標に密集して固まるのを防ぐ斥力（位置補正）処理
+// 入力: なし / 出力: なし / 副作用: mvPositionの微小補正
 void Enemy::ResolveEnemyOverlap()
 {
 	auto enemyList = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Enemy2D);
@@ -179,7 +182,7 @@ void Enemy::ResolveEnemyOverlap()
 			continue;
 		}
 
-		// 完全に同じ座標だと向きが作れないので、左右どちらかに少しだけ逃がす
+		// 同一座標時のゼロ除算を回避するため微小オフセットを付与
 		if (distance <= 0.001f)
 		{
 			mvPosition.x += (this < pOtherEnemy) ? -1.5f : 1.5f;
@@ -189,13 +192,14 @@ void Enemy::ResolveEnemyOverlap()
 		float overlap = minDistance - distance;
 		VECTOR pushDir = VNorm(diff);
 
-		// 半分だけ押し出しておくと、毎フレーム少しずつ自然にばらけやすい
+		// 重なり量の半分を互いに押し出し自然に分離
 		mvPosition.x += pushDir.x * (overlap * 0.5f);
 		mvPosition.y += pushDir.y * (overlap * 0.5f);
 	}
 }
 
-
+// 敵頭上にHPゲージ（現在値＋ダメージ演出バー）を描画
+// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void Enemy::HPGaugeDraw()
 {
 	int gaugeX = (int)(mvPosition.x - gCameraX) - 110;
@@ -207,34 +211,28 @@ void Enemy::HPGaugeDraw()
 	DrawBox(gaugeX, gaugeY, gaugeX + width, gaugeY + gaugeHeight, GetColor(255, 255, 255), FALSE);
 }
 
+// 被弾時に減少分を滑らかに追従させるHP演出ゲージの幅計算
+// 入力: なし / 出力: なし / 副作用: displayDamage, damageWidth, gaugeWidthの更新
 void Enemy::HPGaugeUpdate()
 {
 	hpGaugeTimer++;
 
 	if (hpGaugeTimer >= GaugeFrame)
 	{
-
 		if (displayDamage > hp)
 		{
-
-			// 被弾演出としてダメージ分の赤ゲージを滑らかに追従させ、被弾の実感を与える
+			// 被弾演出としてダメージ減少幅を段階的に追従
 			displayDamage--;
-
 			if (displayDamage < hp)
 			{
 				displayDamage = hp;
-
 			}
-
 		}
-
 		hpGaugeTimer = 0;
-
 	}
 
-
 	int display = displayDamage;
-	// 描画サイズがマイナス値になることでゲージの描画が反転・破綻するのを防ぐ防御処理
+	// 負値による反転描画バグを防ぐための境界ガード
 	if (display < 0 && display > minWidth)
 	{
 		display = minWidth;
@@ -249,17 +247,3 @@ void Enemy::HPGaugeUpdate()
 	damageWidth = (int)((float)display / maxHP * width);
 	gaugeWidth = (int)((float)displayHp / maxHP * width);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

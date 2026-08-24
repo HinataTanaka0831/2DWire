@@ -1,20 +1,13 @@
-#pragma once
+ï»¿#pragma once
 
 #include "SceneManager.h"
 #include "SoundManagerh.h"
 
-//
-// ƒQ[ƒ€“à‚Å1‚Â‚¾‚¯‚µ‚©‘¶İ‚µ‚È‚¢‚à‚Ì‚ğŠÇ—‚·‚éƒNƒ‰ƒX
-// —á‚¦‚ÎA
-// SceneManager ‚¾‚Á‚½‚èAiƒV[ƒ“ŠÇ—ƒNƒ‰ƒXj
-// SoundManager ‚¾‚Á‚½‚èAiƒTƒEƒ“ƒhŠÇ—ƒNƒ‰ƒXj
-// ResourceManager ‚¾‚Á‚½‚èiƒŠƒ\[ƒXi‰æ‘œ‚âƒ‚ƒfƒ‹jŠÇ—ƒNƒ‰ƒXj
-// ‚ğA‚Ç‚±‚©‚ç‚Å‚àQÆ‚Å‚«‚é‚æ‚¤‚É‚µ‚Ä‚¨‚«‚½‚¢‚Ì‚ÅA
-// ‚±‚¤‚¢‚Á‚½ƒNƒ‰ƒX‚ğì‚éB
-//
+// ã‚·ãƒ¼ãƒ³ã‚„ã‚µã‚¦ãƒ³ãƒ‰ãªã©å„æ‰€ã‹ã‚‰å‚ç…§ã•ã‚Œã‚‹å…±æœ‰ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹ã‚’æä¾›ã™ã‚‹ã‚¯ãƒ©ã‚¹
+// å‰¯ä½œç”¨: ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³å…¨ä½“ã§å…±æœ‰ã•ã‚Œã‚‹é™çš„ãƒã‚¤ãƒ³ã‚¿ã‚’ä¿æŒ
 class Master
 {
 public:
-	static SceneManager* mpSceneManager;        // ƒV[ƒ“ƒ}ƒl[ƒWƒƒ[‚Ìƒ|ƒCƒ“ƒ^
-	static SoundManager* mpSoundManager;        // ƒTƒEƒ“ƒhƒ}ƒl[ƒWƒƒ[‚Ìƒ|ƒCƒ“ƒ^
+	static SceneManager* mpSceneManager;        // ã‚·ãƒ¼ãƒ³é·ç§»ãŠã‚ˆã³ç¾åœ¨ã‚·ãƒ¼ãƒ³ã‚’ç®¡ç†ã™ã‚‹ãƒã‚¤ãƒ³ã‚¿
+	static SoundManager* mpSoundManager;        // BGM/SEå†ç”Ÿã‚’çµ±æ‹¬ã™ã‚‹ãƒã‚¤ãƒ³ã‚¿
 };

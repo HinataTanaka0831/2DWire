@@ -1,68 +1,47 @@
-#include "GameOverScene.h"
+ï»¿#include "GameOverScene.h"
 #include "DxLib.h"
 #include "Utility.h"
 #include "Master.h"
 #include "InputManager.h"
 
 GameOverScene::GameOverScene()
-	: Scene()     // Šî’êƒNƒ‰ƒX‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğŒÄ‚Ño‚·
+	: Scene()
 {
-
 }
 
 GameOverScene::~GameOverScene()
 {
-
 }
 
 void GameOverScene::Initialize()
 {
-
 }
 
+// æ±ºå®šã‚­ãƒ¼å…¥åŠ›ã«ã‚ˆã‚‹ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã¸ã®å¾©å¸°
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: SCENE_TITLEã¸ã®é·ç§»è¦æ±‚
 void GameOverScene::Update()
 {
-
-	// ƒGƒ“ƒ^[ƒL[‚ª‰Ÿ‚³‚ê‚½‚çƒQ[ƒ€‰æ–Ê‚ÖˆÚ“®
 	if (InputManager::CheckDownKey(KEY_INPUT_RETURN))
 	{
-		// SEÄ¶
 		Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
-
 		Master::mpSceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_TITLE);
-
 	}
-
-
-
-
-	// Šî’êƒNƒ‰ƒX‚ÌXVˆ—‚ğŒÄ‚Ño‚·
 	Scene::Update();
-
 }
 
+// GAME OVERè¡¨ç¤ºãŠã‚ˆã³ãƒªãƒˆãƒ©ã‚¤æ¡ˆå†…ãƒ†ã‚­ã‚¹ãƒˆã®æç”»
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã¸ã®æç”»
 void GameOverScene::Draw()
 {
-	// •¶š‚ÌƒtƒHƒ“ƒgƒTƒCƒY•ÏX
 	SetFontSize(50);
-	// •¶š—ñ‚Ì•\¦
-	DrawString(Utility::SCREEN_WIDTH / 2 - 270, Utility::SCREEN_HEIGHT / 2 - 140, "@@@GAME OVER", GetColor(255, 255, 255));
-
+	DrawString(Utility::SCREEN_WIDTH / 2 - 270, Utility::SCREEN_HEIGHT / 2 - 140, "      GAME OVER", GetColor(255, 255, 255));
 
 	SetFontSize(20);
+	DrawString(Utility::SCREEN_WIDTH / 2 - 120, 600, "  ENTER: ã‚¿ã‚¤ãƒˆãƒ«ã¸  ", GetColor(255, 255, 255));
 
-	DrawString(Utility::SCREEN_WIDTH / 2 - 120, 600, "@ENTER: ƒ^ƒCƒgƒ‹‚Ö@", GetColor(255, 255, 255));
-
-
-
-
-	// Šî’êƒNƒ‰ƒX‚Ì•`‰æˆ—‚ğŒÄ‚Ño‚·
 	Scene::Draw();
-
 }
 
 void GameOverScene::Finalize()
 {
-
 }
-

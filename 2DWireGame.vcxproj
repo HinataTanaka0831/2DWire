@@ -158,6 +158,7 @@
     <ClCompile Include="Source\Texture.cpp" />
     <ClCompile Include="Source\TextureAnimation.cpp" />
     <ClCompile Include="Source\TitleScene.cpp" />
+    <ClCompile Include="Source\TitleDemo.cpp" />
     <ClCompile Include="Source\WireTarget.cpp" />
     <ClCompile Include="Source\Goal.cpp" />
     <ClCompile Include="Source\Stage.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="Source\Texture.h" />
     <ClInclude Include="Source\TextureAnimation.h" />
     <ClInclude Include="Source\TitleScene.h" />
+    <ClInclude Include="Source\TitleDemo.h" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\WireTarget.h" />
     <ClInclude Include="Source\Goal.h" />

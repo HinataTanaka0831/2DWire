@@ -1,61 +1,48 @@
-#include "DxLib.h"
+ï»¿#include "DxLib.h"
 #include "GameRuleScene.h"
 #include "Utility.h"
 #include "InputManager.h"
 #include "Master.h"
 
 GameRuleScene::GameRuleScene()
-	:Scene()
+	: Scene()
 {
-
 }
 
 GameRuleScene::~GameRuleScene()
 {
-
 }
 
 void GameRuleScene::Initialize()
 {
-
 }
 
+// æ±ºå®šã‚­ãƒ¼å…¥åŠ›æ¤œçŸ¥ã«ã‚ˆã‚‹ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã¸ã®å¾©å¸°
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: SCENE_TITLEã¸ã®é·ç§»è¦æ±‚
 void GameRuleScene::Update()
 {
-	// ƒGƒ“ƒ^[ƒL[‚ª‰Ÿ‚³‚ê‚½‚çƒ^ƒCƒgƒ‹‰æ–Ê‚É–ß‚é
 	if (InputManager::CheckDownKey(KEY_INPUT_RETURN))
 	{
-		// SEÄ¶
 		Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
-
 		Master::mpSceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_TITLE);
 	}
-	// Šî’êƒNƒ‰ƒX‚ÌXVˆ—‚ğŒÄ‚Ño‚·
 	Scene::Update();
 }
 
+// æ“ä½œã‚­ãƒ¼èª¬æ˜ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®æç”»
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã¸ã®æç”»
 void GameRuleScene::Draw()
 {
-	// lŠpŒ`‚Ì•\¦
 	DrawBox(Utility::SCREEN_WIDTH / 2 - 200, 50, Utility::SCREEN_WIDTH / 2 + 200, 350, GetColor(255, 255, 255), false);
-	// •¶š—ñ‚Ì•\¦
-	DrawString(Utility::SCREEN_WIDTH / 2 - 80, Utility::SCREEN_HEIGHT / 2 - 170, "`` —V‚Ñ•û ``", GetColor(255, 255, 255));
+	DrawString(Utility::SCREEN_WIDTH / 2 - 80, Utility::SCREEN_HEIGHT / 2 - 170, "ï½ï½ éŠã³æ–¹ ï½ï½", GetColor(255, 255, 255));
+	DrawString(Utility::SCREEN_WIDTH / 2 - 25, Utility::SCREEN_HEIGHT / 2 - 130, "W : ä¸Š", GetColor(255, 255, 255));
+	DrawString(Utility::SCREEN_WIDTH / 2 - 130, Utility::SCREEN_HEIGHT / 2 - 90, "A : å·¦ã€€ã€€S: ä¸‹ã€€ã€€D: å³", GetColor(255, 255, 255));
+	DrawString(Utility::SCREEN_WIDTH / 2 - 140, Utility::SCREEN_HEIGHT / 2 - 20, "SPACE : ã‚¸ãƒ£ãƒ³ãƒ—", GetColor(255, 255, 255));
+	DrawString(Utility::SCREEN_WIDTH / 2 - 100, 300, "ENTERã§ã‚¿ã‚¤ãƒˆãƒ«ã¸æˆ»ã‚‹", GetColor(255, 0, 255));
 
-	DrawString(Utility::SCREEN_WIDTH / 2 - 25, Utility::SCREEN_HEIGHT / 2 - 130, "W : ã", GetColor(255, 255, 255));
-
-	DrawString(Utility::SCREEN_WIDTH / 2 - 130, Utility::SCREEN_HEIGHT / 2 - 90, "A : ¶@@S: ‰º@@D: ‰E", GetColor(255, 255, 255));
-
-	DrawString(Utility::SCREEN_WIDTH / 2 - 140, Utility::SCREEN_HEIGHT / 2 - 20, "SPEACE : ’e‚ğ”­Ë", GetColor(255, 255, 255));
-
-	DrawString(Utility::SCREEN_WIDTH / 2 - 100, 300, "ENTER‚Åƒ^ƒCƒgƒ‹‚Ö–ß‚é", GetColor(255, 0, 255));
-
-
-	// Šî’êƒNƒ‰ƒX‚Ì•`‰æˆ—‚ğŒÄ‚Ño‚·
 	Scene::Draw();
 }
 
 void GameRuleScene::Finalize()
 {
-
 }
-

@@ -1,44 +1,36 @@
 ﻿#pragma once
-// #ifndef _TEXTURE_H_
-// #define _TEXTURE_H_
 #include <string>
 #include "DxLib.h"
 
+// 単一画像グラフィックリソースの保持・中心基準描画を担当するクラス
 class Texture
 {
 public:
-	// コンストラクタ
+	// 画像読み込みと中心座標・透過フラグの初期化
+	// 入力: filename(画像パス), centerPosition(中心座標), transFlag(透過有無) / 出力: なし / 副作用: 画像ハンドル読み込み
 	Texture(std::string filename, VECTOR centerPosition, int transFlag);     
 
-	// デストラクタ
+	// 保持している画像ハンドルの破棄
+	// 入力: なし / 出力: なし / 副作用: DXライブラリ画像リソースの解放
 	~Texture();     
 
-	// 更新
 	void Update();  
 
-	// 描画
+	// カメラオフセットを考慮した中心基準描画
+	// 入力: offsetX, offsetY(カメラ座標) / 出力: なし / 副作用: バックバッファへの描画
 	void Draw(float offsetX = 0.0f, float offsetY = 0.0f);
 
-	// セッター関数 //
-	// ポジション設定
 	void SetPosition(VECTOR centerPosition) { mvPosition = centerPosition; }
-
-	// ゲッター関数
-	// ポジション取得
 	VECTOR GetPosition() { return mvPosition; }
-
-	// サイズ取得
 	int GetSizeX() { return mnSizeX; }
 	int GetSizeY() { return mnSizeY; }
 	float GetRadius() { return mfRadius; }
 	
 private:
-	int mnHandle;      // 読み込んだ画像のハンドル
-	VECTOR mvPosition; // ポジション
-	int mnSizeX;       // 画像の幅
-	int mnSizeY;       // 画像の高さ
-	int mnTransFlag;  // 画像の透過を有効にするか
-	float mfRadius;   // 半径
-	
-
+	int mnHandle;      // DXライブラリグラフィックハンドル
+	VECTOR mvPosition; // 中心ワールド座標
+	int mnSizeX;       // テクスチャ横幅（ピクセル）
+	int mnSizeY;       // テクスチャ縦幅（ピクセル）
+	int mnTransFlag;   // 透過描画フラグ
+	float mfRadius;    // 衝突判定等で使用する近似半径
 };

@@ -1,31 +1,29 @@
-#include "TitleScene.h"
+ï»¿#include "TitleScene.h"
 #include "DxLib.h"
 #include "Utility.h"
 #include "Master.h"
 #include "InputManager.h"
 #include "Button.h"
 #include "MouseManager.h"
-
-
+#include "TitleDemo.h"
 
 TitleScene::TitleScene() 
-: Scene()     // Šî’êƒNƒ‰ƒX‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğŒÄ‚Ño‚·
-, mnBackGroundHandle(-1)
+	: Scene()
+	, mpPlayButton(nullptr)
+	, mpPlayRuleButton(nullptr)
+	, mnBackGroundHandle(-1)
+	, mpTitleDemo(nullptr)
 {
-
 }
 
 TitleScene::~TitleScene()
 {
-	
 }
 
+// ã‚¿ã‚¤ãƒˆãƒ«èƒŒæ™¯ã€ãƒœã‚¿ãƒ³UIã€è‡ªå‹•ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ãƒ‡ãƒ¢ã®åˆæœŸåŒ–
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: ç”»åƒãƒ­ãƒ¼ãƒ‰ã€Button/TitleDemoã®ç”Ÿæˆ
 void TitleScene::Initialize()
 {
-	// ƒ^ƒCƒgƒ‹ƒƒS‚ÌƒNƒ‰ƒX‚Ìì¬
-	// ƒvƒŒƒCƒ„[‚Ì¶¬
-	// ‚È‚Ç‚ğ‚±‚±‚Ås‚¤
-	// ->ƒ^ƒCƒgƒ‹‰æ–Ê‚Å•K—v‚ÈƒIƒuƒWƒFƒNƒg‚ğ‚±‚±‚Å¶¬‚·‚é
 	if (mnBackGroundHandle == -1)
 	{
 		mnBackGroundHandle = LoadGraph("Resource/BackGround/bg_night.png");
@@ -33,39 +31,41 @@ void TitleScene::Initialize()
 
 	if (mpPlayButton == nullptr)
 	{
-		mpPlayButton = new Button(stringX, PlayY - 10, stringX + 250, PlayY + 60, "@ƒvƒŒƒC@", GetColor(255, 126, 115), GetColor(250, 250, 250), FontSize20);
+		mpPlayButton = new Button(stringX, PlayY - 10, stringX + 250, PlayY + 60, " ãƒ—ãƒ¬ã‚¤ ", GetColor(255, 126, 115), GetColor(250, 250, 250), FontSize20);
 	}
 	if (mpPlayRuleButton == nullptr)
 	{
-		mpPlayRuleButton = new Button(stringX, PlayRuleY - 10, stringX + 250, PlayRuleY + 60, "‘€ìà–¾", GetColor(255, 126, 115), GetColor(250, 250, 250), FontSize20);
+		mpPlayRuleButton = new Button(stringX, PlayRuleY - 10, stringX + 250, PlayRuleY + 60, "ã‚ãã³ã‹ãŸ", GetColor(255, 126, 115), GetColor(250, 250, 250), FontSize20);
 	}
-	// BGMÄ¶
-	//Master::mpSoundManager->PlayBGM(SoundManager::BGM_TITLE);
 
+	// å‰ã‚·ãƒ¼ãƒ³ã®ã‚«ãƒ¡ãƒ©ã‚ªãƒ•ã‚»ãƒƒãƒˆãŒã‚¿ã‚¤ãƒˆãƒ«ç”»é¢ã®æç”»ã«å½±éŸ¿ã—ãªã„ã‚ˆã†åˆæœŸåŒ–
+	gCameraX = 0.0f;
+	gCameraY = 0.0f;
+
+	if (mpTitleDemo == nullptr)
+	{
+		mpTitleDemo = new TitleDemo();
+	}
 }
 
+// ãƒœã‚¿ãƒ³å…¥åŠ›æ¤œçŸ¥ã¨ã‚²ãƒ¼ãƒ æœ¬ç·¨/ãƒ«ãƒ¼ãƒ«ç”»é¢ã¸ã®é·ç§»åˆ¶å¾¡
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: ã‚·ãƒ¼ãƒ³é·ç§»è¦æ±‚ã€ãƒ‡ãƒ¢ã®é€²è¡Œ
 void TitleScene::Update()
 {
-	// SEÄ¶
 	Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
 
-	// SƒL[‚ª‰Ÿ‚³‚ê‚½‚ç‰º‚É‰º‚ª‚é
 	if (mpPlayButton)
 	{
 		mpPlayButton->Update();
-
 		if (mpPlayButton->IsClick())
 		{
-
 			NowSelect3 = select_Play;
 		}
-
 	}
-	// WƒL[‚ª‰Ÿ‚³‚ê‚½‚çã‚Éã‚ª‚é
+
 	if (mpPlayRuleButton)
 	{
 		mpPlayRuleButton->Update();
-
 		if (mpPlayRuleButton->IsClick())
 		{
 			NowSelect3 = select_PlayRule;
@@ -73,59 +73,61 @@ void TitleScene::Update()
 	}
 
 	bool isLeftTrigger = MouseManager::IsLeftTrigger();
-
 	if (isLeftTrigger)
 	{
 		switch (NowSelect3)
 		{
-		case select_Play:  // ƒvƒŒƒC‰æ–Ê‚Ö
+		case select_Play:
 			gCurrentStage = 1;
 			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_GAME);
 			break;
 
-		case select_PlayRule:  // —V‚Ñ•û‚Ö
+		case select_PlayRule:
 			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_GAME_RULE);
 			break;
 		}
-
 	}
 
+	if (mpTitleDemo != nullptr)
+	{
+		mpTitleDemo->Update();
+	}
 
-	// Šî’êƒNƒ‰ƒX‚ÌXVˆ—‚ğŒÄ‚Ño‚·
 	Scene::Update();
 }
 
+// èƒŒæ™¯ã€ãƒ—ãƒ¬ãƒ“ãƒ¥ãƒ¼ãƒ‡ãƒ¢ã€UIãƒœã‚¿ãƒ³ã®æç”»
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã¸ã®æç”»
 void TitleScene::Draw()
 {
-	// 2. “ss”wŒi‚ğgCameraY•ª‰º‚ÉƒVƒtƒg‚µ‚Ä•`‰æ
 	int bgWidth, bgHeight;
 	GetGraphSize(mnBackGroundHandle, &bgWidth, &bgHeight);
 
 	if (bgWidth > 0)
 	{
-		// ƒJƒƒ‰X‚É‡‚í‚¹‚Ä”wŒi‚ğƒXƒNƒ[ƒ‹
 		float scrollSpeed = 0.5f;
 		int offsetX = (int)(gCameraX * scrollSpeed) % bgWidth;
 
-		// offsetX‚ª•‰‚É‚È‚éê‡‚Ì‘Îô
 		if (offsetX < 0)
 		{
 			offsetX += bgWidth;
 		}
 
-		// gCameraY•ª‰º‚ÉƒVƒtƒg‚µ‚Ä•`‰æiã‚Ö”ò‚Ô‚ÆƒXƒJƒCƒ‰ƒCƒ“‚ªG‚ê‚Ü‚·j
 		int bgOffsetY = (int)gCameraY;
-
 		const int Bg_Y_Offset = 0;
 
-		// ƒXƒNƒ[ƒ‹‚µ‚½‚ç”wŒi‚ğƒ‹[ƒv‚³‚¹‚Ä•`‰æ
 		for (int x = -offsetX; x < Utility::SCREEN_WIDTH; x += bgWidth)
 		{
 			DrawGraph(x, -bgOffsetY + Bg_Y_Offset, mnBackGroundHandle, TRUE);
 		}
 	}
 
-	// ƒ{ƒ^ƒ“‚Ì•\¦
+	// èƒŒæ™¯ã¨UIã®é–“ã«ãƒ‡ãƒ¢ã‚’æç”»ã—ã€ãƒœã‚¿ãƒ³ã®è¦–èªæ€§ã‚’æœ€å„ªå…ˆã«ã™ã‚‹
+	if (mpTitleDemo != nullptr)
+	{
+		mpTitleDemo->Draw();
+	}
+
 	if (mpPlayButton)
 	{
 		mpPlayButton->Draw();
@@ -136,19 +138,13 @@ void TitleScene::Draw()
 		mpPlayRuleButton->Draw();
 	}
 
-
-	// Šî’êƒNƒ‰ƒX‚Ì•`‰æˆ—‚ğŒÄ‚Ño‚·
 	Scene::Draw();
 }
 
+// ãƒ‡ãƒ¢ãŠã‚ˆã³ãƒªã‚½ãƒ¼ã‚¹ã®è§£æ”¾
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: mpTitleDemoã®ç ´æ£„
 void TitleScene::Finalize()
 {
-	// BGM’â~
-	//Master::mpSoundManager->StopBGM();
+	delete mpTitleDemo;
+	mpTitleDemo = nullptr;
 }
-
-
-		// SEÄ¶
-//Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
-//
-//Master::mpSceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_SELECT);

@@ -1,28 +1,25 @@
-#pragma once
+ï»¿#pragma once
 #include <DxLib.h>
 
-
+// ãƒã‚¦ã‚¹ã®ã‚«ãƒ¼ã‚½ãƒ«åº§æ¨™ãŠã‚ˆã³ã‚¯ãƒªãƒƒã‚¯çŠ¶æ…‹ï¼ˆæŠ¼ä¸‹ãƒ»ãƒˆãƒªã‚¬ãƒ¼ãƒ»ãƒªãƒªãƒ¼ã‚¹ï¼‰ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
 class MouseManager
 {
 public:
-
 	MouseManager();
 
-	static void MouseClick();  // ƒ}ƒEƒX‚Ìó‘Ô‚ğXV‚·‚éŠÖ”
+	// æ¯ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒã‚¦ã‚¹åº§æ¨™ãŠã‚ˆã³å…¥åŠ›çŠ¶æ…‹ã®ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°
+	// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: å†…éƒ¨ã®åº§æ¨™ãƒ»å…¥åŠ›ãƒ“ãƒƒãƒˆãƒ•ãƒ©ã‚°ã‚’æ›´æ–°
+	static void MouseClick();
 
-	// ƒ}ƒEƒX‚Ìó‘Ô‚ğæ“¾‚·‚éŠÖ”
-	static int GetMouseX() { return mouseX; }  // ƒ}ƒEƒX‚ÌXÀ•W‚ğæ“¾‚·‚éŠÖ”
-	static int GetMouseY() { return mouseY; }  // ƒ}ƒEƒX‚ÌYÀ•W‚ğæ“¾‚·‚éŠÖ”
-	static bool IsLeftDown() { return (mCurrentMouseInput & MOUSE_INPUT_LEFT); }                                                    // ¶ƒNƒŠƒbƒN‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Ìó‘Ô‚ğ”»’è
-	static bool IsLeftTrigger() { return (mCurrentMouseInput & MOUSE_INPUT_LEFT) && !(mPreviousMouseInput & MOUSE_INPUT_LEFT); }   // ¶ƒNƒŠƒbƒN‚ª‰Ÿ‚³‚ê‚½uŠÔ‚Ìó‘Ô‚ğ”»’è
-	static bool IsLeftRelease() { return  !(mCurrentMouseInput & MOUSE_INPUT_LEFT) && (mPreviousMouseInput & MOUSE_INPUT_LEFT); }   // ¶ƒNƒŠƒbƒN‚ª—£‚³‚ê‚½uŠÔ‚Ìó‘Ô‚ğ”»’è
-
+	static int GetMouseX() { return mouseX; }
+	static int GetMouseY() { return mouseY; }
+	static bool IsLeftDown() { return (mCurrentMouseInput & MOUSE_INPUT_LEFT); }
+	static bool IsLeftTrigger() { return (mCurrentMouseInput & MOUSE_INPUT_LEFT) && !(mPreviousMouseInput & MOUSE_INPUT_LEFT); }
+	static bool IsLeftRelease() { return !(mCurrentMouseInput & MOUSE_INPUT_LEFT) && (mPreviousMouseInput & MOUSE_INPUT_LEFT); }
 
 private:
-	// ƒ}ƒEƒX‚ÌƒJ[ƒ\ƒ‹ˆÊ’u‚ğ•Û‚·‚é•Ï”
-	static int mouseX;                 // ƒ}ƒEƒX‚ÌXÀ•W‚ğ•Û‚·‚é•Ï”
-	static int mouseY;                 // ƒ}ƒEƒX‚ÌYÀ•W‚ğ•Û‚·‚é•Ï”
-	static int mCurrentMouseInput;    	// ƒ}ƒEƒX‚ÌŒ»İ‚Ìó‘Ô‚ğ•Û‚·‚é•Ï”
-	static int mPreviousMouseInput;    // ƒ}ƒEƒX‚Ì‘O‰ñ‚Ìó‘Ô‚ğ•Û‚·‚é•Ï”
-
+	static int mouseX;                 // ç¾åœ¨ã®ãƒã‚¦ã‚¹Xåº§æ¨™
+	static int mouseY;                 // ç¾åœ¨ã®ãƒã‚¦ã‚¹Yåº§æ¨™
+	static int mCurrentMouseInput;     // ç¾ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒã‚¦ã‚¹å…¥åŠ›ãƒ“ãƒƒãƒˆãƒ•ãƒ©ã‚°
+	static int mPreviousMouseInput;    // å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®ãƒã‚¦ã‚¹å…¥åŠ›ãƒ“ãƒƒãƒˆãƒ•ãƒ©ã‚°ï¼ˆã‚¨ãƒƒã‚¸æ¤œå‡ºç”¨ï¼‰
 };

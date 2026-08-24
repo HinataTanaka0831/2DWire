@@ -4,28 +4,16 @@
 #include <string>
 #include "SelectScene.h"
 
-
-// クラスの前方宣言
 class Texture;
-
 class TextureAnimation;
 
-
-//
-// 2Dオブジェクトの基底クラス
-// 2Dのオブジェクト（プレイヤー敵など）を何か作る際は、
-// 必ずこれを継承して作成する
-
+// ゲーム内の全2Dエンティティ（プレイヤー、敵、弾、ギミック等）の基底クラス
 class Object2D 
 {
-public:     // enum, struct, 定数の定義
-	// オブジェクトを見分けるためのタグ
+public:
+	// 衝突判定やシーン横断検索でオブジェクト種別を識別するためのタグ
 	enum Tag
 	{
-		// Titleシーンで使われるタグ（1000～）
-		
-		
-		// Gameシーンで使われるタグ（2000～）
 		Player2D = 2000,
 		Enemy2D = 2100,
 		BossEnemy2D = 2200,
@@ -34,57 +22,52 @@ public:     // enum, struct, 定数の定義
 		WireTarget2D = 2300,
 		Goal2D = 2400,
 		Ground2D = 2500,
-
-		// Resultシーンで使われるタグ（3000～）
 	};
 
-
 public:
-	// コンストラクタ
+	// 単一静止画テクスチャを持つオブジェクトの生成
+	// 入力: filename(画像パス), initPos(初期座標) / 出力: なし / 副作用: ObjectManagerへの自動登録
 	Object2D(std::string filename, VECTOR initPos);
 
-	// コンストラクタ（アニメーション用）
+	// スプライトシートアニメーションを持つオブジェクトの生成
+	// 入力: filename, initPos, allNum, numX, numY, interval, scale, type / 出力: なし / 副作用: ObjectManagerへの自動登録
 	Object2D(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale = 1.0f, bool type = true);
 
-	// デストラクタ
+	// 保持する画像リソースの破棄
+	// 入力: なし / 出力: なし / 副作用: テクスチャメモリの解放
 	virtual ~Object2D();
 
-
-
-	// 更新
+	// 毎フレームの座標更新や内部状態の進行
+	// 入力: なし / 出力: なし / 副作用: 座標やテクスチャの更新
 	virtual void Update();
 
-	// 描画
+	// カメラ座標を加味した画面描画
+	// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 	virtual void Draw();
 
 	void Reset();
 
+public:
+	void SetPosition(VECTOR pos) { mvPosition = pos; }
+	VECTOR GetPosition() { return mvPosition; }
+	void SetDeleteFlag(bool flag) { mbDeleteFlag = flag; }
+	bool IsDeleteFlag() { return mbDeleteFlag; }
+	void SetTag(Tag tag) { mnTag = tag; }
+	Tag GetTag() { return mnTag; }
 
-public:      // ゲッター・セッター
-	void SetPosition(VECTOR pos) { mvPosition = pos; }  // 座標設定
-	VECTOR GetPosition() { return mvPosition; }         // 座標取得
-
-	void SetDeleteFlag(bool flag) { mbDeleteFlag = flag; }  // 削除フラグ設定
-	bool IsDeleteFlag() { return mbDeleteFlag; }         // 削除フラグ取得
-
-	void SetTag(Tag tag) { mnTag = tag; }   // タグ設定
-	Tag GetTag() { return mnTag; }          // タグ取得
-
-
-	float GetRadius();   // 半径の取得
+	float GetRadius();
 	int GetSizeX();
 	int GetSizeY();
 
 protected:
-	Texture* mpTexture;     // 画像
-	TextureAnimation* mpTextureAnimation;     // 画像アニメーション
-	VECTOR mvPosition;      // 座標
-	VECTOR mvDirection;  // 移動方向
-	float mfAngle;       // 現在の目標角度
+	Texture* mpTexture;                    // 静止画描画用テクスチャ
+	TextureAnimation* mpTextureAnimation;  // 連番アニメーション描画用テクスチャ
+	VECTOR mvPosition;                     // ワールド座標
+	VECTOR mvDirection;                    // 移動方向ベクトル
+	float mfAngle;                         // 向き・回転角度
 	int count;
 
-
 private:
-	bool mbDeleteFlag;     // 削除フラグ（これがtrueになっていると自動的に削除される（ように作る））
-	Tag mnTag;             // オブジェクトを見分ける用のタグ
+	bool mbDeleteFlag;                     // フレーム終了時の安全削除対象フラグ
+	Tag mnTag;                             // 種別識別用タグ
 };

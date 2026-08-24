@@ -1,4 +1,4 @@
-#include "Button.h"
+ï»¿#include "Button.h"
 #include "MouseManager.h"
 
 Button::Button(int x1, int y1, int x2, int y2, std::string name, int color, int changeColor, int fontHandle)
@@ -13,13 +13,12 @@ Button::Button(int x1, int y1, int x2, int y2, std::string name, int color, int 
 	, mnStringColor(GetColor(255, 255, 255))
 	, mfScale(1.0f)
 {
-
 }
 
+// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã®åŒ…å«åˆ¤å®šã¨ãƒ›ãƒãƒ¼çŠ¶æ…‹ã®æ›´æ–°
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: mbIsHoverãƒ•ãƒ©ã‚°ã®æ›´æ–°
 void Button::Update()
 {
-	// ƒ}ƒEƒX‚ªƒ{ƒ^ƒ“‚Ì”ÍˆÍ“à‚É‚ ‚é‚©‚Ç‚¤‚©‚ğ”»’è‚·‚éB
-	// ƒ}ƒEƒX‚ªƒ{ƒ^ƒ“‚Ì”ÍˆÍ“à‚É‚ ‚éê‡‚Í mbIsHover ‚ğ true ‚Éİ’è‚µA‚»‚¤‚Å‚È‚¢ê‡‚Í false ‚Éİ’è‚·‚éB
 	if (!mbIsEnabled)
 	{
 		mbIsHover = false;
@@ -37,13 +36,12 @@ void Button::Update()
 	{
 		mbIsHover = false;
 	}
-
 }
 
+// çŠ¶æ…‹ã«å¿œã˜ãŸãƒœã‚¿ãƒ³çŸ©å½¢ãŠã‚ˆã³æ–‡å­—åˆ—ã®æç”»
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã¸ã®æç”»
 void Button::Draw()
 {
-	// ƒ{ƒ^ƒ“‚Ì•`‰æF‚ğŒˆ’è‚·‚éB
-	// ƒ{ƒ^ƒ“‚ª–³Œø‚Èê‡‚ÍˆÃ‚¢FAƒzƒo[’†‚Í–¾‚é‚¢FA’Êí‚Í•W€F‚ğg—p‚·‚éB
 	unsigned int drawColor{};
 
 	if (!mbIsEnabled)
@@ -56,7 +54,8 @@ void Button::Draw()
 	{
 		mfScale = 1.1f;
 
-		if (MouseManager::IsLeftDown)
+		// å·¦ã‚¯ãƒªãƒƒã‚¯æŠ¼ä¸‹æ™‚ã«ã‚¯ãƒªãƒƒã‚¯çŠ¶æ…‹ã¸é·ç§»ã—èƒŒæ™¯è‰²ã‚’å¤‰æ›´
+		if (MouseManager::IsLeftDown())
 		{
 			mbIsClicked = true;
 			drawColor = mnChangeColor;
@@ -75,9 +74,7 @@ void Button::Draw()
 		mnStringColor = GetColor(255, 255, 255);
 	}
 
-	// ƒ{ƒ^ƒ“‚Ì’†SÀ•W‚ÆƒTƒCƒY‚ğŒvZ‚·‚éB
-	// ƒ{ƒ^ƒ“‚Ì•`‰æˆÊ’u‚ğŒvZ‚·‚éB
-	// ƒ{ƒ^ƒ“‚Ì•`‰æˆÊ’u‚ÍAƒ{ƒ^ƒ“‚Ì’†SÀ•W‚©‚çŠg‘å—¦‚ğl—¶‚µ‚ÄŒvZ‚·‚éB
+	// æ‹¡ç¸®ä¸­å¿ƒãŒãƒœã‚¿ãƒ³ä¸­å¿ƒã¨ãªã‚‹ã‚ˆã†çŸ©å½¢ã‚’å†è¨ˆç®—
 	float centerX = (mnX1 + mnX2) / 2.0f;
 	float centerY = (mnY1 + mnY2) / 2.0f;
 	float width = (float)mnX2 - mnX1;
@@ -88,7 +85,7 @@ void Button::Draw()
 	float drawX2 = centerX + (width * mfScale) / 2.0f;
 	float drawY2 = centerY + (height * mfScale) / 2.0f;
 
-	int stringWidth = GetDrawStringWidth(mName.c_str(), mName.length());
+	int stringWidth = GetDrawStringWidth(mName.c_str(), (int)mName.length());
 
 	DrawBox((int)drawX1, (int)drawY1, (int)drawX2, (int)drawY2, drawColor, TRUE);
 	DrawFormatStringToHandle((int)(centerX - stringWidth / 2), (int)(centerY - 10), mnStringColor, mnFontHandle, "%s", mName.c_str());

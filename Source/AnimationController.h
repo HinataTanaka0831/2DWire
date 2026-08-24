@@ -1,7 +1,9 @@
 ﻿#pragma once
 #include <map>
+#include <memory>
 #include "TextureAnimation.h"
 
+// アニメーションを切り替えるためのキャラクター状態定義
 enum class CharacterState {
     Idle,
     Moving,
@@ -10,32 +12,36 @@ enum class CharacterState {
     Dead
 };
 
+// 状態に応じたTextureAnimationの切り替え・同期制御を行うコントローラー
 class AnimationController {
 public:
     AnimationController();
     ~AnimationController();
 
-    // 状態に対応するアニメーションを登録。同じ状態に複数登録した場合は後勝ち
-    // 入力：state（登録先状態）, anim（アニメーションへのポインタ、所有権は当クラスが持つ）/ 副作用：既存の登録は上書き
-    void RegisterAnimation(CharacterState state, TextureAnimation* anim);
-    
+    // 状態に対応するアニメーションを登録
+    // 入力: state(状態), anim(アニメーションポインタ) / 出力: なし / 副作用: 内部マップへの所有権移動
+    void RegisterAnimation(CharacterState state, std::unique_ptr<TextureAnimation> anim);
 
+    // キャラクター状態を変更し、アニメーションを切り替え
+    // 入力: newState(新規状態) / 出力: なし / 副作用: 現在状態の更新
     void ChangeState(CharacterState newState);
 
-    // この敵のアニメーション全部に、反転設定を反映する    
+    // 登録された全アニメーションに対して向き（反転フラグ）を一括適用
+    // 入力: rev(反転フラグ) / 出力: なし / 副作用: 全TextureAnimationの反転設定更新
     void SetEnemyReverse(bool rev);
 
-    // 時間経過に基づくアニメーションコマの進捗更新
-    // 副作用：アクティブなアニメーションのカウンタが進む
-    void Update();
-    void Draw(float x, float y, float cameraX, float cameraY);
+    // 現在アクティブなアニメーションの座標同期とフレーム更新
+    // 入力: x, y(中心座標) / 出力: なし / 副作用: アニメーション状態の進行
+    void Update(float x, float y);
 
+    // 現在アクティブなアニメーションの描画
+    // 入力: cameraX, cameraY(カメラ座標) / 出力: なし / 副作用: バックバッファへの描画
+    void Draw(float cameraX, float cameraY);
 
     CharacterState GetCurrentState() const { return mCurrentState; }
 
 private:
-    std::map<CharacterState, TextureAnimation*> mAnimations;
+    std::map<CharacterState, std::unique_ptr<TextureAnimation>> mAnimations;
     CharacterState mCurrentState;
-    CharacterState mPrevState;
     bool mIsInitialized;
 };

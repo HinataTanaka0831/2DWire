@@ -15,12 +15,16 @@ Goal::~Goal()
 {
 }
 
+// 演出用カラーサイクルの更新
+// 入力: なし / 出力: なし / 副作用: mColorStateの加算
 void Goal::Update()
 {
 	Object2D::Update();
-	mColorState++; // 色のアニメーション用
+	mColorState++;
 }
 
+// カメラ座標を加味したゴールゲートおよび「GOAL」テキストの描画
+// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void Goal::Draw()
 {
 	int drawX = (int)(mvPosition.x - gCameraX);
@@ -31,15 +35,13 @@ void Goal::Draw()
 	int right = drawX + mWidth / 2;
 	int bottom = drawY + mHeight / 2;
 
-	// キラキラする色
+	// 視認性を高めるためサイン波で枠色を周期的に変化させる
 	int r = 200 + (int)(55.0 * std::sin(mColorState * 0.1));
 	int g = 200 + (int)(55.0 * std::sin(mColorState * 0.1 + 2.0));
 	int b = 100;
 
-	// ゴールゲートを描画
 	DrawBox(left, top, right, bottom, GetColor(r, g, b), TRUE);
 	DrawBox(left, top, right, bottom, GetColor(255, 255, 255), FALSE);
 	
-	// GOALの文字
 	DrawString(drawX - 20, drawY - 10, "GOAL", GetColor(0, 0, 0), TRUE);
 }

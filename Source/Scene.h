@@ -1,41 +1,38 @@
-#pragma once
+﻿#pragma once
 #include "DxLib.h"
-// �N���X�̑O���錾
+
 class ObjectManager;
 
-// �V�[���̊��N���X
-
-// �^�C�g���A�Q�[���A���U���g��ʂȂǁA
-// ��ʂ����ۂ͕K�����̃N���X���p������
-
+// ゲーム画面（シーン）のライフサイクルおよび固有ObjectManagerを保持する基底クラス
 class Scene
 {
 public:
-	// �R���X�g���N�^
+	// シーン固有のObjectManagerの生成
+	// 入力: なし / 出力: なし / 副作用: mpObjectManagerのインスタンス化
 	Scene();
+	virtual ~Scene();
 
-	// �f�X�g���N�^
-	~Scene();
-
-	// ������
+	// シーン開始時のリソース読み込みやオブジェクト初期配置
+	// 入力: なし / 出力: なし / 副作用: 各具象シーンによるリソース確保
 	virtual void Initialize() = 0;
 
-	// �X�V
+	// シーン内の全オブジェクトの更新
+	// 入力: なし / 出力: なし / 副作用: mpObjectManager->Update()呼び出し
 	virtual void Update();
 
-	// �`��
+	// シーン内の全オブジェクトの描画
+	// 入力: なし / 出力: なし / 副作用: mpObjectManager->Draw()呼び出し
 	virtual void Draw();
 
-	// �I������
+	// シーン終了時のリソース破棄およびオブジェクト解放
+	// 入力: なし / 出力: なし / 副作用: リソースの解放
 	virtual void Finalize() = 0;
 
-
-	// �I�u�W�F�N�g�}�l�[�W���[�̎擾
 	ObjectManager* GetObjectManager() { return mpObjectManager; }
 
 protected:
 	int FontSize20 = CreateFontToHandle(NULL, 20, -1, -1);
 
 private:
-	ObjectManager* mpObjectManager;        // �I�u�W�F�N�g�Ǘ��N���X�̃|�C���^
+	ObjectManager* mpObjectManager; // シーン内のオブジェクトを管理するインスタンス
 };

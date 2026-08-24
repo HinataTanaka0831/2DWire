@@ -1,57 +1,56 @@
-#include "Collision.h"
+﻿#include "Collision.h"
 #include <cmath>
 
+// 2つの円同士の交差判定（平方根計算を回避し二乗のまま比較して高速化）
+// 入力: centerPosA, radiusA, centerPosB, radiusB / 出力: 衝突していればtrue / 副作用: なし
 bool Collision::CheckCircleToCircle(
 	const VECTOR& centerPosA,
 	const float& radiusA,
 	const VECTOR& centerPosB,
 	const float& radiusB)
 {
-	// �����蔻��������@�O�����̒藝(a^2 + b^2 = c^2)
-
-	// X���̋����i�΂̉����j
 	float distanceX = centerPosA.x - centerPosB.x;
-	// Y���̋����i�΂̏c���j
 	float distanceY = centerPosA.y - centerPosB.y;
 
-	// ����
-	float powX = distanceX * distanceX; // ������2��
-	float powY = distanceY * distanceY; // �c���̂Q��
-	float powR = (radiusA + radiusB) * (radiusA + radiusB);  // ���ꂼ��̔��a�𑫂������̂̂Q��
+	// sqrtコストを避けるため三平方の定理(dx^2 + dy^2 <= (r1+r2)^2)で判定
+	float powX = distanceX * distanceX;
+	float powY = distanceY * distanceY;
+	float powR = (radiusA + radiusB) * (radiusA + radiusB);
+
 	if ((powX + powY) <= powR)
 	{
-		return true;       // ����
+		return true;
 	}
 
-	// �����𖞂����Ȃ��̂ł���Ύ��s
 	return false;
 }
 
+// 点と円の包含判定（クリック位置や座標判定用）
+// 入力: pointPos(点座標), centerPos(円の中心), radius(円の半径) / 出力: 内包していればtrue / 副作用: なし
 bool Collision::CheckPointToCircle(
 	const VECTOR& pointPos,
 	const VECTOR& centerPos,
 	const float& radius
 )
 {
-	// X���̋���
 	float distanceX = centerPos.x - pointPos.x;
-	// Y���̋���
 	float distanceY = centerPos.y - pointPos.y;
 
-	// ����
-	float powX = distanceX * distanceX;   // �����̂Q��
-	float powY = distanceY * distanceY;   // �c���̂Q��
-	float powR = radius * radius;         // ���a�̂Q��
+	// 点と円中心の距離二乗が半径二乗以内か判定
+	float powX = distanceX * distanceX;
+	float powY = distanceY * distanceY;
+	float powR = radius * radius;
 
 	if ((powX + powY) <= powR)
 	{
-		return true;    // �������Ă���
+		return true;
 	}
 
-	// �����𖞂����Ȃ��̂ł���Ύ��s
 	return false;
 }
 
+// 2つの軸平行境界ボックス（AABB）同士の矩形重なり判定
+// 入力: rectPositionA, rectWidthA, rectHeightA, rectPositionB, rectWidthB, rectHeightB / 出力: 重なっていればtrue / 副作用: なし
 bool Collision::CheckRectToRect(
 	const VECTOR& rectPositionA,
 	const float& rectWidthA,
@@ -67,33 +66,15 @@ bool Collision::CheckRectToRect(
 	VECTOR leftTopB = rectPositionB;
 	VECTOR rightBottomB = VGet(rectPositionB.x + rectWidthB, rectPositionB.y + rectHeightB, 0.0f);
 
-	bool isLeftLessRight = false;
-	if (leftTopA.x <= rightBottomB.x)
-	{
-		isLeftLessRight = true;
-	}
-
-	bool isRightGreaterLeft = false;
-	if (rightBottomA.x >= leftTopB.x)
-	{
-		isRightGreaterLeft = true;
-	}
-
-	bool isTopLessBottom = false;
-	if (leftTopA.y <= rightBottomB.y)
-	{
-		isTopLessBottom = true;
-	}
-
-	bool isBottomGreaterTop = false;
-	if (rightBottomA.y >= leftTopB.y)
-	{
-		isBottomGreaterTop = true;
-	}
+	// X軸・Y軸の両方で投影区間が交差しているかを評価
+	bool isLeftLessRight = (leftTopA.x <= rightBottomB.x);
+	bool isRightGreaterLeft = (rightBottomA.x >= leftTopB.x);
+	bool isTopLessBottom = (leftTopA.y <= rightBottomB.y);
+	bool isBottomGreaterTop = (rightBottomA.y >= leftTopB.y);
 
 	if (isLeftLessRight && isRightGreaterLeft && isTopLessBottom && isBottomGreaterTop)
 	{
-		return true; // �������Ă���
+		return true;
 	}
 
 	return false;

@@ -1,55 +1,45 @@
-#pragma once
+﻿#pragma once
 
 #include <list>
 #include <vector>
 #include "Object2D.h"
 
-//
-// �I�u�W�F�N�g���Ǘ�����N���X
-//
-// 2D��3D�̃I�u�W�F�N�g�����������Ƃ��inew�����Ƃ��j�ɕK���o�R����A
-// �������ꂽ�I�u�W�F�N�g���ꊇ�Ǘ�����N���X�B
-// ���̃N���X����邱�ƂŁA�ǂ̃I�u�W�F�N�g����ł����l�ȃA�N�Z�X���\�ɂȂ�A
-// ���_��ȃQ�[�����삪���₷���Ȃ�
-//
+// シーン内の全2Dオブジェクトのライフサイクル・更新・描画・タグ検索を一括管理するクラス
 class ObjectManager
 {
 public:
-	// �R���X�g���N�^
 	ObjectManager();
-	// �f�X�g���N�^
 	~ObjectManager();
 
-	// �X�V
+	// 管理下の全2Dオブジェクトの一括更新
+	// 入力: なし / 出力: なし / 副作用: 各オブジェクトのUpdate呼び出し
 	void Update();
 
-	// �`��
+	// 管理下の全2Dオブジェクトの一括描画
+	// 入力: なし / 出力: なし / 副作用: 各オブジェクトのDraw呼び出し
 	void Draw();
 
-
-public:         // 2D�n�̊֐��錾
-	// 2D�I�u�W�F�N�g�ǉ�
+public:
+	// オブジェクトの登録
+	// 入力: object2D(追加するオブジェクト) / 出力: なし / 副作用: 管理リストへのポインタ追加
 	void AddObject(Object2D* object2D);
 
-	// 2D�I�u�W�F�N�g�S�폜
+	// シーン切り替え時等における全オブジェクトの即時破棄
+	// 入力: なし / 出力: なし / 副作用: 全オブジェクトのdeleteおよびリストクリア
 	void DeleteAll2D();
 
-	// �폜����K�v�̂���I�u�W�F�N�g������΍폜����
-	// note: �S�ẴI�u�W�F�N�g�̍X�V���I�������ɌĂяo��
+	// 削除フラグが立った不要オブジェクトをフレーム終了時に安全に一括削除
+	// 入力: なし / 出力: なし / 副作用: 該当オブジェクトのdeleteおよびリストからの除外
 	void DeleteAll2DIfNeeded();
 
-	// �w�肵���^�O��2D�I�u�W�F�N�g���擾
-	// note: �Y������I�u�W�F�N�g����������ꍇ�A�ŏ��Ɍ������I�u�W�F�N�g��Ԃ�
+	// 指定タグを持つ先頭のオブジェクトを検索
+	// 入力: tag(検索対象タグ) / 出力: 一致するObject2Dポインタ(存在しない場合はnullptr) / 副作用: なし
 	Object2D* GetObject2DByTag(Object2D::Tag tag);
 
-	// �w�肵���^�O��2D�I�u�W�F�N�g�̃��X�g���擾
-	// note: �Y������I�u�W�F�N�g����������ꍇ�A���X�g�����Ă��ׂẴI�u�W�F�N�g��Ԃ�
+	// 指定タグを持つ全オブジェクトのリストを取得
+	// 入力: tag(検索対象タグ) / 出力: 一致する全Object2Dポインタの配列 / 副作用: なし
 	std::vector<Object2D*> GetObject2DListByTag(Object2D::Tag tag);
 
-public:      // 3D�n�̊֐��錾
-	// ���͋����
-
-
 private:
-	std::list<Object2D*> mObject2DList;         // 2D�I�u�W�F�N�g���Ǘ����郊�X�g
+	std::list<Object2D*> mObject2DList;         // オブジェクト管理用双方向リスト
 };

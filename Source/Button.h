@@ -1,33 +1,35 @@
-#pragma once
+ï»¿#pragma once
 #include "DxLib.h"
 #include <string>
 
+// ãƒã‚¦ã‚¹ãƒ›ãƒãƒ¼ãƒ»ã‚¯ãƒªãƒƒã‚¯æ¤œçŸ¥ãŠã‚ˆã³è¦–è¦šæ¼”å‡ºï¼ˆæ‹¡å¤§ãƒ»è‰²å¤‰åŒ–ï¼‰ã‚’æŒã¤UIãƒœã‚¿ãƒ³ã‚¯ãƒ©ã‚¹
 class Button
 {
 public:
+	// ãƒœã‚¿ãƒ³ã®çŸ©å½¢é ˜åŸŸãƒ»ãƒ©ãƒ™ãƒ«ãƒ»é…è‰²ã®åˆæœŸåŒ–
+	// å…¥åŠ›: x1, y1, x2, y2(çŸ©å½¢åº§æ¨™), name(è¡¨ç¤ºæ–‡å­—åˆ—), color, changeColor, fontHandle / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: å„ç¨®ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã®è¨­å®š
 	Button(int x1, int y1, int x2, int y2, std::string name, int color, int changeColor, int fontHandle);
 
-	// ƒ{ƒ^ƒ“‚Ìó‘Ô‚ğXV‚·‚éŠÖ”
+	// ãƒã‚¦ã‚¹ã‚«ãƒ¼ã‚½ãƒ«ã®åŒ…å«åˆ¤å®šã¨ãƒ›ãƒãƒ¼çŠ¶æ…‹ã®æ›´æ–°
+	// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: mbIsHoverãƒ•ãƒ©ã‚°ã®æ›´æ–°
 	void Update();
-	// ƒ{ƒ^ƒ“‚ğ•`‰æ‚·‚éŠÖ”
+
+	// çŠ¶æ…‹ï¼ˆé€šå¸¸ãƒ»ãƒ›ãƒãƒ¼ãƒ»ã‚¯ãƒªãƒƒã‚¯ä¸­ãƒ»ç„¡åŠ¹ï¼‰ã«å¿œã˜ãŸãƒœã‚¿ãƒ³çŸ©å½¢ãŠã‚ˆã³æ–‡å­—åˆ—ã®æç”»
+	// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡ã¸ã®æç”»
 	void Draw();
 
 	bool IsClick() const { return mbIsHover && mbIsClicked; }
 
 private:
-	// ƒNƒ‰ƒX‚ª¶¬‚³‚ê‚½Û‚Ìƒ{ƒ^ƒ“‚ÌÀ•WA–¼‘OAFAƒtƒHƒ“ƒgƒnƒ“ƒhƒ‹‚Ìî•ñ‚ğ•Û‚·‚éƒƒ“ƒo•Ï”
-	int mnX1;
-	int mnY1;
-	int mnX2;
-	int mnY2;
-	std::string mName;
-	int mnColor;
-	int mnChangeColor;
-	int mnFontHandle;
+	int mnX1, mnY1, mnX2, mnY2;  // ãƒœã‚¿ãƒ³ã®çŸ©å½¢é ˜åŸŸ
+	std::string mName;           // ãƒœã‚¿ãƒ³ãƒ©ãƒ™ãƒ«æ–‡å­—åˆ—
+	int mnColor;                 // é€šå¸¸æ™‚ãƒ»ãƒ›ãƒãƒ¼æ™‚ã®èƒŒæ™¯è‰²
+	int mnChangeColor;           // ã‚¯ãƒªãƒƒã‚¯æ™‚ã®èƒŒæ™¯è‰²
+	int mnFontHandle;            // ãƒ©ãƒ™ãƒ«æç”»ç”¨ãƒ•ã‚©ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«
 	
-	int mnStringColor; // •¶š—ñ‚ÌF‚ğ’Ç‰Á
-	float mfScale; // ƒ{ƒ^ƒ“‚ÌŠg‘å—¦‚ğ’Ç‰Á
-	bool mbIsHover = false;   // ƒ}ƒEƒX‚ªƒ{ƒ^ƒ“ã‚É‚ ‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO‚ğ’Ç‰Á
-	bool mbIsEnabled = true; // ƒ{ƒ^ƒ“‚ª—LŒø‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO‚ğ’Ç‰Á
-	bool mbIsClicked = false; // ƒ{ƒ^ƒ“‚ªƒNƒŠƒbƒN‚³‚ê‚½‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO‚ğ’Ç‰Á
+	int mnStringColor;           // æ–‡å­—åˆ—ã‚«ãƒ©ãƒ¼
+	float mfScale;               // ãƒ›ãƒãƒ¼æ¼”å‡ºç”¨æ‹¡å¤§ç‡
+	bool mbIsHover = false;      // ã‚«ãƒ¼ã‚½ãƒ«ãŒãƒœã‚¿ãƒ³ä¸Šã«ã‚ã‚‹ã‹
+	bool mbIsEnabled = true;     // ãƒœã‚¿ãƒ³ã®æ“ä½œæœ‰åŠ¹ãƒ•ãƒ©ã‚°
+	bool mbIsClicked = false;    // ã‚¯ãƒªãƒƒã‚¯ã•ã‚ŒãŸã‹
 };

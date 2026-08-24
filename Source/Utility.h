@@ -1,20 +1,18 @@
 ﻿#pragma once
 
-// プログラム内で共通して使用する定数定義などをここに記述していく
-// 関数なども記述していく
-
+// ゲーム全体で共有される画面解像度定数およびグローバルステートの定義
 class Utility
 {
-public:  // 定数定義
-	static const int SCREEN_WIDTH = 1920;   // 画面の幅
-	static const int SCREEN_HEIGHT = 1080; // 画面の高さ
+public:
+	static const int SCREEN_WIDTH = 1920;   // ゲーム全体の基本描画解像度（横幅）
+	static const int SCREEN_HEIGHT = 1080;  // ゲーム全体の基本描画解像度（縦幅）
 };
 
-// グローバルなカメラX座標（スクロール用）とY座標（縦スクロール用）を定義
+// プレイヤー追従および描画オフセット計算に使用するグローバルカメラ座標
 extern float gCameraX;
 extern float gCameraY;
 
-// 今プレイ中のステージ番号
+// シーン間をまたいで進行度を保持するための現在ステージ番号
 extern int gCurrentStage;
-// 最終ステージ番号
+// ステージ進行の上限値（これを超えると全ステージクリア判定）
 static const int MaxStage = 2;

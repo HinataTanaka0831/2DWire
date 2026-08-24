@@ -1,15 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Scene.h"
 #include "Utility.h"
 
-
+// ã‚¹ãƒ†ãƒ¼ã‚¸ã¾ãŸã¯ãƒ¢ãƒ¼ãƒ‰åˆ†å²ã‚’é¸æŠã™ã‚‹ã‚·ãƒ¼ãƒ³ã‚¯ãƒ©ã‚¹
 class SelectScene : public Scene
 {
-
-
-public:  // enum ’è”‚Ì’è‹`
-	// ‘I‘ğˆ
 public:
 	enum {
 		select_salt,
@@ -18,31 +14,22 @@ public:
 		select_Num,
 	};
 
-
-
 public:
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 	SelectScene();
-	// ƒfƒXƒgƒ‰ƒNƒ^
-	virtual~SelectScene();
-	// ‰Šú‰»
+	virtual ~SelectScene();
+
 	virtual void Initialize() override;
-	// XV
 	virtual void Update() override;
-	// •`‰æ
 	virtual void Draw() override;
-	// I—¹ˆ—
 	virtual void Finalize() override;
 
 	void ChangeAttack();
-
 	bool Getflag() { return c; }
 
 private:
-	static const int Salt_Y = 270;  // ‘I‘ğˆi‰–j‚ÌYÀ•W
-	static const int Sauce_Y= 320;  // ‘I‘ğˆiƒ\[ƒXj‚ÌYÀ•W
-	int y = 0;           // ‘I‘ğˆiƒAƒCƒRƒ“j‚ÌYÀ•Ws
+	static const int Salt_Y = 270;
+	static const int Sauce_Y = 320;
+	int y = 0;
 	bool c;
-	int NowSelect;   // ‘I‘ğˆiƒAƒCƒRƒ“j‚Ì‰Šú‰»
-
+	int NowSelect;
 };

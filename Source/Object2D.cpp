@@ -6,91 +6,74 @@
 #include "Scene.h"
 #include "Utility.h"
 
-
-// コンストラクタ
+// 単一静止画テクスチャを持つオブジェクトの生成
+// 入力: filename(画像パス), initPos(初期座標) / 出力: なし / 副作用: ObjectManagerへの自動登録
 Object2D::Object2D(std::string filename, VECTOR initPos)
 	: mvPosition(initPos)
 	, mbDeleteFlag(false)
 	, mpTextureAnimation(nullptr)
 {
-	// 現在シーンの ObjectManager に自身（this）を追加する
+	// シーン管理下へ自身を登録し、一括更新・描画の対象にする
 	Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->AddObject(this);
-
-	// 画像生成
 	mpTexture = new Texture(filename, initPos, true);
-
 }
 
-// コンストラクタ（アニメーション用）
+// スプライトシートアニメーションを持つオブジェクトの生成
+// 入力: filename, initPos, allNum, numX, numY, interval, scale, type / 出力: なし / 副作用: ObjectManagerへの自動登録
 Object2D::Object2D(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool type)
 	: mvPosition(initPos)
 	, mbDeleteFlag(false)
 	, mpTexture(nullptr)
 {
-	// 現在シーンの ObjectManager に自身（this）を追加する
 	Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->AddObject(this);
-
-	// 画像生成
 	mpTextureAnimation = new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale, type);
-
 }
 
-// デストラクタ
+// 保持する画像リソースの破棄
+// 入力: なし / 出力: なし / 副作用: テクスチャメモリの解放
 Object2D::~Object2D()
 {
-	// 画像破棄
 	if (mpTexture != nullptr)
 	{
 		delete mpTexture;
 	}
 
-	// 画像アニメーション破棄
 	if (mpTextureAnimation != nullptr)
 	{
 		delete mpTextureAnimation;
 	}
-
 }
 
-// 更新
+// 毎フレームの座標更新や内部状態の進行
+// 入力: なし / 出力: なし / 副作用: 座標やテクスチャの更新
 void Object2D::Update()
 {
-	// 画像の更新
 	if (mpTexture != nullptr)
 	{
 		mpTexture->Update();
-
-		// 座標設定
 		mpTexture->SetPosition(mvPosition);
-
 	}
 
-	// 画像アニメーションの更新
 	if (mpTextureAnimation != nullptr)
 	{
 		mpTextureAnimation->Update();
-		
-		// 座標設定
 		mpTextureAnimation->SetPosition(mvPosition);	
 	}
-
 }
 
-// 描画
+// カメラ座標を加味した画面描画
+// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void Object2D::Draw()
 {
-	// 画像の描画
 	if (mpTexture != nullptr)
 	{
 		mpTexture->Draw(gCameraX, gCameraY);
 	}
 
-	// 画像アニメーションの描画
 	if (mpTextureAnimation != nullptr)
 	{
 		mpTextureAnimation->Draw(gCameraX, gCameraY);
 	}
-
 }
 
 void Object2D::Reset()
@@ -101,8 +84,8 @@ void Object2D::Reset()
 	}
 }
 
-
-// 半径の取得
+// 当たり判定等で使用する近似半径の取得
+// 入力: なし / 出力: 半径(px) / 副作用: なし
 float Object2D::GetRadius()
 {
 	if (mpTexture != nullptr)
@@ -133,7 +116,6 @@ int Object2D::GetSizeX()
 	return 0;
 }
 
-// 画像の横サイズを取得
 int Object2D::GetSizeY()
 {
 	if (mpTexture != nullptr)

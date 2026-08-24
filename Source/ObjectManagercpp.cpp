@@ -1,132 +1,105 @@
-#include "ObjectManager.h"
+ï»¿#include "ObjectManager.h"
+#include <algorithm>
 
-// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 ObjectManager::ObjectManager()
 {
-
 }
 
-// ƒfƒXƒgƒ‰ƒNƒ^
 ObjectManager::~ObjectManager()
 {
-
 }
 
-// XV
+// ç®¡ç†ä¸‹ã®å…¨2Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä¸€æ‹¬æ›´æ–°
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: å„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®Updateå‘¼ã³å‡ºã—
 void ObjectManager::Update()
 {
-	// 2DƒIƒuƒWƒFƒNƒg‚ÌXV
-	// mObject2Dlist.begin() ... ƒŠƒXƒg‚Ìæ“ª‚Ì—v‘f‚Ö‚ÌƒCƒeƒŒ[ƒ^[‚ğæ“¾‚·‚é
-	// mObject2Dlist.end() ... ƒŠƒXƒg‚Ì––”ö‚Ì—v‘f‚Ö‚ÌƒCƒeƒŒ[ƒ^[‚ğæ“¾‚·‚é
-	// ƒCƒeƒŒ[ƒ^[‚Æ‚ÍH ... std::list ‚Ì—v‘f‚Ì‚±‚Æ‚ğw‚·B
-	// ƒŠƒXƒg‚Ì—˜“_ ... —v‘f‚Æ—v‘f‚ÌŠÔ‚ÉV‚µ‚¢—v‘f‚ğ·‚µ‚Ş‚±‚Æ‚ª—eˆÕ‚Éo—ˆ‚é
-	// std::list ... ‘o•ûŒü˜AŒ‹ƒŠƒXƒgi—v‘f‚Ì‘OŒã‚Ì—v‘f‚ÉƒAƒNƒZƒX‚·‚é‚±‚Æ‚ªŠÈ’Pj
 	for (std::list<Object2D*>::iterator itr = mObject2DList.begin(); itr != mObject2DList.end(); itr++)
 	{
 		(*itr)->Update();
 	}
 }
 
-// •`‰æ
+// ç®¡ç†ä¸‹ã®å…¨2Dã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä¸€æ‹¬æç”»
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: å„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®Drawå‘¼ã³å‡ºã—
 void ObjectManager::Draw()
 {
-	// auto ... Œ^„˜_B = ‚æ‚è‰E‘¤‚ÌŒ^‚ğ„‘ª‚µ‚Ä‚­‚ê‚é•Ö—˜‚È‚â‚Â
 	for (auto itr = mObject2DList.begin(); itr != mObject2DList.end(); itr++)
 	{
 		(*itr)->Draw();
 	}
-
 }
 
-// 2DƒIƒuƒWƒFƒNƒg‚Ì’Ç‰Á
+// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç™»éŒ²
+// å…¥åŠ›: object2D(è¿½åŠ ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ) / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: ç®¡ç†ãƒªã‚¹ãƒˆã¸ã®ãƒã‚¤ãƒ³ã‚¿è¿½åŠ 
 void ObjectManager::AddObject(Object2D* object2D)
 {
 	mObject2DList.push_back(object2D);
 }
 
-// 2DƒIƒuƒWƒFƒNƒg‚Ì‘Síœ
+// ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆæ™‚ç­‰ã«ãŠã‘ã‚‹å…¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å³æ™‚ç ´æ£„
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: å…¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®deleteãŠã‚ˆã³ãƒªã‚¹ãƒˆã‚¯ãƒªã‚¢
 void ObjectManager::DeleteAll2D()
 {
-	for (auto itr = mObject2DList.begin(); itr != mObject2DList.end(); /*‚±‚±‚Í‹ó‚Á‚Û‚È‚Ì‚Å’ˆÓ*/)
+	for (auto itr = mObject2DList.begin(); itr != mObject2DList.end(); )
 	{
 		Object2D* temp = *itr;
-
-		// ƒŠƒXƒg‚©‚çíœ
+		// ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ç„¡åŠ¹åŒ–ã‚’é˜²ããŸã‚eraseã®æˆ»ã‚Šå€¤ã§ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã‚’æ›´æ–°
 		itr = mObject2DList.erase(itr);
-
-		// ƒIƒuƒWƒFƒNƒg‚»‚Ì‚à‚Ì‚ğíœ
 		delete temp;
 		temp = nullptr;
 	}
 }
 
-
-// íœ‚·‚é•K—v‚Ì‚ ‚éƒIƒuƒWƒFƒNƒg‚ª‚ ‚ê‚Îíœ‚·‚é
+// å‰Šé™¤ãƒ•ãƒ©ã‚°ãŒç«‹ã£ãŸä¸è¦ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ãƒ•ãƒ¬ãƒ¼ãƒ çµ‚äº†æ™‚ã«å®‰å…¨ã«ä¸€æ‹¬å‰Šé™¤
+// å…¥åŠ›: ãªã— / å‡ºåŠ›: ãªã— / å‰¯ä½œç”¨: è©²å½“ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®deleteãŠã‚ˆã³ãƒªã‚¹ãƒˆã‹ã‚‰ã®é™¤å¤–
 void ObjectManager::DeleteAll2DIfNeeded()
 {
-	for (auto itr = mObject2DList.begin(); itr != mObject2DList.end(); /*‚±‚±‚Í‹ó‚Á‚Û‚È‚Ì‚Å’ˆÓ*/)
+	// Updateãƒ«ãƒ¼ãƒ—ä¸­ã®ç›´æ¥å‰Šé™¤ã«ã‚ˆã‚‹ã‚¯ãƒ©ãƒƒã‚·ãƒ¥ï¼ˆä¸æ­£ãƒ¡ãƒ¢ãƒªã‚¢ã‚¯ã‚»ã‚¹ï¼‰ã‚’é˜²ããŸã‚ã®é…å»¶ã‚¯ãƒªãƒ¼ãƒ³ã‚¢ãƒƒãƒ—
+	for (auto itr = mObject2DList.begin(); itr != mObject2DList.end(); )
 	{
-		// ”jŠüƒtƒ‰ƒO‚ª—§‚Á‚Ä‚¢‚ê‚Îíœ‚·‚é
-		if ( (*itr)->IsDeleteFlag() )
+		if ((*itr)->IsDeleteFlag())
 		{
-			Object2D *temp = *itr;
-
-			// ƒŠƒXƒg‚©‚çíœ
-			// erase() ‚ÍAíœ‚µ‚½ itr ‚ÌŸ‚Ì—v‘f‚ğ•Ô‹p‚µ‚Ä‚­‚ê‚é
+			Object2D* temp = *itr;
 			itr = mObject2DList.erase(itr);
-
-			// ƒIƒuƒWƒFƒNƒg‚»‚Ì‚à‚Ì‚ğíœ
 			delete temp;
 			temp = nullptr;
 		}
 		else
 		{
-			// Ÿ‚Ì—v‘f‚Öi‚ß‚é
 			itr++;
 		}
 	}
-
 }
 
-// w’è‚µ‚½ƒ^ƒO‚Ì2DƒIƒuƒWƒFƒNƒg‚ğæ“¾
+// æŒ‡å®šã‚¿ã‚°ã‚’æŒã¤å…ˆé ­ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æ¤œç´¢
+// å…¥åŠ›: tag(æ¤œç´¢å¯¾è±¡ã‚¿ã‚°) / å‡ºåŠ›: ä¸€è‡´ã™ã‚‹Object2Dãƒã‚¤ãƒ³ã‚¿(å­˜åœ¨ã—ãªã„å ´åˆã¯nullptr) / å‰¯ä½œç”¨: ãªã—
 Object2D* ObjectManager::GetObject2DByTag(Object2D::Tag tag)
 {
-	// std::find ‚ğ—˜—p‚µ‚Ä‘ÎÛ‚ÌƒIƒuƒWƒFƒNƒg‚ğ’T‚·
 	auto itr = std::find_if(
 		mObject2DList.begin(),
 		mObject2DList.end(),
-		[&](Object2D* obj) { return obj->GetTag() == tag; }   // ƒ‰ƒ€ƒ_®
-		// [&] ... ¡‰ñ‚Ìê‡AmObject2Dlist ‚Ì—v‘f‚ğ[QÆ]‚·‚é‚Æ‚¢‚¤ˆÓ–¡‡‚¢
-		// (Object2D *obj) ... QÆ‚µ‚½ƒIƒuƒWƒFƒNƒg‚ÌŒ^‚Æˆø”–¼
-		// { ... } ... ˆ—“à—ei¡‰ñ‚ÍğŒ®j
-		// [](){ ... } ‚±‚ÌŒ`‚ªƒ‰ƒ€ƒ_®‚ÌŠî–{
+		[&](Object2D* obj) { return obj->GetTag() == tag; }
 	);
 
-
-	// Œ©‚Â‚©‚Á‚½‚©‚Ç‚¤‚©”»’è
 	if (itr != mObject2DList.end())
 	{
-		return (*itr);    // ƒIƒuƒWƒFƒNƒg‚ªŒ©‚Â‚©‚Á‚½
+		return (*itr);
 	}
 
-	return nullptr;      // ƒIƒuƒWƒFƒNƒg‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½
+	return nullptr;
 }
 
-
-// w’è‚µ‚½ƒ^ƒO‚Ì2DƒIƒuƒWƒFƒNƒg‚ÌƒŠƒXƒg‚ğæ“¾
+// æŒ‡å®šã‚¿ã‚°ã‚’æŒã¤å…¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒªã‚¹ãƒˆã‚’å–å¾—
+// å…¥åŠ›: tag(æ¤œç´¢å¯¾è±¡ã‚¿ã‚°) / å‡ºåŠ›: ä¸€è‡´ã™ã‚‹å…¨Object2Dãƒã‚¤ãƒ³ã‚¿ã®é…åˆ— / å‰¯ä½œç”¨: ãªã—
 std::vector<Object2D*> ObjectManager::GetObject2DListByTag(Object2D::Tag tag)
 {
 	std::vector<Object2D*> ret;
-
 	for (auto itr = mObject2DList.begin(); itr != mObject2DList.end(); itr++)
 	{
-		// tag ‚Æ“¯‚¶ƒ^ƒO‚ğ‚Á‚Ä‚¢‚éƒIƒuƒWƒFƒNƒg‚ª‚ ‚ê‚Îvector‚É“ü‚ê‚é
-		if ( (*itr)->GetTag() == tag )
+		if ((*itr)->GetTag() == tag)
 		{
 			ret.push_back((*itr));
 		}
 	}
-
-
 	return ret;
 }

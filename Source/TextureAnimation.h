@@ -2,11 +2,12 @@
 #include "DxLib.h"
 #include <string>
 
+// スプライトシート分割画像の管理とコマ送りアニメーション描画を行うクラス
 class TextureAnimation
 {
 public:
-	// スプライトシート画像を分割ロードし、アニメーション用リソースを初期化
-	// 入力：filename（画像パス）, initPos（初期座標）, allNum（全フレーム数）, NumX/NumY（分割コマ数）, interval（更新間隔）, scale（拡縮率） / 副作用：mnHandleListのメモリ確保
+	// スプライトシート画像を分割ロードし、アニメーションリソースを初期化
+	// 入力: filename(画像パス), initPos(初期座標), allNum(総コマ数), NumX/NumY(分割数), interval(更新間隔), scale(拡縮率), type(プレイヤー種別フラグ) / 出力: なし / 副作用: 画像配列の動的確保
 	TextureAnimation(
 		std::string filename,
 		VECTOR initPos,
@@ -17,47 +18,43 @@ public:
 		float scale = 1.0f,
 		bool type = true
 	);  
-	// 確保した画像ハンドルリストのメモリ領域を破棄
-	// 副作用：mnHandleListのメモリ解放
+
+	// 動的確保したグラフィックハンドル配列の破棄
+	// 入力: なし / 出力: なし / 副作用: 画像配列メモリの解放
 	~TextureAnimation(); 
 
-	// プレイヤーの移動向きを監視し、スプライトの左右反転フラグとアニメーションコマを更新
-	// 副作用：反転フラグおよびアニメーションカウンタを更新
+	// フレーム進行とキャラクター向き（左右反転）状態の更新
+	// 入力: なし / 出力: なし / 副作用: アニメーションコマと反転フラグの更新
 	void Update();  
 
-	// カメラのスクロール座標を減算したスクリーン座標で、反転設定を反映して描画
-	// 入力：cameraX, cameraY（カメラのワールド座標）
+	// カメラ座標を加味した拡縮・回転・反転スプライト描画
+	// 入力: cameraX, cameraY(カメラ座標) / 出力: なし / 副作用: バックバッファへの描画
 	void Draw(float cameraX = 0.0f, float cameraY = 0.0f);   
 
-	// アニメーションを最初のフレームに戻し、再生をリスタート
-	// 副作用：再生フレームの初期化
+	// アニメーション再生位置を先頭コマにリセット
+	// 入力: なし / 出力: なし / 副作用: カウンタおよび現在コマの初期化
 	void Reset(); 
+
 	void SetPosition(VECTOR pos) { mvPosition = pos; } 
-
 	void SetReverse(bool rev) { mbEnemyReverseX = rev; }
-
 	int GetSizeX() { return mnSizeX; }    
 	int GetSizeY() { return mnSizeY; }    
-
 	float GetRadius() { return mfRadius; }    
-
 	void SetScale(float scale) { mnScale = scale; }    
 	float GetScale() { return mnScale; }    
 
-
 private:
-	VECTOR mvPosition;  
-	int mnCounter;      
-	int mnInterval;     
-	int mnCurrentNum;   
-	int* mnHandleList;  
-	int mnAllNum;       
-	int mnSizeX = 0;       
-	int mnSizeY = 0;       
-	float mfRadius = 90.0f;
-	float mnScale;     
-	bool mbPlayerReverseX;    
-	bool mbEnemyReverseX;
-	bool mbType;
-  
+	VECTOR mvPosition;        // 中心座標
+	int mnCounter;            // フレーム進捗カウンタ
+	int mnInterval;           // コマ切り替えフレーム間隔
+	int mnCurrentNum;         // 現在再生中のフレームインデックス
+	int* mnHandleList;        // 分割ロードされた画像ハンドル配列
+	int mnAllNum;             // 総コマ数
+	int mnSizeX = 0;          // 1コマあたりの横幅
+	int mnSizeY = 0;          // 1コマあたりの縦幅
+	float mfRadius = 90.0f;   // 当たり判定用半径
+	float mnScale;            // 描画拡縮倍率
+	bool mbPlayerReverseX;    // プレイヤー用左右反転フラグ
+	bool mbEnemyReverseX;     // 敵キャラクター用左右反転フラグ
+	bool mbType;              // true: プレイヤー / false: 敵
 };

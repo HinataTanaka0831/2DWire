@@ -5,7 +5,6 @@
 #include "Player.h"
 #include "Enemy.h"
 
-
 TextureAnimation::TextureAnimation(
 	std::string filename,
 	VECTOR initPos,
@@ -27,7 +26,7 @@ TextureAnimation::TextureAnimation(
 	mnHandleList = new int[allNum];
 
 	int handle = LoadGraph(filename.c_str());
-	// 不正ファイル読み込みによるクラッシュを回避するため、失敗時は早期離脱
+	// 不正パスや読み込み失敗時のクラッシュを防止するため早期リターン
 	if (handle == -1)
 	{
 		return;
@@ -36,10 +35,9 @@ TextureAnimation::TextureAnimation(
 	int sizeX, sizeY;
 	GetGraphSize(handle, &sizeX, &sizeY);
 
-	// 衝突判定および描画時の矩形計算用として等分割した一コマ分のサイズを保存
+	// 衝突判定および中心位置調整のため1コマあたりの幅・高さを算出
 	mnSizeX = sizeX / NumX;
 	mnSizeY = sizeY / NumY;
-
 
 	LoadDivGraph(
 		filename.c_str(),
@@ -54,13 +52,14 @@ TextureAnimation::TextureAnimation(
 
 TextureAnimation::~TextureAnimation()
 {
-	// メモリリーク防止のため、コンストラクタでnewしたグラフィックハンドル配列を確実に解放
+	// メモリリーク防止のため動的確保したハンドル配列を解放
 	delete[] mnHandleList;
 }
 
+// フレーム進行とキャラクター向き（左右反転）状態の更新
+// 入力: なし / 出力: なし / 副作用: アニメーションコマと反転フラグの更新
 void TextureAnimation::Update()
 {
-
 	if (mbType)
 	{
 		auto pObj = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
@@ -68,13 +67,12 @@ void TextureAnimation::Update()
 
 		if (pPlayer != nullptr)
 		{
-			// プレイヤーが記録している「最後に向いていた方向」を使う（速度ゼロでも向きが保たれる）
-			mbPlayerReverseX = (pPlayer->IsFacingLeft() || pPlayer->GetAngularAcceleration() < 0.0f && pPlayer->IsWireActive());
+			// 静止時でも直前の向きを維持し、ワイヤーアクション中は振り子角加速度の向きに連動させる
+			mbPlayerReverseX = (pPlayer->IsFacingLeft() || (pPlayer->GetAngularAcceleration() < 0.0f && pPlayer->IsWireActive()));
 		}
 	}
 
-
-    // 指定されたインターバル時間に基づき、等速でアニメーションをループ再生
+	// 指定フレーム間隔ごとに次のコマへサイクリックに進行
 	mnCounter++;
 	if (mnCounter % mnInterval == 0)
 	{
@@ -83,6 +81,8 @@ void TextureAnimation::Update()
 	}
 }
 
+// カメラ座標を加味した拡縮・回転・反転スプライト描画
+// 入力: cameraX, cameraY(カメラ座標) / 出力: なし / 副作用: バックバッファへの描画
 void TextureAnimation::Draw(float cameraX, float cameraY)
 {
 	if (mbType)
@@ -95,6 +95,8 @@ void TextureAnimation::Draw(float cameraX, float cameraY)
 	}
 }
 
+// アニメーション再生位置を先頭コマにリセット
+// 入力: なし / 出力: なし / 副作用: カウンタおよび現在コマの初期化
 void TextureAnimation::Reset()
 {
 	mnCounter = 0;
