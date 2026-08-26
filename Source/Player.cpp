@@ -15,6 +15,7 @@
 Player::Player(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool type)
 	: Object2D(filename, initPos, allNum, numX, numY, interval, scale, type)
 	, mnDisplayDamage(mnMaxHP)
+	, mvWireTargetPos(VGet(0.0f, 0.0f, 0.0f))
 {
 	SetTag(Object2D::Player2D);
 
@@ -41,10 +42,10 @@ void Player::Update()
 	Attack();
 
 	// 攻撃アニメーションの持続時間管理
-	if (mnAttackTimer > 0)
+	if (mnAttackAnimationTimer > 0)
 	{
-		mnAttackTimer--;
-		if (mnAttackTimer <= 0)
+		mnAttackAnimationTimer--;
+		if (mnAttackAnimationTimer <= 0)
 		{
 			mbIsAttack = false;
 		}
@@ -88,8 +89,10 @@ void Player::Draw()
 // 入力: なし / 出力: なし / 副作用: 座標、速度、振り子角度、ワイヤー状態の更新
 void Player::Move()
 {
-	bool isLeftTrigger = MouseManager::IsLeftTrigger();
-	bool isLeftRelease = MouseManager::IsLeftRelease();
+	//bool isLeftTrigger = MouseManager::IsLeftTrigger();
+	//bool isLeftRelease = MouseManager::IsLeftRelease();
+	bool isLeftTrigger = MouseManager::CheckTriggerMouseClick(MOUSE_INPUT_LEFT);
+	bool isLeftRelease = MouseManager::CheckReleaseMouseClick(MOUSE_INPUT_LEFT);
 	int mouseX = MouseManager::GetMouseX();
 	int mouseY = MouseManager::GetMouseY();
 	
@@ -189,16 +192,20 @@ void Player::Move()
 			mfVelocityX *= 0.85f;
 		}
 
-		if (InputManager::CheckDownKey(KEY_INPUT_SPACE))
+		if (!mbIsJump)
 		{
-			mfVelocityY = -15.0f;
+			if (InputManager::CheckDownKey(KEY_INPUT_SPACE))
+			{
+				mbIsJump = true;
+				mfVelocityY -= 15.0f;
+			}
 		}
 
 		if (InputManager::CheckDownKey(KEY_INPUT_G) && mnAttackCooldown == 0)
 		{
 			mbIsAttack = true;
-			mHasHitThisAttack = false;
-			mnAttackTimer = 30;
+			mbHasHitThisAttack = false;
+			mnAttackAnimationTimer = 30;
 			mnAttackCooldown = AttackInterval;
 		}
 
@@ -212,7 +219,7 @@ void Player::Move()
 		mvPosition.y += mfVelocityY;
 	}
 
-	// 敵との接触衝突応答（頭上スライドおよび移動ブロック）
+	// 敵との接触衝突判定（頭上スライドおよび移動ブロック）
 	{
 		float moveX = mvPosition.x - prevPosition.x;
 		float moveY = mvPosition.y - prevPosition.y;
@@ -276,6 +283,7 @@ void Player::Move()
 					(dirToEnemyY < 0.0f && moveY < 0.0f))
 				{
 					mvPosition.y = prevPosition.y;
+					mbIsJump = false;
 					if (!mbIsWireActive)
 					{
 						mfVelocityY = 0.0f;
@@ -292,10 +300,10 @@ void Player::Move()
 					mfPendulumAngularVelocity *= 0.3f;
 				}
 
-				if (mnAttackCooldown <= 0)
+				if (mnDamageCooldown <= 0)
 				{
 					PDamage(1);
-					mnAttackCooldown = AttackInterval;
+					mnDamageCooldown = DamageInterval;
 				}
 
 				break;
@@ -307,6 +315,7 @@ void Player::Move()
 	if (mvPosition.y > 1000.0f)
 	{
 		mvPosition.y = 1000.0f;
+		mbIsJump = false;
 
 		if (mbIsWireActive)
 		{
@@ -333,7 +342,7 @@ void Player::Attack()
 	}
 
 	// 攻撃アクション中かつ未ヒット時のみ判定（多重ヒット防止）
-	if (!mbIsAttack || mHasHitThisAttack)
+	if (!mbIsAttack || mbHasHitThisAttack)
 	{
 		return;
 	}
@@ -384,7 +393,7 @@ void Player::Attack()
 		))
 		{
 			pEnemy->EDamage(10);
-			mHasHitThisAttack = true;
+			mbHasHitThisAttack = true;
 			break;
 		}
 	}

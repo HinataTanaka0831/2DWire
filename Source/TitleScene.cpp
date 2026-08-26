@@ -14,6 +14,7 @@ TitleScene::TitleScene()
 	, mnBackGroundHandle(-1)
 	, mpTitleDemo(nullptr)
 {
+
 }
 
 TitleScene::~TitleScene()
@@ -31,11 +32,11 @@ void TitleScene::Initialize()
 
 	if (mpPlayButton == nullptr)
 	{
-		mpPlayButton = new Button(stringX, PlayY - 10, stringX + 250, PlayY + 60, " プレイ ", GetColor(255, 126, 115), GetColor(250, 250, 250), FontSize20);
+		mpPlayButton = std::make_unique<Button>(stringX, PlayY - 10, stringX + 250, PlayY + 60, " プレイ ", GetColor(255, 126, 115), GetColor(250, 250, 250), FontSize20);
 	}
 	if (mpPlayRuleButton == nullptr)
 	{
-		mpPlayRuleButton = new Button(stringX, PlayRuleY - 10, stringX + 250, PlayRuleY + 60, "あそびかた", GetColor(255, 126, 115), GetColor(250, 250, 250), FontSize20);
+		mpPlayRuleButton = std::make_unique<Button>(stringX, PlayRuleY - 10, stringX + 250, PlayRuleY + 60, "操作方法", GetColor(255, 126, 115), GetColor(250, 250, 250), FontSize20);
 	}
 
 	// 前シーンのカメラオフセットがタイトル画面の描画に影響しないよう初期化
@@ -44,7 +45,7 @@ void TitleScene::Initialize()
 
 	if (mpTitleDemo == nullptr)
 	{
-		mpTitleDemo = new TitleDemo();
+		mpTitleDemo = std::make_unique<TitleDemo>();
 	}
 }
 
@@ -72,8 +73,8 @@ void TitleScene::Update()
 		}
 	}
 
-	bool isLeftTrigger = MouseManager::IsLeftTrigger();
-	if (isLeftTrigger)
+	//bool isLeftTrigger = MouseManager::IsLeftTrigger();
+	if (MouseManager::CheckTriggerMouseClick(MOUSE_INPUT_LEFT))
 	{
 		switch (NowSelect3)
 		{
@@ -142,9 +143,8 @@ void TitleScene::Draw()
 }
 
 // デモおよびリソースの解放
-// 入力: なし / 出力: なし / 副作用: mpTitleDemoの破棄
+// 入力: なし / 出力: なし / 副作用: なし
 void TitleScene::Finalize()
 {
-	delete mpTitleDemo;
-	mpTitleDemo = nullptr;
+
 }

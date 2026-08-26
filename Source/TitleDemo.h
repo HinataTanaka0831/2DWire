@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "DxLib.h"
+#include <memory>
 
 class TextureAnimation;
 
@@ -41,8 +42,8 @@ private:
 	void UpdateLandRun();
 	void UpdateWaitReset();
 
-	TextureAnimation* mpPlayerAnim;
-	TextureAnimation* mpEnemyAnim;
+	std::unique_ptr<TextureAnimation> mpPlayerAnim;
+	std::unique_ptr<TextureAnimation> mpEnemyAnim;
 
 	DemoState mState;
 	int mnWaitTimer;

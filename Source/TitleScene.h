@@ -2,6 +2,7 @@
 
 #include "Scene.h"
 #include "Utility.h"
+#include <memory>
 
 class Button;
 class TitleDemo;
@@ -38,12 +39,12 @@ public:
 	void Finalize() override;
 
 private:
-	Button* mpPlayButton;
-	Button* mpPlayRuleButton;
+	std::unique_ptr<Button> mpPlayButton;
+	std::unique_ptr<Button> mpPlayRuleButton;
+	std::unique_ptr<TitleDemo> mpTitleDemo;
 	int NowSelect3 = select_Play;
 	const int stringX = Utility::SCREEN_WIDTH / 2 - 150;
 	const int PlayY = 600;
 	const int PlayRuleY = 750;
 	int mnBackGroundHandle;
-	TitleDemo* mpTitleDemo;
 };

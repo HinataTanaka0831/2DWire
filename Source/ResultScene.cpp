@@ -2,7 +2,7 @@
 #include "DxLib.h"
 #include "Utility.h"
 #include "Master.h"
-#include "InputManager.h"
+#include "MouseManager.h"
 
 ResultScene::ResultScene()
 	: Scene()
@@ -21,7 +21,7 @@ void ResultScene::Initialize()
 // 入力: なし / 出力: なし / 副作用: SCENE_TITLEへの遷移要求
 void ResultScene::Update()
 {
-	if (InputManager::CheckDownKey(KEY_INPUT_RETURN))
+	if (MouseManager::CheckTriggerMouseClick(MOUSE_INPUT_LEFT))
 	{
 		Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
 		Master::mpSceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_TITLE);

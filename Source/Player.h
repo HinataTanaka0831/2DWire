@@ -77,8 +77,13 @@ private:
 	const float GaugeFrame = 3.0f; 
 
 	bool mbIsAttack = false;                // 攻撃アクション中フラグ
-	bool mHasHitThisAttack = false;         // 1回のアクションでの多重ヒット防止フラグ
-	int mnAttackTimer = 0;                  // 攻撃アニメーション持続タイマー
+	bool mbHasHitThisAttack = false;        // 1回のアクションでの多重ヒット防止フラグ
+	int mnAttackAnimationTimer = 0;         // 攻撃アニメーション持続タイマー
 	int mnAttackCooldown = 0;               // 次の攻撃実行までのクールダウン
 	const int AttackInterval = 16;          // 攻撃間隔フレーム数
+
+	int mnDamageCooldown = 0;              // 次のプレイヤーが受けるダメージ実行までのクールダウン
+	const int DamageInterval = 10;          // プレイヤーが受けるダメージ間隔フレーム数
+
+	bool mbIsJump = false;                 // ジャンプアクション中のフラグ
 };

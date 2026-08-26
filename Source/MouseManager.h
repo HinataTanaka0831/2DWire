@@ -9,17 +9,26 @@ public:
 
 	// 毎フレームのマウス座標および入力状態のサンプリング
 	// 入力: なし / 出力: なし / 副作用: 内部の座標・入力ビットフラグを更新
-	static void MouseClick();
+	static void MouseUpdate();
 
-	static int GetMouseX() { return mouseX; }
-	static int GetMouseY() { return mouseY; }
-	static bool IsLeftDown() { return (mCurrentMouseInput & MOUSE_INPUT_LEFT); }
-	static bool IsLeftTrigger() { return (mCurrentMouseInput & MOUSE_INPUT_LEFT) && !(mPreviousMouseInput & MOUSE_INPUT_LEFT); }
-	static bool IsLeftRelease() { return !(mCurrentMouseInput & MOUSE_INPUT_LEFT) && (mPreviousMouseInput & MOUSE_INPUT_LEFT); }
+	// 指定されたマウスがが押し続けられているかどうかを判定
+    // 入力: mouseCode(マウスコード) / 出力: 押下中ならtrue、それ以外はfalse / 副作用: なし
+	static bool CheckPressMouseClick(int mouseCode);
+
+	// 指定されたマウスが押された瞬間かどうかを判定
+    // 入力: mouseCode(マウスコード) / 出力: 押下瞬間ならtrue、それ以外はfalse / 副作用: なし
+	static bool CheckTriggerMouseClick(int mouseCode);
+
+	// 指定されたマウスが離された瞬間かどうかを判定
+    // 入力: mouseCode(マウスコード) / 出力: 離された瞬間ならtrue、それ以外はfalse / 副作用: なし
+	static bool CheckReleaseMouseClick(int mouseCode);
+
+	static int GetMouseX() { return MouseX; }
+	static int GetMouseY() { return MouseY; }
 
 private:
-	static int mouseX;                 // 現在のマウスX座標
-	static int mouseY;                 // 現在のマウスY座標
-	static int mCurrentMouseInput;     // 現フレームのマウス入力ビットフラグ
-	static int mPreviousMouseInput;    // 前フレームのマウス入力ビットフラグ（エッジ検出用）
+	static int MouseX;                 // 現在のマウスX座標
+	static int MouseY;                 // 現在のマウスY座標
+	static int CurrentMouseInput;     // 現フレームのマウス入力ビットフラグ
+	static int PreviousMouseInput;    // 前フレームのマウス入力ビットフラグ（エッジ検出用）
 };

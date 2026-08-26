@@ -57,7 +57,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		Master::mpSceneManager->Draw();
 		
 		// 毎フレームのクリック・リリース状態を検知するため入力状態を更新
-		gMouseManager.MouseClick();
+		gMouseManager.MouseUpdate();
 
 		ScreenFlip();
 

@@ -55,7 +55,7 @@ void Button::Draw()
 		mfScale = 1.1f;
 
 		// 左クリック押下時にクリック状態へ遷移し背景色を変更
-		if (MouseManager::IsLeftDown())
+		if (MouseManager::CheckPressMouseClick(MOUSE_INPUT_LEFT))
 		{
 			mbIsClicked = true;
 			drawColor = mnChangeColor;

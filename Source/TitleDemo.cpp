@@ -21,12 +21,12 @@ TitleDemo::TitleDemo()
 	, mbIsWireVisible(false)
 {
 	// デモ用のため本編Player検索を無効化(type=false)して直接アニメーションを制御
-	mpPlayerAnim = new TextureAnimation(
+	mpPlayerAnim = std::make_unique<TextureAnimation>(
 		"Resource/Player/anim_walk.png",
 		VGet(0.0f, 0.0f, 0.0f),
 		4, 4, 1, 7, 1.0f, false);
 
-	mpEnemyAnim = new TextureAnimation(
+	mpEnemyAnim = std::make_unique<TextureAnimation>(
 		"Resource/Enemy/anim_monster01walk.png",
 		VGet(0.0f, 0.0f, 0.0f),
 		6, 6, 1, 8, 1.0f, false);
@@ -38,11 +38,6 @@ TitleDemo::TitleDemo()
 
 TitleDemo::~TitleDemo()
 {
-	delete mpPlayerAnim;
-	mpPlayerAnim = nullptr;
-	delete mpEnemyAnim;
-	mpEnemyAnim = nullptr;
-
 	if (mnBuildingHandle != -1)
 	{
 		DeleteGraph(mnBuildingHandle);
