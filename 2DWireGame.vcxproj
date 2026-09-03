@@ -136,7 +136,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\AnimationController.cpp" />
-    <ClCompile Include="Source\Bullet.cpp" />
     <ClCompile Include="Source\Button.cpp" />
     <ClCompile Include="Source\Collision.cpp" />
     <ClCompile Include="Source\Enemy.cpp" />
@@ -149,7 +148,6 @@
     <ClCompile Include="Source\MouseManager.cpp" />
     <ClCompile Include="Source\Object2D.cpp" />
     <ClCompile Include="Source\ObjectManagercpp.cpp" />
-    <ClCompile Include="Source\OriginalBullet.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\ResultScene.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
@@ -165,21 +163,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AnimationController.h" />
-    <ClInclude Include="Source\Bullet.h" />
     <ClInclude Include="Source\Button.h" />
     <ClInclude Include="Source\Collision.h" />
     <ClInclude Include="Source\Enemy.h" />
     <ClInclude Include="Source\GameOverScene.h" />
     <ClInclude Include="Source\GameRuleScene.h" />
     <ClInclude Include="Source\GameScene.h" />
-    <ClInclude Include="Source\HomingBullet.h" />
     <ClInclude Include="Source\InputManager.h" />
     <ClInclude Include="Source\Loading.h" />
     <ClInclude Include="Source\Master.h" />
     <ClInclude Include="Source\MouseManager.h" />
     <ClInclude Include="Source\Object2D.h" />
     <ClInclude Include="Source\ObjectManager.h" />
-    <ClInclude Include="Source\OriginalBullet.h" />
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\ResultScene.h" />
     <ClInclude Include="Source\Scene.h" />

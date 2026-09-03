@@ -11,7 +11,7 @@ private:
 	static const int MoveSpeed = 3;
 
 private:
-	AnimationController mAnimController;
+	AnimationController m_animController;
 
 public:
 	// 敵キャラクターの初期化とアニメーションの登録
@@ -50,31 +50,31 @@ public:
 	void HPGaugeUpdate();
 
 private:
-	int time = 0;
-	int type;
+	int m_time = 0;
+	int m_type;
 
 	// AI意思決定用の距離・時間閾値定数
-	static constexpr float Search_Range = 700.0f; // プレイヤーを検知して追跡を開始する距離
-	static constexpr float Attack_Range = 230.0f; // 攻撃アニメーションに切り替える距離
-	static constexpr int Attack_Interval = 60;    // 毎フレーム多重ヒットによる瞬殺を防ぐクールダウン(60F = 1秒)
+	static constexpr float m_searchRange = 700.0f; // プレイヤーを検知して追跡を開始する距離
+	static constexpr float m_attackRange = 230.0f; // 攻撃アニメーションに切り替える距離
+	static constexpr int m_attackInterval = 60;    // 毎フレーム多重ヒットによる瞬殺を防ぐクールダウン(60F = 1秒)
 
-	int mnAttackCooldown = 0; // 攻撃判定の間隔制御タイマー
+	int m_attackCooldown = 0; // 攻撃判定の間隔制御タイマー
 
-	int hp = 100;
-	int maxHP = 100;
-	int width = 250;
-	int gaugeWidth = 0;
-	int gaugeHeight = 20;
-	int damageWidth = 0;
-	int minWidth = 5;
-	int displayDamage;
-	int hpGaugeTimer = 0;
-	int mnHitFlashTimer = 0;
+	int m_hp = 100;
+	int m_maxHP = 100;
+	int m_width = 250;
+	int m_gaugeWidth = 0;
+	int m_gaugeHeight = 20;
+	int m_damageWidth = 0;
+	int m_minWidth = 5;
+	int m_displayDamage = m_maxHP;
+	int m_hpGaugeTimer = 0;
+	int m_hitFlashTimer = 0;
 
 	static const int HitFlashDuration = 60;
 	static const int HitFlashInterval = 6;
 
 	const float GaugeFrame = 3.0f;
 
-	bool isCollidingWithPlayer;
+	bool m_isCollidingWithPlayer;
 };
