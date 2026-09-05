@@ -9,10 +9,6 @@
 
 TitleScene::TitleScene() 
 	: Scene()
-	, mpPlayButton(nullptr)
-	, mpPlayRuleButton(nullptr)
-	, mnBackGroundHandle(-1)
-	, mpTitleDemo(nullptr)
 {
 
 }
@@ -21,8 +17,6 @@ TitleScene::~TitleScene()
 {
 }
 
-// タイトル背景、ボタンUI、自動プレビューデモの初期化
-// 入力: なし / 出力: なし / 副作用: 画像ロード、Button/TitleDemoの生成
 void TitleScene::Initialize()
 {
 	if (mnBackGroundHandle == -1)
@@ -32,11 +26,17 @@ void TitleScene::Initialize()
 
 	if (mpPlayButton == nullptr)
 	{
-		mpPlayButton = std::make_unique<Button>(stringX, PlayY - 10, stringX + 250, PlayY + 60, " プレイ ", GetColor(255, 126, 115), GetColor(250, 250, 250), FontSize20);
+		mpPlayButton = std::make_unique<Button>(StringX, PlayY - 10, StringX + 250, PlayY + 60, " プレイ ", GetColor(70, 70, 90), GetColor(80, 130, 255), fontSize20);
 	}
+
 	if (mpPlayRuleButton == nullptr)
 	{
-		mpPlayRuleButton = std::make_unique<Button>(stringX, PlayRuleY - 10, stringX + 250, PlayRuleY + 60, "操作方法", GetColor(255, 126, 115), GetColor(250, 250, 250), FontSize20);
+		mpPlayRuleButton = std::make_unique<Button>(StringX, PlayRuleY - 10, StringX + 250, PlayRuleY + 60, "操作方法", GetColor(70, 70, 90), GetColor(80, 130, 255), fontSize20);
+	}
+
+	if (mpQuitButton == nullptr)
+	{
+		mpQuitButton = std::make_unique<Button>(StringX, QuitY - 10, StringX + 250, QuitY + 60, "終了", GetColor(70, 70, 90), GetColor(80, 130, 255), fontSize20);
 	}
 
 	// 前シーンのカメラオフセットがタイトル画面の描画に影響しないよう初期化
@@ -49,47 +49,43 @@ void TitleScene::Initialize()
 	}
 }
 
-// ボタン入力検知とゲーム本編/ルール画面への遷移制御
-// 入力: なし / 出力: なし / 副作用: シーン遷移要求、デモの進行
 void TitleScene::Update()
 {
-	Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
-
 	if (mpPlayButton)
 	{
 		mpPlayButton->Update();
+
 		if (mpPlayButton->IsClick())
 		{
-			NowSelect3 = select_Play;
+			gCurrentStage = 1;
+			Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
+			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_GAME);
 		}
 	}
 
 	if (mpPlayRuleButton)
 	{
 		mpPlayRuleButton->Update();
+
 		if (mpPlayRuleButton->IsClick())
 		{
-			NowSelect3 = select_PlayRule;
-		}
-	}
-
-	//bool isLeftTrigger = MouseManager::IsLeftTrigger();
-	if (MouseManager::CheckTriggerMouseClick(MOUSE_INPUT_LEFT))
-	{
-		switch (NowSelect3)
-		{
-		case select_Play:
-			gCurrentStage = 1;
-			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_GAME);
-			break;
-
-		case select_PlayRule:
+			Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
 			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_GAME_RULE);
-			break;
 		}
 	}
 
-	if (mpTitleDemo != nullptr)
+	if (mpQuitButton)
+	{
+		mpQuitButton->Update();
+
+		if (mpQuitButton->IsClick())
+		{
+			Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
+			Master::mpSceneManager->RequestQuit();
+		}
+	}
+
+	if (mpTitleDemo)
 	{
 		mpTitleDemo->Update();
 	}
@@ -97,8 +93,6 @@ void TitleScene::Update()
 	Scene::Update();
 }
 
-// 背景、プレビューデモ、UIボタンの描画
-// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void TitleScene::Draw()
 {
 	int bgWidth, bgHeight;
@@ -115,16 +109,15 @@ void TitleScene::Draw()
 		}
 
 		int bgOffsetY = (int)gCameraY;
-		const int Bg_Y_Offset = 0;
 
 		for (int x = -offsetX; x < Utility::SCREEN_WIDTH; x += bgWidth)
 		{
-			DrawGraph(x, -bgOffsetY + Bg_Y_Offset, mnBackGroundHandle, TRUE);
+			DrawGraph(x, -bgOffsetY, mnBackGroundHandle, TRUE);
 		}
 	}
 
 	// 背景とUIの間にデモを描画し、ボタンの視認性を最優先にする
-	if (mpTitleDemo != nullptr)
+	if (mpTitleDemo)
 	{
 		mpTitleDemo->Draw();
 	}
@@ -139,12 +132,19 @@ void TitleScene::Draw()
 		mpPlayRuleButton->Draw();
 	}
 
+	if (mpQuitButton)
+	{
+		mpQuitButton->Draw();
+	}
+
 	Scene::Draw();
 }
 
-// デモおよびリソースの解放
-// 入力: なし / 出力: なし / 副作用: なし
 void TitleScene::Finalize()
 {
-
+	if (mnBackGroundHandle != -1)
+	{
+		DeleteGraph(mnBackGroundHandle);
+		mnBackGroundHandle = -1;
+	}
 }

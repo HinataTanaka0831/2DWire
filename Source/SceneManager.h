@@ -12,11 +12,12 @@ public:
 		SCENE_NONE = 0,
 		SCENE_TITLE,
 		SCENE_GAME,
-		SCENE_GAME_STAGE2,
 		SCENE_RESULT,
 		SCENE_GAME_RULE,
 		SCENE_GAMEOVER,
 	};
+
+
 
 	// 遷移演出の種類
 	enum class TransitionType
@@ -70,6 +71,12 @@ public:
 	// 入力: なし / 出力: なし / 副作用: バックバッファへのアルファ描画
 	void DrawTransitionEffects();
 
+	// ゲームループを終了するフラグを設定する
+	// 入力: なし / 出力: なし / 副作用: mbQuitRequestでゲームループを続けるかどうかを決める
+	void RequestQuit();
+
+	bool IsQuitRequest() const { return mbQuitRequest; }
+
 	Scene* GetCurrentScene() { return mpCurrentScene; }
 
 private:
@@ -77,13 +84,15 @@ private:
 	SCENE_TYPE mnNextSceneType;
 	Scene* mpCurrentScene;
 
-	bool mIsTransition = false;
-	int mTransitionTimer = 0;
+	bool mbIsTransition = false;    // トランジション演出を行うかどうかのフラグ
+	int mnTransitionTimer = 0;      // トランジションを行う時間
 	const int TRANSITION_TIME = 15; // 遷移にかけるフレーム数（約0.25秒）
 	TransitionPhase mPhase = TransitionPhase::TRANS_NONE;
 
 	TransitionType mTransitionType = TransitionType::NORMAL_BLACK;
-	int mShakeOffsetX = 0;
-	int mShakeOffsetY = 0;
-	int mWorkScreenHandle = -1;
+	int mnShakeOffsetX = 0;
+	int mnShakeOffsetY = 0;
+	int mnWorkScreenHandle = -1;
+
+	bool mbQuitRequest = false;
 };

@@ -1,5 +1,9 @@
 ﻿#pragma once
 #include "Scene.h"
+#include "Utility.h"
+#include <memory>
+
+class Button;
 
 // プレイヤーHPゼロ時のゲームオーバー画面を制御するクラス
 class GameOverScene : public Scene
@@ -19,4 +23,11 @@ public:
 	void Draw() override;
 
 	void Finalize() override;
+
+private:
+	std::unique_ptr<Button> mpTitleButton = nullptr;
+	std::unique_ptr<Button> mpQuitButton = nullptr;
+	const int StringX = Utility::SCREEN_WIDTH / 2 - 150;
+	const int TitleY = 750;
+	const int QuitY = 850;
 };

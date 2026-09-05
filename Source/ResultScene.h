@@ -1,6 +1,10 @@
 ﻿#pragma once
 
 #include "Scene.h"
+#include "Utility.h"
+#include <memory>
+
+class Button;
 
 // 全ステージクリア時のリザルト画面を制御するクラス
 class ResultScene : public Scene
@@ -20,4 +24,11 @@ public:
 	void Draw() override;
 
 	void Finalize() override;
+
+private:
+	std::unique_ptr<Button> mpTitleButton = nullptr;
+	std::unique_ptr<Button> mpQuitButton = nullptr;
+	const int StringX = Utility::SCREEN_WIDTH / 2 - 150;
+	const int TitleY = 750;
+	const int QuitY = 850;
 };

@@ -64,8 +64,6 @@ protected:
 	TextureAnimation* mpTextureAnimation;  // 連番アニメーション描画用テクスチャ
 	VECTOR mvPosition;                     // ワールド座標
 	VECTOR mvDirection;                    // 移動方向ベクトル
-	float mfAngle;                         // 向き・回転角度
-	int count;
 
 private:
 	bool mbDeleteFlag;                     // フレーム終了時の安全削除対象フラグ

@@ -6,7 +6,8 @@
 #include "Utility.h"
 #include "Stage.h"
 #include "Loading.h"
-#include "SoundManagerh.h"
+#include "SoundManager.h"
+#include "Goal.h"
 #include <cmath>
 
 float gCameraX = 0.0f;
@@ -15,9 +16,6 @@ int gCurrentStage = 1;
 
 GameScene::GameScene()
 	: Scene()
-	, mpPlayer(nullptr)
-	, mnBackGroundHandle(-1)
-	, mpStage(nullptr)
 {
 }
 
@@ -25,19 +23,18 @@ GameScene::~GameScene()
 {
 }
 
-// 背景リソースロードおよびローダーを介したステージ初期化の実行
-// 入力: なし / 出力: なし / 副作用: ローディング画面実行、ステージ構築
 void GameScene::Initialize()
 {
-	mnBackGroundHandle = LoadGraph("Resource/BackGround/bg_night.png");
+	if (mnBackGroundHandle == -1)
+	{
+		mnBackGroundHandle = LoadGraph("Resource/BackGround/bg_night.png");
+	}
 
 	LoadingManager loader;
 	loader.AddTask(std::make_unique<InitializeLoadStageData>());
 	loader.ExecuteGameScene();
 }
 
-// ステージ地形・プレイヤー・敵のインスタンス化
-// 入力: なし / 出力: なし / 副作用: Player, Stageの生成
 void GameScene::LoadStageData()
 {
 	mpStage = new Stage();
@@ -51,12 +48,13 @@ void GameScene::LoadStageData()
 	);
 }
 
-// カメラのスムーズ追従、境界制限、ゴール接触クリア判定
-// 入力: なし / 出力: なし / 副作用: gCameraX/Yの更新、次シーン遷移要求
 void GameScene::Update()
 {
-	if (mpPlayer != nullptr)
+	if (mpPlayer == nullptr)
 	{
+		return;
+	}
+
 		float playerX = mpPlayer->GetPosition().x;
 		float playerY = mpPlayer->GetPosition().y;
 
@@ -96,6 +94,11 @@ void GameScene::Update()
 			mpPlayer->SetPosition(pos);
 		}
 
+		if (mpPlayer->IsDead())
+		{
+			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_GAMEOVER);
+		}
+
 		// ゴール接触判定とステージ遷移/リザルト遷移のディスパッチ
 		if (!mIsGoalReached)
 		{
@@ -107,14 +110,21 @@ void GameScene::Update()
 				float dy = mpPlayer->GetPosition().y - goal->GetPosition().y;
 				float dist = std::sqrt(dx * dx + dy * dy);
 
-				if (dist < goal->GetSizeX() / 2.0f + 50.0f)
+				Goal* pGoal = dynamic_cast<Goal*>(goal);
+
+				if (pGoal == nullptr)
+				{
+					return;
+				}
+
+				if (dist < pGoal->GetWidth() / 2.0f + 50.0f)
 				{
 					// 多重遷移防止フラグを立ててステージ進行を分岐
 					mIsGoalReached = true;
 					if (gCurrentStage < MaxStage)
 					{
 						gCurrentStage++;
-						Master::mpSceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_GAME_STAGE2);
+						Master::mpSceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_GAME);
 					}
 					else
 					{
@@ -124,13 +134,11 @@ void GameScene::Update()
 				}
 			}
 		}
-	}
+	
 
 	Scene::Update();
 }
 
-// スカイライン・視差スクロール背景およびオブジェクト群の描画
-// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void GameScene::Draw()
 {
 	// 深度感を演出する空の縦グラデーション背景
@@ -156,19 +164,21 @@ void GameScene::Draw()
 		}
 
 		int bgOffsetY = (int)gCameraY;
-		const int Bg_Y_Offset = 120;
+		const int bgYOffset = 120;
 
 		for (int x = -offsetX; x < Utility::SCREEN_WIDTH; x += bgWidth)
 		{
-			DrawGraph(x, -bgOffsetY + Bg_Y_Offset, mnBackGroundHandle, TRUE);
+			if (mnBackGroundHandle != -1)
+			{
+
+			}
+			DrawGraph(x, -bgOffsetY + bgYOffset, mnBackGroundHandle, TRUE);
 		}
 	}
 
 	Scene::Draw();
 }
 
-// ステージ・プレイヤー・背景リソースの解放
-// 入力: なし / 出力: なし / 副作用: 全2Dオブジェクトおよび背景ハンドルの破棄
 void GameScene::Finalize()
 {
 	if (mnBackGroundHandle != -1)

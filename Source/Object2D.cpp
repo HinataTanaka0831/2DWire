@@ -130,3 +130,4 @@ int Object2D::GetSizeY()
 
 	return 0;
 }
+

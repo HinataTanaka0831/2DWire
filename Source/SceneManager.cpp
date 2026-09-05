@@ -13,8 +13,8 @@ SceneManager::SceneManager()
 	, mnNextSceneType(SCENE_TYPE::SCENE_NONE)
 	, mpCurrentScene(nullptr)
 	, mTransitionType(TransitionType::NORMAL_BLACK)
-	, mShakeOffsetX(0)
-	, mShakeOffsetY(0)
+	, mnShakeOffsetX(0)
+	, mnShakeOffsetY(0)
 {
 }
 
@@ -22,18 +22,14 @@ SceneManager::~SceneManager()
 {
 }
 
-// 一時描画スクリーンバッファの生成と初期シーン（タイトル）の設定
-// 入力: なし / 出力: なし / 副作用: mWorkScreenHandleの生成
 void SceneManager::Initialize()
 {
 	// 画面シェイクや全画面ポストエフェクト合成用の中間スクリーンバッファを生成
-	mWorkScreenHandle = MakeScreen(Utility::SCREEN_WIDTH, Utility::SCREEN_HEIGHT, TRUE);
+	mnWorkScreenHandle = MakeScreen(Utility::SCREEN_WIDTH, Utility::SCREEN_HEIGHT, TRUE);
 	mnNextSceneType = SCENE_TYPE::SCENE_TITLE;
 	ChangeSceneIfNeeded();
 }
 
-// 現在シーンの更新および遷移演出タイマーの進行
-// 入力: なし / 出力: なし / 副作用: シーンUpdateおよび画面揺れ計算
 void SceneManager::Update()
 {
 	if (mpCurrentScene != nullptr)
@@ -41,20 +37,18 @@ void SceneManager::Update()
 		mpCurrentScene->Update();
 	}
 
-	if (mIsTransition)
+	if (mbIsTransition)
 	{
 		UpdateTransition();
 	}
 }
 
-// オフスクリーンバッファ経由でのシーン描画とポストエフェクト（シェイク・フェード）合成
-// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void SceneManager::Draw()
 {
 	if (mpCurrentScene == nullptr) return;
 
 	// シェイク演出を適用するため一旦ワークスクリーンへ全描画
-	SetDrawScreen(mWorkScreenHandle);
+	SetDrawScreen(mnWorkScreenHandle);
 	ClearDrawScreen();
 
 	mpCurrentScene->Draw();
@@ -62,27 +56,23 @@ void SceneManager::Draw()
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	// シェイクオフセットを加算して本来のバックバッファへ転送
-	DrawGraph(mShakeOffsetX, mShakeOffsetY, mWorkScreenHandle, FALSE);
+	DrawGraph(mnShakeOffsetX, mnShakeOffsetY, mnWorkScreenHandle, FALSE);
 
-	if (mIsTransition)
+	if (mbIsTransition)
 	{
 		DrawTransitionEffects();
 	}
 }
 
-// 一時バッファの解放
-// 入力: なし / 出力: なし / 副作用: DxLibグラフィックハンドルの削除
 void SceneManager::Finalize()
 {
-	if (mWorkScreenHandle != -1)
+	if (mnWorkScreenHandle != -1)
 	{
-		DeleteGraph(mWorkScreenHandle);
-		mWorkScreenHandle = -1;
+		DeleteGraph(mnWorkScreenHandle);
+		mnWorkScreenHandle = -1;
 	}
 }
 
-// ループ安全なタイミングで現在シーンを破棄し次シーンを初期化
-// 入力: なし / 出力: なし / 副作用: mpCurrentSceneの破棄と再生成
 void SceneManager::ChangeSceneIfNeeded()
 {
 	if (mnSceneType == mnNextSceneType)
@@ -105,7 +95,6 @@ void SceneManager::ChangeSceneIfNeeded()
 		mpCurrentScene = new TitleScene();
 		break;
 	case SCENE_TYPE::SCENE_GAME:
-	case SCENE_TYPE::SCENE_GAME_STAGE2:
 		mpCurrentScene = new GameScene();
 		break;
 	case SCENE_TYPE::SCENE_RESULT:
@@ -127,8 +116,6 @@ void SceneManager::ChangeSceneIfNeeded()
 	}
 }
 
-// 次に遷移すべきシーンを設定しトランジション演出を開始
-// 入力: next(遷移先シーン種別) / 出力: なし / 副作用: 遷移演出フラグとタイマーの開始
 void SceneManager::SetNextScene(SCENE_TYPE next)
 {
 	if (mnSceneType == next) return;
@@ -149,82 +136,78 @@ void SceneManager::SetNextScene(SCENE_TYPE next)
 		mTransitionType = TransitionType::NORMAL_BLACK;
 	}
 
-	mIsTransition = true;
+	mbIsTransition = true;
 	mPhase = TransitionPhase::TRANS_FADEOUT;
-	mTransitionTimer = 0;
-	mShakeOffsetX = 0;
-	mShakeOffsetY = 0;
+	mnTransitionTimer = 0;
+	mnShakeOffsetX = 0;
+	mnShakeOffsetY = 0;
 }
 
-// 遷移演出のフェード・シェイク進行計算
-// 入力: なし / 出力: なし / 副作用: mShakeOffsetX/Yおよびアルファ値の更新
 void SceneManager::UpdateTransition()
 {
-	mTransitionTimer++;
+	mnTransitionTimer++;
 
 	if (mTransitionType == TransitionType::RED_FLASH_SHAKE)
 	{
 		if (mPhase == TransitionPhase::TRANS_FADEOUT)
 		{
 			// 被弾・死亡の衝撃を表現するため時間経過とともに減衰するランダム振動を生成
-			int currentTime = mTransitionTimer;
+			int currentTime = mnTransitionTimer;
 			int limitTime = TRANSITION_TIME;
 			int maxShakeAmount = 15;
 
 			int shakeRange = maxShakeAmount * (limitTime - currentTime) / limitTime;
 			if (shakeRange > 0)
 			{
-				mShakeOffsetX = (rand() % (shakeRange * 2 + 1)) - shakeRange;
-				mShakeOffsetY = (rand() % (shakeRange * 2 + 1)) - shakeRange;
+				mnShakeOffsetX = (rand() % (shakeRange * 2 + 1)) - shakeRange;
+				mnShakeOffsetY = (rand() % (shakeRange * 2 + 1)) - shakeRange;
 			}
 			else
 			{
-				mShakeOffsetX = 0;
-				mShakeOffsetY = 0;
+				mnShakeOffsetX = 0;
+				mnShakeOffsetY = 0;
 			}
 		}
 		else
 		{
-			mShakeOffsetX = 0;
-			mShakeOffsetY = 0;
+			mnShakeOffsetX = 0;
+			mnShakeOffsetY = 0;
 		}
 	}
 
 	switch (mPhase)
 	{
 	case TransitionPhase::TRANS_FADEOUT:
-		if (mTransitionTimer >= TRANSITION_TIME)
+		if (mnTransitionTimer >= TRANSITION_TIME)
 		{
 			ChangeSceneIfNeeded();
 			mPhase = TransitionPhase::TRANS_FADEIN;
-			mTransitionTimer = 0;
+			mnTransitionTimer = 0;
 		}
 		break;
 
 	case TransitionPhase::TRANS_FADEIN:
-		if (mTransitionTimer >= TRANSITION_TIME)
+		if (mnTransitionTimer >= TRANSITION_TIME)
 		{
-			mIsTransition = false;
+			mbIsTransition = false;
 			mPhase = TransitionPhase::TRANS_NONE;
-			mShakeOffsetX = 0;
-			mShakeOffsetY = 0;
+			mnShakeOffsetX = 0;
+			mnShakeOffsetY = 0;
 		}
 		break;
 	}
 }
 
-// トランジション用マスク・フラッシュの描画
-// 入力: なし / 出力: なし / 副作用: バックバッファへのアルファ描画
 void SceneManager::DrawTransitionEffects()
 {
 	int alpha = 0;
 	if (mPhase == TransitionPhase::TRANS_FADEOUT)
 	{
-		alpha = (mTransitionTimer * 255) / TRANSITION_TIME;
+		alpha = (mnTransitionTimer * 255) / TRANSITION_TIME;
 	}
 	else if (mPhase == TransitionPhase::TRANS_FADEIN)
 	{
-		alpha = ((TRANSITION_TIME - mTransitionTimer) * 255) / TRANSITION_TIME;
+		alpha = ((TRANSITION_TIME - mnTransitionTimer) * 255) / TRANSITION_TIME;
 	}
 
 	unsigned int color = GetColor(0, 0, 0);
@@ -246,4 +229,9 @@ void SceneManager::DrawTransitionEffects()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	DrawBox(0, 0, Utility::SCREEN_WIDTH, Utility::SCREEN_HEIGHT, color, TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+
+void SceneManager::RequestQuit()
+{
+	mbQuitRequest = true;
 }

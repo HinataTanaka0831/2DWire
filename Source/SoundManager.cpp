@@ -1,4 +1,4 @@
-﻿#include "SoundManagerh.h"
+﻿#include "SoundManager.h"
 #include "DxLib.h"
 
 SoundManager::SoundManager()

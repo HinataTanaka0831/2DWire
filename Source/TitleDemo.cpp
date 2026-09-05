@@ -186,7 +186,7 @@ void TitleDemo::UpdateLandRun()
 	mvEnemyPos.x += EnemyRunSpeed;
 	mvEnemyPos.y = EnemyGroundY;
 
-	if (mvPlayerPos.x > Utility::SCREEN_WIDTH + 140.0f && mvEnemyPos.x > Utility::SCREEN_WIDTH + 140.0f)
+	if (mvPlayerPos.x > Utility::SCREEN_WIDTH + 140.0f && mvEnemyPos.x > Utility::SCREEN_WIDTH + 200.0f)
 	{
 		mState = DemoState::StateWaitReset;
 		mnWaitTimer = 40;

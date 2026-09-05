@@ -11,14 +11,6 @@ class TitleDemo;
 class TitleScene : public Scene
 {
 public:
-	enum {
-		select_Play,
-		select_PlayRule,
-
-		select_Now3,
-	};
-
-public:
 	TitleScene();
 	~TitleScene();
 
@@ -39,12 +31,13 @@ public:
 	void Finalize() override;
 
 private:
-	std::unique_ptr<Button> mpPlayButton;
-	std::unique_ptr<Button> mpPlayRuleButton;
-	std::unique_ptr<TitleDemo> mpTitleDemo;
-	int NowSelect3 = select_Play;
-	const int stringX = Utility::SCREEN_WIDTH / 2 - 150;
-	const int PlayY = 600;
+	std::unique_ptr<Button> mpPlayButton = nullptr;
+	std::unique_ptr<Button> mpPlayRuleButton = nullptr;
+	std::unique_ptr<Button> mpQuitButton = nullptr;
+	std::unique_ptr<TitleDemo> mpTitleDemo = nullptr;
+	const int StringX = Utility::SCREEN_WIDTH / 2 - 150;
+	const int PlayY = 650;
 	const int PlayRuleY = 750;
-	int mnBackGroundHandle;
+	const int QuitY = 850;
+	int mnBackGroundHandle = -1;
 };

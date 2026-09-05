@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "SceneManager.h"
-#include "SoundManagerh.h"
+#include "SoundManager.h"
 
 // シーンやサウンドなど各所から参照される共有マネージャーへのアクセスを提供するクラス
 // 副作用: アプリケーション全体で共有される静的ポインタを保持

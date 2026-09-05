@@ -6,6 +6,7 @@ class MouseManager
 {
 public:
 	MouseManager();
+	~MouseManager();
 
 	// 毎フレームのマウス座標および入力状態のサンプリング
 	// 入力: なし / 出力: なし / 副作用: 内部の座標・入力ビットフラグを更新
@@ -23,12 +24,12 @@ public:
     // 入力: mouseCode(マウスコード) / 出力: 離された瞬間ならtrue、それ以外はfalse / 副作用: なし
 	static bool CheckReleaseMouseClick(int mouseCode);
 
-	static int GetMouseX() { return MouseX; }
-	static int GetMouseY() { return MouseY; }
+	static float GetMouseX() { return MouseX; }
+	static float GetMouseY() { return MouseY; }
 
 private:
-	static int MouseX;                 // 現在のマウスX座標
-	static int MouseY;                 // 現在のマウスY座標
+	static float MouseX;                 // 現在のマウスX座標
+	static float MouseY;                 // 現在のマウスY座標
 	static int CurrentMouseInput;     // 現フレームのマウス入力ビットフラグ
 	static int PreviousMouseInput;    // 前フレームのマウス入力ビットフラグ（エッジ検出用）
 };

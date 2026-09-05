@@ -15,8 +15,6 @@
 // 全システムから参照されるシングルトン的マネージャーの静的インスタンス
 SceneManager* Master::mpSceneManager = new SceneManager();
 SoundManager* Master::mpSoundManager = new SoundManager();
-// マウス入力状態を全シーンで共有するためのグローバルインスタンス
-MouseManager gMouseManager;
 
 // アプリケーションのエントリーポイントおよびメインループ制御
 // 入力: hInstance, hPrevInstance, lpCmdLine, nCmdShow / 出力: 0(正常終了), -1(初期化失敗) / 副作用: ウィンドウ生成、DXライブラリ初期化・終了、全リソース破棄
@@ -53,11 +51,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
 		int time = GetNowCount();
 
+		// 更新
 		Master::mpSceneManager->Update();
+
+		// 毎フレームのクリック・リリース状態を検知するため入力状態を更新
+		MouseManager::MouseUpdate();
+
+		// 描画
 		Master::mpSceneManager->Draw();
 		
-		// 毎フレームのクリック・リリース状態を検知するため入力状態を更新
-		gMouseManager.MouseUpdate();
+
+		if (Master::mpSceneManager->IsQuitRequest())
+		{
+			break;
+		}
 
 		ScreenFlip();
 

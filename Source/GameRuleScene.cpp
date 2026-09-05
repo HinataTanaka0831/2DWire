@@ -1,8 +1,9 @@
 ﻿#include "DxLib.h"
 #include "GameRuleScene.h"
 #include "Utility.h"
-#include "InputManager.h"
+#include "MouseManager.h"
 #include "Master.h"
+#include "Button.h"
 
 GameRuleScene::GameRuleScene()
 	: Scene()
@@ -15,34 +16,80 @@ GameRuleScene::~GameRuleScene()
 
 void GameRuleScene::Initialize()
 {
+	if (mnMoveLeftHandle == -1)
+	{
+		mnMoveLeftHandle = LoadGraph("Resource/UI/ui_ruleMoveLeft.png");
+	}
+
+	if (mnMoveRightHandle == -1)
+	{
+		mnMoveRightHandle = LoadGraph("Resource/UI/ui_ruleMoveRight.png");
+	}
+
+	if (mnJumpHandle == -1)
+	{
+		mnJumpHandle = LoadGraph("Resource/UI/ui_ruleJump.png");
+	}
+
+	if (mpBackButton == nullptr)
+	{
+		mpBackButton = std::make_unique<Button>(StringX, BackY - 10, StringX + 250, BackY + 60, "戻る", GetColor(70, 70, 90), GetColor(80, 130, 255), fontSize20);
+	}
 }
 
-// 決定キー入力検知によるタイトル画面への復帰
-// 入力: なし / 出力: なし / 副作用: SCENE_TITLEへの遷移要求
 void GameRuleScene::Update()
 {
-	if (InputManager::CheckDownKey(KEY_INPUT_RETURN))
+	if (mpBackButton)
 	{
-		Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
-		Master::mpSceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_TITLE);
+		mpBackButton->Update();
+
+		if (mpBackButton->IsClick())
+		{
+			Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
+			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_TITLE);
+		}
 	}
 	Scene::Update();
 }
 
-// 操作キー説明ダイアログの描画
-// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void GameRuleScene::Draw()
 {
-	DrawBox(Utility::SCREEN_WIDTH / 2 - 200, 50, Utility::SCREEN_WIDTH / 2 + 200, 350, GetColor(255, 255, 255), false);
-	DrawString(Utility::SCREEN_WIDTH / 2 - 80, Utility::SCREEN_HEIGHT / 2 - 170, "～～ 遊び方 ～～", GetColor(255, 255, 255));
-	DrawString(Utility::SCREEN_WIDTH / 2 - 25, Utility::SCREEN_HEIGHT / 2 - 130, "W : 上", GetColor(255, 255, 255));
-	DrawString(Utility::SCREEN_WIDTH / 2 - 130, Utility::SCREEN_HEIGHT / 2 - 90, "A : 左　　S: 下　　D: 右", GetColor(255, 255, 255));
-	DrawString(Utility::SCREEN_WIDTH / 2 - 140, Utility::SCREEN_HEIGHT / 2 - 20, "SPACE : ジャンプ", GetColor(255, 255, 255));
-	DrawString(Utility::SCREEN_WIDTH / 2 - 100, 300, "ENTERでタイトルへ戻る", GetColor(255, 0, 255));
+	DrawBox(Utility::SCREEN_WIDTH / 2 - 850, 50, Utility::SCREEN_WIDTH / 2 + 850, 1000, GetColor(255, 255, 255), false);
+
+	DrawStringToHandle(Utility::SCREEN_WIDTH / 2 - 400, 100, "～～ 操作説明 ～～", GetColor(255, 255, 255), fontSize90);
+
+	DrawExtendGraph(480, 350, 480 + 210 / 2, 350 + 214 / 2, mnMoveLeftHandle, true);
+	DrawExtendGraph(730, 350, 730 + 209 / 2, 350 + 214 / 2, mnMoveRightHandle, true);
+	DrawStringToHandle(Utility::SCREEN_WIDTH / 2 - 500, 470, "左移動　　右移動", GetColor(255, 255, 255), fontSize50);
+
+	DrawExtendGraph(510, 620, 510 + 614 / 2, 620 + 186 / 2, mnJumpHandle, true);
+	DrawStringToHandle(Utility::SCREEN_WIDTH / 2 - 391, Utility::SCREEN_HEIGHT / 2 + 190, "ジャンプ", GetColor(255, 255, 255), fontSize50);
+
+	if (mpBackButton)
+	{
+		mpBackButton->Draw();
+	}
 
 	Scene::Draw();
 }
 
 void GameRuleScene::Finalize()
 {
+	if (mnMoveLeftHandle != -1)
+	{
+		DeleteGraph(mnMoveLeftHandle);
+		mnMoveLeftHandle = -1;
+	}
+
+	if (mnMoveRightHandle != -1)
+	{
+		DeleteGraph(mnMoveRightHandle);
+		mnMoveRightHandle = -1;
+	}
+
+	if (mnJumpHandle != -1)
+	{
+		DeleteGraph(mnJumpHandle);
+		mnJumpHandle = -1;
+	}
 }

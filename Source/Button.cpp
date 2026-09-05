@@ -25,8 +25,8 @@ void Button::Update()
 		return;
 	}
 
-	int mouseX = MouseManager::GetMouseX();
-	int mouseY = MouseManager::GetMouseY();
+	int mouseX = (int)MouseManager::GetMouseX();
+	int mouseY = (int)MouseManager::GetMouseY();
 
 	if (mouseX >= mnX1 && mouseX <= mnX2 && mouseY >= mnY1 && mouseY <= mnY2)
 	{
@@ -55,7 +55,7 @@ void Button::Draw()
 		mfScale = 1.1f;
 
 		// 左クリック押下時にクリック状態へ遷移し背景色を変更
-		if (MouseManager::CheckPressMouseClick(MOUSE_INPUT_LEFT))
+		if (MouseManager::CheckTriggerMouseClick(MOUSE_INPUT_LEFT))
 		{
 			mbIsClicked = true;
 			drawColor = mnChangeColor;
@@ -70,7 +70,7 @@ void Button::Draw()
 	else
 	{
 		mfScale = 1.0f;
-		drawColor = GetColor(0, 0, 0);
+		drawColor = GetColor(30, 30, 30);
 		mnStringColor = GetColor(255, 255, 255);
 	}
 

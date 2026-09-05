@@ -31,7 +31,9 @@ public:
 	ObjectManager* GetObjectManager() { return mpObjectManager; }
 
 protected:
-	int FontSize20 = CreateFontToHandle(NULL, 20, -1, -1);
+	int fontSize20 = CreateFontToHandle(NULL, 20, -1, -1);
+	int fontSize50 = CreateFontToHandle(NULL, 50, -1, -1);
+	int fontSize90 = CreateFontToHandle(NULL, 90, -1, -1);
 
 private:
 	ObjectManager* mpObjectManager; // シーン内のオブジェクトを管理するインスタンス

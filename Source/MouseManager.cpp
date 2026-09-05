@@ -1,13 +1,19 @@
 ﻿#include "MouseManager.h"
 
-int MouseManager::MouseX = 0;
-int MouseManager::MouseY = 0;
+float MouseManager::MouseX = 0;
+float MouseManager::MouseY = 0;
 int MouseManager::PreviousMouseInput = 0;
 int MouseManager::CurrentMouseInput = 0;
 
 
 MouseManager::MouseManager()
 {
+
+}
+
+MouseManager::~MouseManager()
+{
+
 }
 
 // 毎フレームのマウス座標および入力状態のサンプリング
@@ -17,8 +23,8 @@ void MouseManager::MouseUpdate()
 	int mx, my;
 	GetMousePoint(&mx, &my);
 
-	MouseX = mx;
-	MouseY = my;
+	MouseX = (float)mx;
+	MouseY = (float)my;
 
 	PreviousMouseInput = CurrentMouseInput;
 	CurrentMouseInput = GetMouseInput();

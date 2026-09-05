@@ -33,8 +33,6 @@ Player::~Player()
 {
 }
 
-// 毎フレームの物理挙動、入力検知、攻撃・HPゲージ更新
-// 入力: なし / 出力: なし / 副作用: 座標・速度・ステート・HPの更新
 void Player::Update()
 {
 	HPGaugeUpdate();
@@ -69,8 +67,6 @@ void Player::Update()
 	mAnimController.Update(mvPosition.x, mvPosition.y);
 }
 
-// ワイヤーライン、プレイヤースプライト、HPゲージの描画
-// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void Player::Draw()
 {
 	// ワイヤー係留中はプレイヤーとターゲット間にラインを描画
@@ -85,16 +81,12 @@ void Player::Draw()
 	HPGaugeDraw();
 }
 
-// キー/マウス入力に基づく歩行・ジャンプ・ワイヤー振り子運動物理演算
-// 入力: なし / 出力: なし / 副作用: 座標、速度、振り子角度、ワイヤー状態の更新
 void Player::Move()
 {
-	//bool isLeftTrigger = MouseManager::IsLeftTrigger();
-	//bool isLeftRelease = MouseManager::IsLeftRelease();
 	bool isLeftTrigger = MouseManager::CheckTriggerMouseClick(MOUSE_INPUT_LEFT);
 	bool isLeftRelease = MouseManager::CheckReleaseMouseClick(MOUSE_INPUT_LEFT);
-	int mouseX = MouseManager::GetMouseX();
-	int mouseY = MouseManager::GetMouseY();
+	float mouseX = MouseManager::GetMouseX();
+	float mouseY = MouseManager::GetMouseY();
 	
 	// クリックしたターゲットへのワイヤー射出判定
 	if (isLeftTrigger)
@@ -332,8 +324,6 @@ void Player::Move()
 	}
 }
 
-// 近接攻撃の当たり判定生成と敵へのダメージ適用
-// 入力: なし / 出力: なし / 副作用: 攻撃判定Rectの計算と敵へのEDamage呼び出し
 void Player::Attack()
 {
 	if (mnAttackCooldown > 0)
@@ -399,8 +389,6 @@ void Player::Attack()
 	}
 }
 
-// プレイヤー頭上にHPゲージを描画
-// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void Player::HPGaugeDraw()
 {
 	int gaugeX = (int)(mvPosition.x - gCameraX) - 110;
@@ -412,8 +400,6 @@ void Player::HPGaugeDraw()
 	DrawBox(gaugeX, gaugeY, gaugeX + mnWidth, gaugeY + mnGaugeHeight, GetColor(255, 255, 255), FALSE);
 }
 
-// 被弾時にダメージ減少分を滑らかに追従させる描画幅計算
-// 入力: なし / 出力: なし / 副作用: mnDisplayDamage, mnDamageWidth, mnGaugeWidthの更新
 void Player::HPGaugeUpdate()
 {
 	mnHPGaugeTimer++;
@@ -448,13 +434,11 @@ void Player::HPGaugeUpdate()
 	mnGaugeWidth = (int)((float)displayHp / mnMaxHP * mnWidth);
 }
 
-// 被弾によるHP減算とゲームオーバー遷移トリガー
-// 入力: damage(ダメージ量) / 出力: なし / 副作用: HP減算、HP<=0時のSCENE_GAMEOVER遷移要求
 void Player::PDamage(int damage)
 {
 	mnHP -= damage;
 	if (mnHP <= 0)
 	{
-		Master::mpSceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_GAMEOVER);
+		mbIsDead = true;
 	}
 }

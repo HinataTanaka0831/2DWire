@@ -18,9 +18,6 @@
     <ClCompile Include="Source\AnimationController.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Bullet.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Collision.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -45,10 +42,7 @@
     <ClCompile Include="Source\Object2D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Source\ObjectManagercpp.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\OriginalBullet.cpp">
+    <ClCompile Include="Source\ObjectManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Source\Player.cpp">
@@ -101,9 +95,6 @@
     <ClInclude Include="Source\AnimationController.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Bullet.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Collision.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -134,9 +125,6 @@
     <ClInclude Include="Source\ObjectManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\OriginalBullet.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -152,7 +140,7 @@
     <ClInclude Include="Source\SelectScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SoundManagerh.h">
+    <ClInclude Include="Source\SoundManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Source\Texture.h">

@@ -51,6 +51,7 @@ public:
 	bool IsFacingLeft() const { return mbFacingLeft; }
 	float GetAngularAcceleration() const { return mfAngularAcceleration; } 
 	bool IsWireActive() const { return mbIsWireActive; } 
+	bool IsDead() const { return mbIsDead; }
 
 private:      
 	bool mbIsWireActive = false;            // ワイヤー射出・係留中フラグ
@@ -58,11 +59,11 @@ private:
 	float mfPendulumAngle = 0.0f;           // 振り子の現在角度(rad)
 	float mfPendulumAngularVelocity = 0.0f; // 振り子の角速度
 	float mfWireLength = 0.0f;              // 係留時のワイヤー固定長
+	float mfAngularAcceleration = 0.0f;     // 振り子運動の角加速度
 	
 	float mfVelocityY = 0.0f;               // Y軸移動速度
 	float mfVelocityX = 0.0f;               // X軸移動速度
 	bool mbFacingLeft = false;              // 水平方向の向き保持フラグ(true: 左向き)
-	float mfAngularAcceleration = 0.0f;     // 振り子運動の角加速度
 	static constexpr float Gravity = 0.5f;  // 重力加速度定数
 
 	int mnHP = 100;                         // 現在HP
@@ -86,4 +87,6 @@ private:
 	const int DamageInterval = 10;          // プレイヤーが受けるダメージ間隔フレーム数
 
 	bool mbIsJump = false;                 // ジャンプアクション中のフラグ
+
+	bool mbIsDead = false;                 // プレイヤーがやられたかどうかのフラグ
 };
