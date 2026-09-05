@@ -38,10 +38,10 @@ public:
     // 入力: cameraX, cameraY(カメラ座標) / 出力: なし / 副作用: バックバッファへの描画
     void Draw(float cameraX, float cameraY);
 
-    CharacterState GetCurrentState() const { return mCurrentState; }
+    CharacterState GetCurrentState() const { return m_currentState; }
 
 private:
-    std::map<CharacterState, std::unique_ptr<TextureAnimation>> mAnimations;
-    CharacterState mCurrentState;
-    bool mIsInitialized;
+    std::map<CharacterState, std::unique_ptr<TextureAnimation>> m_animations;
+    CharacterState m_currentState;
+    bool m_isInitialized;
 };

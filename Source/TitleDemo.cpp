@@ -4,44 +4,44 @@
 #include <cmath>
 
 TitleDemo::TitleDemo()
-	: mpPlayerAnim(nullptr)
-	, mpEnemyAnim(nullptr)
-	, mState(DemoState::StateRun)
-	, mnWaitTimer(0)
-	, mnBuildingHandle(-1)
-	, mvPlayerPos(VGet(0.0f, 0.0f, 0.0f))
-	, mvEnemyPos(VGet(0.0f, 0.0f, 0.0f))
-	, mvHookPos(VGet(0.0f, 0.0f, 0.0f))
-	, mfPlayerVelY(0.0f)
-	, mfEnemyVelY(0.0f)
-	, mfWireLength(0.0f)
-	, mfPendulumAngle(0.0f)
-	, mfPendulumAngularVelocity(0.0f)
-	, mfWireExtendRatio(0.0f)
-	, mbIsWireVisible(false)
+	: m_playerAnim(nullptr)
+	, m_enemyAnim(nullptr)
+	, m_state(DemoState::StateRun)
+	, m_waitTimer(0)
+	, m_buildingHandle(-1)
+	, m_playerPos(VGet(0.0f, 0.0f, 0.0f))
+	, m_enemyPos(VGet(0.0f, 0.0f, 0.0f))
+	, m_hookPos(VGet(0.0f, 0.0f, 0.0f))
+	, m_playerVelY(0.0f)
+	, m_enemyVelY(0.0f)
+	, m_wireLength(0.0f)
+	, m_pendulumAngle(0.0f)
+	, m_pendulumAngularVelocity(0.0f)
+	, m_wireExtendRatio(0.0f)
+	, m_isWireVisible(false)
 {
 	// デモ用のため本編Player検索を無効化(type=false)して直接アニメーションを制御
-	mpPlayerAnim = std::make_unique<TextureAnimation>(
+	m_playerAnim = std::make_unique<TextureAnimation>(
 		"Resource/Player/anim_walk.png",
 		VGet(0.0f, 0.0f, 0.0f),
 		4, 4, 1, 7, 1.0f, false);
 
-	mpEnemyAnim = std::make_unique<TextureAnimation>(
+	m_enemyAnim = std::make_unique<TextureAnimation>(
 		"Resource/Enemy/anim_monster01walk.png",
 		VGet(0.0f, 0.0f, 0.0f),
 		6, 6, 1, 8, 1.0f, false);
 
-	mnBuildingHandle = LoadGraph("Resource/WireTarget/Building.png");
+	m_buildingHandle = LoadGraph("Resource/WireTarget/Building.png");
 
 	Reset();
 }
 
 TitleDemo::~TitleDemo()
 {
-	if (mnBuildingHandle != -1)
+	if (m_buildingHandle != -1)
 	{
-		DeleteGraph(mnBuildingHandle);
-		mnBuildingHandle = -1;
+		DeleteGraph(m_buildingHandle);
+		m_buildingHandle = -1;
 	}
 }
 
@@ -49,18 +49,18 @@ TitleDemo::~TitleDemo()
 // 入力: なし / 出力: なし / 副作用: 座標・タイマー・ステートのリセット
 void TitleDemo::Reset()
 {
-	mvPlayerPos = VGet(-220.0f, PlayerGroundY, 0.0f);
-	mvEnemyPos = VGet(-420.0f, EnemyGroundY, 0.0f);
-	mvHookPos = VGet(980.0f, 340.0f, 0.0f);
-	mfPlayerVelY = 0.0f;
-	mfEnemyVelY = 0.0f;
-	mfWireLength = 0.0f;
-	mfPendulumAngle = 0.0f;
-	mfPendulumAngularVelocity = 0.0f;
-	mfWireExtendRatio = 0.0f;
-	mbIsWireVisible = false;
-	mnWaitTimer = 0;
-	mState = DemoState::StateRun;
+	m_playerPos = VGet(-220.0f, m_playerGroundY, 0.0f);
+	m_enemyPos = VGet(-420.0f, m_enemyGroundY, 0.0f);
+	m_hookPos = VGet(980.0f, 340.0f, 0.0f);
+	m_playerVelY = 0.0f;
+	m_enemyVelY = 0.0f;
+	m_wireLength = 0.0f;
+	m_pendulumAngle = 0.0f;
+	m_pendulumAngularVelocity = 0.0f;
+	m_wireExtendRatio = 0.0f;
+	m_isWireVisible = false;
+	m_waitTimer = 0;
+	m_state = DemoState::StateRun;
 }
 
 // デモステートマシンおよびスプライトアニメーションの進行
@@ -73,7 +73,7 @@ void TitleDemo::Update()
 
 void TitleDemo::UpdateState()
 {
-	switch (mState)
+	switch (m_state)
 	{
 	case DemoState::StateRun:
 		UpdateRun();
@@ -95,85 +95,85 @@ void TitleDemo::UpdateState()
 
 void TitleDemo::UpdateAnimation()
 {
-	if (mpPlayerAnim != nullptr)
+	if (m_playerAnim != nullptr)
 	{
-		mpPlayerAnim->SetPosition(mvPlayerPos);
-		mpPlayerAnim->SetReverse(false);
-		mpPlayerAnim->Update();
+		m_playerAnim->SetPosition(m_playerPos);
+		m_playerAnim->SetReverse(false);
+		m_playerAnim->Update();
 	}
-	if (mpEnemyAnim != nullptr)
+	if (m_enemyAnim != nullptr)
 	{
-		mpEnemyAnim->SetPosition(mvEnemyPos);
-		mpEnemyAnim->SetReverse(true);
-		mpEnemyAnim->Update();
+		m_enemyAnim->SetPosition(m_enemyPos);
+		m_enemyAnim->SetReverse(true);
+		m_enemyAnim->Update();
 	}
 }
 
 void TitleDemo::UpdateRun()
 {
-	mvPlayerPos.x += PlayerRunSpeed;
-	mvEnemyPos.x += EnemyRunSpeed;
+	m_playerPos.x += m_playerRunSpeed;
+	m_enemyPos.x += m_enemyRunSpeed;
 
-	if (mvPlayerPos.x >= LeftCliffEndX - 40.0f)
+	if (m_playerPos.x >= m_leftCliffEndX - 40.0f)
 	{
-		mvPlayerPos.x = LeftCliffEndX - 40.0f;
-		mState = DemoState::StateFireWire;
-		mbIsWireVisible = true;
-		mfWireExtendRatio = 0.0f;
+		m_playerPos.x = m_leftCliffEndX - 40.0f;
+		m_state = DemoState::StateFireWire;
+		m_isWireVisible = true;
+		m_wireExtendRatio = 0.0f;
 	}
 }
 
 void TitleDemo::UpdateFireWire()
 {
-	mfWireExtendRatio += 0.08f;
-	if (mfWireExtendRatio >= 1.0f)
+	m_wireExtendRatio += 0.08f;
+	if (m_wireExtendRatio >= 1.0f)
 	{
-		mfWireExtendRatio = 1.0f;
+		m_wireExtendRatio = 1.0f;
 
-		float diffX = mvPlayerPos.x - mvHookPos.x;
-		float diffY = mvPlayerPos.y - mvHookPos.y;
-		mfWireLength = std::sqrt(diffX * diffX + diffY * diffY);
-		if (mfWireLength < 1.0f)
+		float diffX = m_playerPos.x - m_hookPos.x;
+		float diffY = m_playerPos.y - m_hookPos.y;
+		m_wireLength = std::sqrt(diffX * diffX + diffY * diffY);
+		if (m_wireLength < 1.0f)
 		{
-			mfWireLength = 1.0f;
+			m_wireLength = 1.0f;
 		}
-		mfPendulumAngle = std::atan2(diffX, diffY);
-		mfPendulumAngularVelocity = 0.042f;
-		mState = DemoState::StateSwing;
+		m_pendulumAngle = std::atan2(diffX, diffY);
+		m_pendulumAngularVelocity = 0.042f;
+		m_state = DemoState::StateSwing;
 	}
 
-	mvEnemyPos.x += EnemyRunSpeed;
+	m_enemyPos.x += m_enemyRunSpeed;
 }
 
 void TitleDemo::UpdateSwing()
 {
-	if (mfWireLength > 0.0f)
+	if (m_wireLength > 0.0f)
 	{
-		float mfAngularAcceleration = -(Gravity / mfWireLength) * std::sin(mfPendulumAngle);
+		float angularAcceleration = -(m_gravity / m_wireLength) * std::sin(m_pendulumAngle);
 		// デモで確実に右岸へ到達させるための補助推進力
-		mfAngularAcceleration += 0.0014f;
-		mfPendulumAngularVelocity *= 0.997f;
-		mfPendulumAngularVelocity += mfAngularAcceleration;
-		mfPendulumAngle += mfPendulumAngularVelocity;
+		angularAcceleration += 0.0014f;
+		m_pendulumAngularVelocity *= 0.997f;
+		m_pendulumAngularVelocity += angularAcceleration;
+		m_pendulumAngle += m_pendulumAngularVelocity;
 
-		mvPlayerPos.x = mvHookPos.x + std::sin(mfPendulumAngle) * mfWireLength;
-		mvPlayerPos.y = mvHookPos.y + std::cos(mfPendulumAngle) * mfWireLength;
+		m_playerPos.x = m_hookPos.x + std::sin(m_pendulumAngle) * m_wireLength;
+		m_playerPos.y = m_hookPos.y + std::cos(m_pendulumAngle) * m_wireLength;
 	}
 
-	mvEnemyPos.x += EnemyRunSpeed;
+	m_enemyPos.x += m_enemyRunSpeed;
 
-	bool isOverRightCliff = mvPlayerPos.x >= RightCliffStartX + 30.0f;
-	bool isNearGround = mvPlayerPos.y >= PlayerGroundY - 12.0f;
+	bool isOverRightCliff = m_playerPos.x >= m_rightCliffStartX + 30.0f;
+	bool isNearGround = m_playerPos.y >= m_playerGroundY - 12.0f;
 	if (isOverRightCliff && isNearGround)
 	{
-		mvPlayerPos.y = PlayerGroundY;
-		mbIsWireVisible = false;
-		mfPlayerVelY = 0.0f;
-		mState = DemoState::StateLandRun;
+		m_playerPos.y = m_playerGroundY;
+		m_isWireVisible = false;
+		m_playerVelY = 0.0f;
+		m_state = DemoState::StateLandRun;
 	}
 
 	// 落下等の予期せぬ挙動発生時の自動リカバリ
-	if (mvPlayerPos.y > Utility::SCREEN_HEIGHT + 80.0f)
+	if (m_playerPos.y > Utility::SCREEN_HEIGHT + 80.0f)
 	{
 		Reset();
 	}
@@ -181,22 +181,22 @@ void TitleDemo::UpdateSwing()
 
 void TitleDemo::UpdateLandRun()
 {
-	mvPlayerPos.x += PlayerRunSpeed;
-	mvPlayerPos.y = PlayerGroundY;
-	mvEnemyPos.x += EnemyRunSpeed;
-	mvEnemyPos.y = EnemyGroundY;
+	m_playerPos.x += m_playerRunSpeed;
+	m_playerPos.y = m_playerGroundY;
+	m_enemyPos.x += m_enemyRunSpeed;
+	m_enemyPos.y = m_enemyGroundY;
 
 	if (mvPlayerPos.x > Utility::SCREEN_WIDTH + 140.0f && mvEnemyPos.x > Utility::SCREEN_WIDTH + 200.0f)
 	{
-		mState = DemoState::StateWaitReset;
-		mnWaitTimer = 40;
+		m_state = DemoState::StateWaitReset;
+		m_waitTimer = 40;
 	}
 }
 
 void TitleDemo::UpdateWaitReset()
 {
-	mnWaitTimer--;
-	if (mnWaitTimer <= 0)
+	m_waitTimer--;
+	if (m_waitTimer <= 0)
 	{
 		Reset();
 	}
@@ -206,34 +206,34 @@ void TitleDemo::UpdateWaitReset()
 // 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void TitleDemo::Draw()
 {
-	if (mnBuildingHandle != -1)
+	if (m_buildingHandle != -1)
 	{
-		DrawRotaGraph((int)mvHookPos.x, (int)mvHookPos.y + 100, 1.0f, 0.0f, mnBuildingHandle, TRUE);
+		DrawRotaGraph((int)m_hookPos.x, (int)m_hookPos.y + 100, 1.0f, 0.0f, m_buildingHandle, TRUE);
 	}
 
 
-	if (mbIsWireVisible)
+	if (m_isWireVisible)
 	{
-		float tipX = mvHookPos.x;
-		float tipY = mvHookPos.y;
-		if (mState == DemoState::StateFireWire)
+		float tipX = m_hookPos.x;
+		float tipY = m_hookPos.y;
+		if (m_state == DemoState::StateFireWire)
 		{
-			tipX = mvPlayerPos.x + (mvHookPos.x - mvPlayerPos.x) * mfWireExtendRatio;
-			tipY = mvPlayerPos.y + (mvHookPos.y - mvPlayerPos.y) * mfWireExtendRatio;
+			tipX = m_playerPos.x + (m_hookPos.x - m_playerPos.x) * m_wireExtendRatio;
+			tipY = m_playerPos.y + (m_hookPos.y - m_playerPos.y) * m_wireExtendRatio;
 		}
 
 		DrawLine(
-			(int)mvPlayerPos.x, (int)mvPlayerPos.y,
+			(int)m_playerPos.x, (int)m_playerPos.y,
 			(int)tipX, (int)tipY,
 			GetColor(200, 255, 255), 4);
 	}
 
-	if (mpEnemyAnim != nullptr)
+	if (m_enemyAnim != nullptr)
 	{
-		mpEnemyAnim->Draw(0.0f, 0.0f);
+		m_enemyAnim->Draw(0.0f, 0.0f);
 	}
-	if (mpPlayerAnim != nullptr)
+	if (m_playerAnim != nullptr)
 	{
-		mpPlayerAnim->Draw(0.0f, 0.0f);
+		m_playerAnim->Draw(0.0f, 0.0f);
 	}
 }

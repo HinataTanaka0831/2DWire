@@ -7,10 +7,10 @@ class Collision
 public:
 	// AABB矩形判定用構造体
 	struct Rect {
-		float X;
-		float Y;
-		float Width;
-		float Height;
+		float x;
+		float y;
+		float width;
+		float height;
 	};
 
 public:

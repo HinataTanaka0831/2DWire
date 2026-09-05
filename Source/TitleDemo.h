@@ -42,31 +42,31 @@ private:
 	void UpdateLandRun();
 	void UpdateWaitReset();
 
-	std::unique_ptr<TextureAnimation> mpPlayerAnim;
-	std::unique_ptr<TextureAnimation> mpEnemyAnim;
+	std::unique_ptr<TextureAnimation> m_playerAnim;
+	std::unique_ptr<TextureAnimation> m_enemyAnim;
 
-	DemoState mState;
-	int mnWaitTimer;
-	int mnBuildingHandle;
+	DemoState m_state;
+	int m_waitTimer;
+	int m_buildingHandle;
 
-	VECTOR mvPlayerPos;
-	VECTOR mvEnemyPos;
-	VECTOR mvHookPos;
+	VECTOR m_playerPos;
+	VECTOR m_enemyPos;
+	VECTOR m_hookPos;
 
-	float mfPlayerVelY;
-	float mfEnemyVelY;
-	float mfWireLength;
-	float mfPendulumAngle;
-	float mfPendulumAngularVelocity;
-	float mfWireExtendRatio;
-	bool mbIsWireVisible;
+	float m_playerVelY;
+	float m_enemyVelY;
+	float m_wireLength;
+	float m_pendulumAngle;
+	float m_pendulumAngularVelocity;
+	float m_wireExtendRatio;
+	bool m_isWireVisible;
 
-	static constexpr float EnemyGroundY = 850.0f;
-	static constexpr float PlayerGroundY = 900.0f;
-	static constexpr float PlatformTopY = 980.0f;
-	static constexpr float LeftCliffEndX = 780.0f;
-	static constexpr float RightCliffStartX = 1180.0f;
-	static constexpr float PlayerRunSpeed = 6.0f;
-	static constexpr float EnemyRunSpeed = 4.2f;
-	static constexpr float Gravity = 0.5f;
+	static constexpr float m_enemyGroundY = 850.0f;
+	static constexpr float m_playerGroundY = 900.0f;
+	static constexpr float m_platformTopY = 980.0f;
+	static constexpr float m_leftCliffEndX = 780.0f;
+	static constexpr float m_rightCliffStartX = 1180.0f;
+	static constexpr float m_playerRunSpeed = 6.0f;
+	static constexpr float m_enemyRunSpeed = 4.2f;
+	static constexpr float m_gravity = 0.5f;
 };

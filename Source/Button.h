@@ -18,18 +18,18 @@ public:
 	// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 	void Draw();
 
-	bool IsClick() const { return mbIsHover && mbIsClicked; }
+	bool IsClick() const { return m_isHover && m_isClicked; }
 
 private:
-	int mnX1, mnY1, mnX2, mnY2;  // ボタンの矩形領域
-	std::string mName;           // ボタンラベル文字列
-	int mnColor;                 // 通常時・ホバー時の背景色
-	int mnChangeColor;           // クリック時の背景色
-	int mnFontHandle;            // ラベル描画用フォントハンドル
+	int m_x1, m_y1, m_x2, m_y2;  // ボタンの矩形領域
+	std::string m_name;           // ボタンラベル文字列
+	int m_color;                 // 通常時・ホバー時の背景色
+	int m_changeColor;           // クリック時の背景色
+	int m_fontHandle;            // ラベル描画用フォントハンドル
 	
-	int mnStringColor;           // 文字列カラー
-	float mfScale;               // ホバー演出用拡大率
-	bool mbIsHover = false;      // カーソルがボタン上にあるか
-	bool mbIsEnabled = true;     // ボタンの操作有効フラグ
-	bool mbIsClicked = false;    // クリックされたか
+	int m_stringColor;           // 文字列カラー
+	float m_scale;               // ホバー演出用拡大率
+	bool m_isHover = false;      // カーソルがボタン上にあるか
+	bool m_isEnabled = true;     // ボタンの操作有効フラグ
+	bool m_isClicked = false;    // クリックされたか
 };

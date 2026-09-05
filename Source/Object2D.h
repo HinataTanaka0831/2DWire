@@ -48,24 +48,26 @@ public:
 	void Reset();
 
 public:
-	void SetPosition(VECTOR pos) { mvPosition = pos; }
-	VECTOR GetPosition() { return mvPosition; }
-	void SetDeleteFlag(bool flag) { mbDeleteFlag = flag; }
-	bool IsDeleteFlag() { return mbDeleteFlag; }
-	void SetTag(Tag tag) { mnTag = tag; }
-	Tag GetTag() { return mnTag; }
+	void SetPosition(VECTOR pos) { m_position = pos; }
+	VECTOR GetPosition() { return m_position; }
+	void SetDeleteFlag(bool flag) { m_deleteFlag = flag; }
+	bool IsDeleteFlag() { return m_deleteFlag; }
+	void SetTag(Tag tag) { m_tag = tag; }
+	Tag GetTag() { return m_tag; }
 
 	float GetRadius();
 	int GetSizeX();
 	int GetSizeY();
 
 protected:
-	Texture* mpTexture;                    // 静止画描画用テクスチャ
-	TextureAnimation* mpTextureAnimation;  // 連番アニメーション描画用テクスチャ
-	VECTOR mvPosition;                     // ワールド座標
-	VECTOR mvDirection;                    // 移動方向ベクトル
+	Texture* m_texture;                    // 静止画描画用テクスチャ
+	TextureAnimation* m_textureAnimation;  // 連番アニメーション描画用テクスチャ
+	VECTOR m_position;                     // ワールド座標
+	VECTOR m_direction;                    // 移動方向ベクトル
+	float m_angle;                         // 向き・回転角度
+	int m_count;
 
 private:
-	bool mbDeleteFlag;                     // フレーム終了時の安全削除対象フラグ
-	Tag mnTag;                             // 種別識別用タグ
+	bool m_deleteFlag;                     // フレーム終了時の安全削除対象フラグ
+	Tag m_tag;                             // 種別識別用タグ
 };
