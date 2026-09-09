@@ -34,9 +34,9 @@ public:
 	void Finalize() override;
 
 private:
-	Player* mpPlayer = nullptr;
-	Stage* mpStage = nullptr;
-	StageInfo mStageInfo = {};
-	int mnBackGroundHandle = -1;
+	Player* m_player = nullptr;
+	Stage* m_stage = nullptr;
+	StageInfo m_stageInfo = {};
+	int m_backGroundHandle = -1;
 	bool mIsGoalReached = false;
 };

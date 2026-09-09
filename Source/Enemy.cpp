@@ -10,22 +10,21 @@
 static bool gCurrentEnemyFlip = false;
 extern bool gEnemyReverseX;
 
-Enemy::Enemy(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool type)
-	: Object2D(filename, initPos, allNum, numX, numY, interval, scale, type)
+Enemy::Enemy(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool type)
+	: Object2D(fileName, initPosition, allNum, numX, numY, interval, scale, type)
 {
 	m_direction = VGet(-1.0f, 0.0f, 0.0f);
 	SetTag(Object2D::Enemy2D);
 
 	m_animController.RegisterAnimation(CharacterState::Idle,
-		std::make_unique<TextureAnimation>(filename, initPos, allNum, numX, numY, interval, scale, type));
+		std::make_unique<TextureAnimation>(fileName, initPosition, allNum, numX, numY, interval, scale, type));
 	
 	m_animController.RegisterAnimation(CharacterState::Moving,
-		std::make_unique<TextureAnimation>("Resource/Enemy/anim_monster01walk.png", initPos, 6, 6, 1, 8, scale, type));
+		std::make_unique<TextureAnimation>("Resource/Enemy/enemy_monster01_walk.png", initPosition, 6, 6, 1, 8, scale, type));
 
 	// 攻撃モーションの俊敏さを演出するため再生速度を調整して登録
 	m_animController.RegisterAnimation(CharacterState::Attacking,
-		std::make_unique<TextureAnimation>("Resource/Enemy/anim_monster01attack.png", initPos, 4, 4, 1, 10, scale, type));
-
+		std::make_unique<TextureAnimation>("Resource/Enemy/enemy_monster01_attack.png", initPosition, 4, 4, 1, 10, scale, type));
 	m_animController.ChangeState(CharacterState::Idle);
 }
 
@@ -44,11 +43,21 @@ void Enemy::Update()
 		m_hitFlashTimer--;
 	}
 
+	if (m_attackAnimationTimer > 0)
+	{
+		m_attackAnimationTimer--;
+
+		if (m_attackAnimationTimer <= 0)
+		{
+			m_isAttack = false;
+		}
+	}
+
 	if (m_hp <= 0) {
 		m_animController.ChangeState(CharacterState::Dead);
 	} 
 	else {
-		auto pTarget = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
+		auto pTarget = Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
 		Player* pPlayer = dynamic_cast<Player*>(pTarget);
 		
 		if (pPlayer != nullptr) {
@@ -56,7 +65,7 @@ void Enemy::Update()
 			float distance = VSize(diff);
 
 			// プレイヤーとの距離閾値に応じてアニメーション状態を自動遷移
-			if (distance <= m_attackRange) {
+			if (m_isAttack) {
 				m_animController.ChangeState(CharacterState::Attacking);
 			}
 			else if (distance <= m_searchRange) {
@@ -93,7 +102,7 @@ void Enemy::Draw()
 // 入力: なし / 出力: なし / 副作用: mvPosition, mvDirection, mnAttackCooldownの更新
 void Enemy::Move()
 {
-	auto pTarget = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
+	auto pTarget = Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
 	Player* pPlayer = dynamic_cast<Player*>(pTarget);
 
 	if (pPlayer != nullptr)
@@ -109,6 +118,8 @@ void Enemy::Move()
 
 		if (distance <= m_attackRange)
 		{
+			m_isAttack = true;
+			m_attackAnimationTimer = 40;
 			m_direction.x = 0.0f;
 
 			// クールダウン満了時にプレイヤーへダメージ適用
@@ -162,7 +173,7 @@ void Enemy::EDamage(int damage)
 // 入力: なし / 出力: なし / 副作用: mvPositionの微小補正
 void Enemy::ResolveEnemyOverlap()
 {
-	auto enemyList = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Enemy2D);
+	auto enemyList = Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Enemy2D);
 
 	for (int i = 0; i < (int)enemyList.size(); i++)
 	{

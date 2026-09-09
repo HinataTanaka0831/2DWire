@@ -15,8 +15,8 @@ private:
 
 public:
 	// 敵キャラクターの初期化とアニメーションの登録
-	// 入力: filename, initPos, allNum, numX, numY, interval, scale, type / 出力: なし / 副作用: AnimationControllerへのステート登録
-	Enemy(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool type);
+	// 入力: fileName, initPosition, allNum, numX, numY, interval, scale, type / 出力: なし / 副作用: AnimationControllerへのステート登録
+	Enemy(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool type);
 	~Enemy();
 
 	// 毎フレームのAI思考、移動、被弾点滅、HP更新
@@ -56,7 +56,7 @@ private:
 	// AI意思決定用の距離・時間閾値定数
 	static constexpr float m_searchRange = 700.0f; // プレイヤーを検知して追跡を開始する距離
 	static constexpr float m_attackRange = 230.0f; // 攻撃アニメーションに切り替える距離
-	static constexpr int m_attackInterval = 60;    // 毎フレーム多重ヒットによる瞬殺を防ぐクールダウン(60F = 1秒)
+	static constexpr int m_attackInterval = 40;    // 毎フレーム多重ヒットによる瞬殺を防ぐクールダウン(60F = 1秒)
 
 	int m_attackCooldown = 0; // 攻撃判定の間隔制御タイマー
 
@@ -70,6 +70,8 @@ private:
 	int m_displayDamage = m_maxHP;
 	int m_hpGaugeTimer = 0;
 	int m_hitFlashTimer = 0;
+	int m_attackAnimationTimer = 0;
+	bool m_isAttack = false;
 
 	static const int HitFlashDuration = 60;
 	static const int HitFlashInterval = 6;

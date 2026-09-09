@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "DxLib.h"
 #include "Scene.h"
 #include "Utility.h"
 #include <memory>
@@ -25,9 +26,9 @@ public:
 	void Finalize() override;
 
 private:
-	std::unique_ptr<Button> mpTitleButton = nullptr;
-	std::unique_ptr<Button> mpQuitButton = nullptr;
-	const int StringX = Utility::SCREEN_WIDTH / 2 - 150;
+	std::unique_ptr<Button> m_titleButton = nullptr;
+	std::unique_ptr<Button> m_quitButton = nullptr;
+	const int DrawX = Utility::SCREEN_WIDTH / 2 - 150;
 	const int TitleY = 750;
 	const int QuitY = 850;
 };

@@ -4,7 +4,6 @@
 #include "Master.h"
 #include "InputManager.h"
 #include "Button.h"
-#include "MouseManager.h"
 #include "TitleDemo.h"
 
 TitleScene::TitleScene() 
@@ -19,75 +18,75 @@ TitleScene::~TitleScene()
 
 void TitleScene::Initialize()
 {
-	if (mnBackGroundHandle == -1)
+	if (m_backGroundHandle == -1)
 	{
-		mnBackGroundHandle = LoadGraph("Resource/BackGround/bg_night.png");
+		m_backGroundHandle = LoadGraph("Resource/BackGround/bg_night.png");
 	}
 
-	if (mpPlayButton == nullptr)
+	if (m_playButton == nullptr)
 	{
-		mpPlayButton = std::make_unique<Button>(StringX, PlayY - 10, StringX + 250, PlayY + 60, " プレイ ", GetColor(70, 70, 90), GetColor(80, 130, 255), fontSize20);
+		m_playButton = std::make_unique<Button>(DrawX, PlayY - 10, DrawX + 250, PlayY + 60, " プレイ ", GetColor(70, 70, 90), GetColor(80, 130, 255), m_fontSize20);
 	}
 
-	if (mpPlayRuleButton == nullptr)
+	if (m_playRuleButton == nullptr)
 	{
-		mpPlayRuleButton = std::make_unique<Button>(StringX, PlayRuleY - 10, StringX + 250, PlayRuleY + 60, "操作方法", GetColor(70, 70, 90), GetColor(80, 130, 255), fontSize20);
+		m_playRuleButton = std::make_unique<Button>(DrawX, PlayRuleY - 10, DrawX + 250, PlayRuleY + 60, "操作方法", GetColor(70, 70, 90), GetColor(80, 130, 255), m_fontSize20);
 	}
 
-	if (mpQuitButton == nullptr)
+	if (m_quitButton == nullptr)
 	{
-		mpQuitButton = std::make_unique<Button>(StringX, QuitY - 10, StringX + 250, QuitY + 60, "終了", GetColor(70, 70, 90), GetColor(80, 130, 255), fontSize20);
+		m_quitButton = std::make_unique<Button>(DrawX, QuitY - 10, DrawX + 250, QuitY + 60, "終了", GetColor(70, 70, 90), GetColor(80, 130, 255), m_fontSize20);
 	}
 
 	// 前シーンのカメラオフセットがタイトル画面の描画に影響しないよう初期化
 	gCameraX = 0.0f;
 	gCameraY = 0.0f;
 
-	if (mpTitleDemo == nullptr)
+	if (m_titleDemo == nullptr)
 	{
-		mpTitleDemo = std::make_unique<TitleDemo>();
+		m_titleDemo = std::make_unique<TitleDemo>();
 	}
 }
 
 void TitleScene::Update()
 {
-	if (mpPlayButton)
+	if (m_playButton)
 	{
-		mpPlayButton->Update();
+		m_playButton->Update();
 
-		if (mpPlayButton->IsClick())
+		if (m_playButton->IsClick())
 		{
 			gCurrentStage = 1;
-			Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
-			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_GAME);
+			Master::m_soundManager->PlaySE(SoundManager::SE_DECIDE);
+			Master::m_sceneManager->SetNextScene(SceneManager::SCENE_GAME);
 		}
 	}
 
-	if (mpPlayRuleButton)
+	if (m_playRuleButton)
 	{
-		mpPlayRuleButton->Update();
+		m_playRuleButton->Update();
 
-		if (mpPlayRuleButton->IsClick())
+		if (m_playRuleButton->IsClick())
 		{
-			Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
-			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_GAME_RULE);
+			Master::m_soundManager->PlaySE(SoundManager::SE_DECIDE);
+			Master::m_sceneManager->SetNextScene(SceneManager::SCENE_GAME_RULE);
 		}
 	}
 
-	if (mpQuitButton)
+	if (m_quitButton)
 	{
-		mpQuitButton->Update();
+		m_quitButton->Update();
 
-		if (mpQuitButton->IsClick())
+		if (m_quitButton->IsClick())
 		{
-			Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
-			Master::mpSceneManager->RequestQuit();
+			Master::m_soundManager->PlaySE(SoundManager::SE_DECIDE);
+			Master::m_sceneManager->RequestQuit();
 		}
 	}
 
-	if (mpTitleDemo)
+	if (m_titleDemo)
 	{
-		mpTitleDemo->Update();
+		m_titleDemo->Update();
 	}
 
 	Scene::Update();
@@ -96,7 +95,7 @@ void TitleScene::Update()
 void TitleScene::Draw()
 {
 	int bgWidth, bgHeight;
-	GetGraphSize(mnBackGroundHandle, &bgWidth, &bgHeight);
+	GetGraphSize(m_backGroundHandle, &bgWidth, &bgHeight);
 
 	if (bgWidth > 0)
 	{
@@ -112,29 +111,29 @@ void TitleScene::Draw()
 
 		for (int x = -offsetX; x < Utility::SCREEN_WIDTH; x += bgWidth)
 		{
-			DrawGraph(x, -bgOffsetY, mnBackGroundHandle, TRUE);
+			DrawGraph(x, -bgOffsetY, m_backGroundHandle, TRUE);
 		}
 	}
 
 	// 背景とUIの間にデモを描画し、ボタンの視認性を最優先にする
-	if (mpTitleDemo)
+	if (m_titleDemo)
 	{
-		mpTitleDemo->Draw();
+		m_titleDemo->Draw();
 	}
 
-	if (mpPlayButton)
+	if (m_playButton)
 	{
-		mpPlayButton->Draw();
+		m_playButton->Draw();
 	}
 
-	if (mpPlayRuleButton)
+	if (m_playRuleButton)
 	{
-		mpPlayRuleButton->Draw();
+		m_playRuleButton->Draw();
 	}
 
-	if (mpQuitButton)
+	if (m_quitButton)
 	{
-		mpQuitButton->Draw();
+		m_quitButton->Draw();
 	}
 
 	Scene::Draw();
@@ -142,9 +141,9 @@ void TitleScene::Draw()
 
 void TitleScene::Finalize()
 {
-	if (mnBackGroundHandle != -1)
+	if (m_backGroundHandle != -1)
 	{
-		DeleteGraph(mnBackGroundHandle);
-		mnBackGroundHandle = -1;
+		DeleteGraph(m_backGroundHandle);
+		m_backGroundHandle = -1;
 	}
 }

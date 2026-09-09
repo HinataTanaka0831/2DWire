@@ -54,8 +54,7 @@ class LoadingManager {
 private:
     std::vector<std::unique_ptr<ILoadTask>> tasks;
     std::vector<std::unique_ptr<ILoadTask>> m_tasks;
-    int Scene3D_GameRuleHandle;
-    int FontSize = CreateFontToHandle(NULL, 30, -1, -1);
+    int m_fontSize = CreateFontToHandle(NULL, 30, -1, -1);
 
 public:
     // 実行キューにロードタスクを追加

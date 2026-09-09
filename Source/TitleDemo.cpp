@@ -4,21 +4,6 @@
 #include <cmath>
 
 TitleDemo::TitleDemo()
-	: m_playerAnim(nullptr)
-	, m_enemyAnim(nullptr)
-	, m_state(DemoState::StateRun)
-	, m_waitTimer(0)
-	, m_buildingHandle(-1)
-	, m_playerPos(VGet(0.0f, 0.0f, 0.0f))
-	, m_enemyPos(VGet(0.0f, 0.0f, 0.0f))
-	, m_hookPos(VGet(0.0f, 0.0f, 0.0f))
-	, m_playerVelY(0.0f)
-	, m_enemyVelY(0.0f)
-	, m_wireLength(0.0f)
-	, m_pendulumAngle(0.0f)
-	, m_pendulumAngularVelocity(0.0f)
-	, m_wireExtendRatio(0.0f)
-	, m_isWireVisible(false)
 {
 	// デモ用のため本編Player検索を無効化(type=false)して直接アニメーションを制御
 	m_playerAnim = std::make_unique<TextureAnimation>(
@@ -49,11 +34,11 @@ TitleDemo::~TitleDemo()
 // 入力: なし / 出力: なし / 副作用: 座標・タイマー・ステートのリセット
 void TitleDemo::Reset()
 {
-	m_playerPos = VGet(-220.0f, m_playerGroundY, 0.0f);
-	m_enemyPos = VGet(-420.0f, m_enemyGroundY, 0.0f);
-	m_hookPos = VGet(980.0f, 340.0f, 0.0f);
-	m_playerVelY = 0.0f;
-	m_enemyVelY = 0.0f;
+	m_playerPosition = VGet(-220.0f, m_playerGroundY, 0.0f);
+	m_enemyPosition = VGet(-420.0f, m_enemyGroundY, 0.0f);
+	m_hookPosition = VGet(980.0f, 340.0f, 0.0f);
+	m_playerVelocityY = 0.0f;
+	m_enemyVelocityY = 0.0f;
 	m_wireLength = 0.0f;
 	m_pendulumAngle = 0.0f;
 	m_pendulumAngularVelocity = 0.0f;
@@ -97,13 +82,13 @@ void TitleDemo::UpdateAnimation()
 {
 	if (m_playerAnim != nullptr)
 	{
-		m_playerAnim->SetPosition(m_playerPos);
+		m_playerAnim->SetPosition(m_playerPosition);
 		m_playerAnim->SetReverse(false);
 		m_playerAnim->Update();
 	}
 	if (m_enemyAnim != nullptr)
 	{
-		m_enemyAnim->SetPosition(m_enemyPos);
+		m_enemyAnim->SetPosition(m_enemyPosition);
 		m_enemyAnim->SetReverse(true);
 		m_enemyAnim->Update();
 	}
@@ -111,12 +96,12 @@ void TitleDemo::UpdateAnimation()
 
 void TitleDemo::UpdateRun()
 {
-	m_playerPos.x += m_playerRunSpeed;
-	m_enemyPos.x += m_enemyRunSpeed;
+	m_playerPosition.x += m_playerRunSpeed;
+	m_enemyPosition.x += m_enemyRunSpeed;
 
-	if (m_playerPos.x >= m_leftCliffEndX - 40.0f)
+	if (m_playerPosition.x >= m_leftCliffEndX - 40.0f)
 	{
-		m_playerPos.x = m_leftCliffEndX - 40.0f;
+		m_playerPosition.x = m_leftCliffEndX - 40.0f;
 		m_state = DemoState::StateFireWire;
 		m_isWireVisible = true;
 		m_wireExtendRatio = 0.0f;
@@ -130,8 +115,8 @@ void TitleDemo::UpdateFireWire()
 	{
 		m_wireExtendRatio = 1.0f;
 
-		float diffX = m_playerPos.x - m_hookPos.x;
-		float diffY = m_playerPos.y - m_hookPos.y;
+		float diffX = m_playerPosition.x - m_hookPosition.x;
+		float diffY = m_playerPosition.y - m_hookPosition.y;
 		m_wireLength = std::sqrt(diffX * diffX + diffY * diffY);
 		if (m_wireLength < 1.0f)
 		{
@@ -142,7 +127,7 @@ void TitleDemo::UpdateFireWire()
 		m_state = DemoState::StateSwing;
 	}
 
-	m_enemyPos.x += m_enemyRunSpeed;
+	m_enemyPosition.x += m_enemyRunSpeed;
 }
 
 void TitleDemo::UpdateSwing()
@@ -156,24 +141,24 @@ void TitleDemo::UpdateSwing()
 		m_pendulumAngularVelocity += angularAcceleration;
 		m_pendulumAngle += m_pendulumAngularVelocity;
 
-		m_playerPos.x = m_hookPos.x + std::sin(m_pendulumAngle) * m_wireLength;
-		m_playerPos.y = m_hookPos.y + std::cos(m_pendulumAngle) * m_wireLength;
+		m_playerPosition.x = m_hookPosition.x + std::sin(m_pendulumAngle) * m_wireLength;
+		m_playerPosition.y = m_hookPosition.y + std::cos(m_pendulumAngle) * m_wireLength;
 	}
 
-	m_enemyPos.x += m_enemyRunSpeed;
+	m_enemyPosition.x += m_enemyRunSpeed;
 
-	bool isOverRightCliff = m_playerPos.x >= m_rightCliffStartX + 30.0f;
-	bool isNearGround = m_playerPos.y >= m_playerGroundY - 12.0f;
+	bool isOverRightCliff = m_playerPosition.x >= m_rightCliffStartX + 30.0f;
+	bool isNearGround = m_playerPosition.y >= m_playerGroundY - 12.0f;
 	if (isOverRightCliff && isNearGround)
 	{
-		m_playerPos.y = m_playerGroundY;
+		m_playerPosition.y = m_playerGroundY;
 		m_isWireVisible = false;
-		m_playerVelY = 0.0f;
+		m_playerVelocityY = 0.0f;
 		m_state = DemoState::StateLandRun;
 	}
 
 	// 落下等の予期せぬ挙動発生時の自動リカバリ
-	if (m_playerPos.y > Utility::SCREEN_HEIGHT + 80.0f)
+	if (m_playerPosition.y > Utility::SCREEN_HEIGHT + 80.0f)
 	{
 		Reset();
 	}
@@ -181,12 +166,12 @@ void TitleDemo::UpdateSwing()
 
 void TitleDemo::UpdateLandRun()
 {
-	m_playerPos.x += m_playerRunSpeed;
-	m_playerPos.y = m_playerGroundY;
-	m_enemyPos.x += m_enemyRunSpeed;
-	m_enemyPos.y = m_enemyGroundY;
+	m_playerPosition.x += m_playerRunSpeed;
+	m_playerPosition.y = m_playerGroundY;
+	m_enemyPosition.x += m_enemyRunSpeed;
+	m_enemyPosition.y = m_enemyGroundY;
 
-	if (mvPlayerPos.x > Utility::SCREEN_WIDTH + 140.0f && mvEnemyPos.x > Utility::SCREEN_WIDTH + 200.0f)
+	if (m_playerPosition.x > Utility::SCREEN_WIDTH + 140.0f && m_enemyPosition.x > Utility::SCREEN_WIDTH + 200.0f)
 	{
 		m_state = DemoState::StateWaitReset;
 		m_waitTimer = 40;
@@ -208,22 +193,22 @@ void TitleDemo::Draw()
 {
 	if (m_buildingHandle != -1)
 	{
-		DrawRotaGraph((int)m_hookPos.x, (int)m_hookPos.y + 100, 1.0f, 0.0f, m_buildingHandle, TRUE);
+		DrawRotaGraph((int)m_hookPosition.x, (int)m_hookPosition.y + 100, 1.0f, 0.0f, m_buildingHandle, TRUE);
 	}
 
 
 	if (m_isWireVisible)
 	{
-		float tipX = m_hookPos.x;
-		float tipY = m_hookPos.y;
+		float tipX = m_hookPosition.x;
+		float tipY = m_hookPosition.y;
 		if (m_state == DemoState::StateFireWire)
 		{
-			tipX = m_playerPos.x + (m_hookPos.x - m_playerPos.x) * m_wireExtendRatio;
-			tipY = m_playerPos.y + (m_hookPos.y - m_playerPos.y) * m_wireExtendRatio;
+			tipX = m_playerPosition.x + (m_hookPosition.x - m_playerPosition.x) * m_wireExtendRatio;
+			tipY = m_playerPosition.y + (m_hookPosition.y - m_playerPosition.y) * m_wireExtendRatio;
 		}
 
 		DrawLine(
-			(int)m_playerPos.x, (int)m_playerPos.y,
+			(int)m_playerPosition.x, (int)m_playerPosition.y,
 			(int)tipX, (int)tipY,
 			GetColor(200, 255, 255), 4);
 	}

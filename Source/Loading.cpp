@@ -43,7 +43,7 @@ InitializeSoundManagerTask::InitializeSoundManagerTask() {}
 // サウンドマネージャーに必要な全BGM/SEのプリロードを実行
 // 入力: なし / 出力: 0 / 副作用: サウンドリソースの読み込み
 int InitializeSoundManagerTask::Execute() {
-    Master::mpSoundManager->Initialize();
+    Master::m_soundManager->Initialize();
     return 0;
 }
 
@@ -60,7 +60,7 @@ InitializeSceneManagerTask::InitializeSceneManagerTask() {}
 // シーンマネージャーの初期化および初期シーンの構築
 // 入力: なし / 出力: 0 / 副作用: シーン生成とリソース初期化
 int InitializeSceneManagerTask::Execute() {
-    Master::mpSceneManager->Initialize();
+    Master::m_sceneManager->Initialize();
     return 0;
 }
 
@@ -76,7 +76,7 @@ InitializeLoadStageData::InitializeLoadStageData() {}
 // 現在のゲームシーンに対してステージ地形・オブジェクトデータの構築を要求
 // 入力: なし / 出力: 0 / 副作用: GameSceneのステージデータロード実行
 int InitializeLoadStageData::Execute() {
-    GameScene* pGameScene = dynamic_cast<GameScene*>(Master::mpSceneManager->GetCurrentScene());
+    GameScene* pGameScene = dynamic_cast<GameScene*>(Master::m_sceneManager->GetCurrentScene());
     if (pGameScene != nullptr)
     {
         pGameScene->LoadStageData();
@@ -117,7 +117,7 @@ void LoadingManager::ExecuteAll() {
         std::string loadingText = "Loading: ";
         loadingText += m_tasks[i]->GetTaskName();
 
-        DrawStringToHandle(1280, 900, loadingText.c_str(), GetColor(255, 255, 255), FontSize);
+        DrawStringToHandle(1280, 900, loadingText.c_str(), GetColor(255, 255, 255), m_fontSize);
 
         ScreenFlip();
 
@@ -130,7 +130,7 @@ void LoadingManager::ExecuteAll() {
     ClearDrawScreen();
     DrawBox(1280, 950, 1280 + 580, 990, GetColor(255, 255, 255), FALSE);
     DrawBox(1280, 950, 1280 + 580, 990, GetColor(100, 200, 255), TRUE);
-    DrawStringToHandle(1280, 900, "Loading Complete!", GetColor(255, 255, 255), FontSize);
+    DrawStringToHandle(1280, 900, "Loading Complete!", GetColor(255, 255, 255), m_fontSize);
     ScreenFlip();
 
     // 完了表示を視認させるための完了後ウェイト
@@ -139,41 +139,41 @@ void LoadingManager::ExecuteAll() {
 
 // ゲームシーン用のステージ画像付きローディングを実行
 // 入力: なし / 出力: なし / 副作用: 画面描画、各タスクのExecute呼び出し
-void LoadingManager::ExecuteGameScene()
-{
-    const int total = static_cast<int>(m_tasks.size());
-
-    for (int i = 0; i < total; ++i)
-    {
-        ClearDrawScreen();
-
-        Scene3D_GameRuleHandle = LoadGraph("Resource/3D_UI/GameRulePicture.png");
-        DrawGraph(0, 0, Scene3D_GameRuleHandle, false);
-
-        float progress = static_cast<float>(i) / total;
-
-        const int barX = 1280, barY = 950, barWidth = 580, barHeight = 40;
-        DrawBox(barX, barY, barX + barWidth, barY + barHeight, GetColor(255, 255, 255), FALSE);
-
-        int filledWidth = static_cast<int>(barWidth * progress);
-        DrawBox(barX, barY, barX + filledWidth, barY + barHeight, GetColor(100, 200, 255), TRUE);
-
-        ScreenFlip();
-
-        m_tasks[i]->Execute();
-
-        // ロード進行を視認させるための待機時間
-        WaitTimer(100);
-    }
-
-    ClearDrawScreen();
-    DrawBox(1280, 950, 1280 + 580, 990, GetColor(255, 255, 255), FALSE);
-    DrawBox(1280, 950, 1280 + 580, 990, GetColor(100, 200, 255), TRUE);
-
-    // ロード画面用テクスチャのメモリリークを防止するため破棄
-    DeleteGraph(Scene3D_GameRuleHandle);
-
-    ScreenFlip();
-
-    WaitTimer(300);
-}
+//void LoadingManager::ExecuteGameScene()
+//{
+//    const int total = static_cast<int>(m_tasks.size());
+//
+//    for (int i = 0; i < total; ++i)
+//    {
+//        ClearDrawScreen();
+//
+//        m_scene3DGameRuleHandle = LoadGraph("Resource/3D_UI/GameRulePicture.png");
+//        DrawGraph(0, 0, m_scene3DGameRuleHandle, false);
+//
+//        float progress = static_cast<float>(i) / total;
+//
+//        const int barX = 1280, barY = 950, barWidth = 580, barHeight = 40;
+//        DrawBox(barX, barY, barX + barWidth, barY + barHeight, GetColor(255, 255, 255), FALSE);
+//
+//        int filledWidth = static_cast<int>(barWidth * progress);
+//        DrawBox(barX, barY, barX + filledWidth, barY + barHeight, GetColor(100, 200, 255), TRUE);
+//
+//        ScreenFlip();
+//
+//        m_tasks[i]->Execute();
+//
+//        // ロード進行を視認させるための待機時間
+//        WaitTimer(100);
+//    }
+//
+//    ClearDrawScreen();
+//    DrawBox(1280, 950, 1280 + 580, 990, GetColor(255, 255, 255), FALSE);
+//    DrawBox(1280, 950, 1280 + 580, 990, GetColor(100, 200, 255), TRUE);
+//
+//    // ロード画面用テクスチャのメモリリークを防止するため破棄
+//    DeleteGraph(m_scene3DGameRuleHandle);
+//
+//    ScreenFlip();
+//
+//    WaitTimer(300);
+//}

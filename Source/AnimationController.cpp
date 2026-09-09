@@ -1,8 +1,6 @@
 ﻿#include "AnimationController.h"
 
 AnimationController::AnimationController()
-    : m_currentState(CharacterState::Idle)
-    , m_isInitialized(false)
 {
 }
 
@@ -48,12 +46,12 @@ void AnimationController::ChangeState(CharacterState newState)
 }
 
 // 登録された全アニメーションに対して向き（反転フラグ）を一括適用
-// 入力: rev(反転フラグ) / 出力: なし / 副作用: 全TextureAnimationの反転設定更新
-void AnimationController::SetEnemyReverse(bool rev)
+// 入力: reverse(反転フラグ) / 出力: なし / 副作用: 全TextureAnimationの反転設定更新
+void AnimationController::SetEnemyReverse(bool reverse)
 {
     // 状態遷移をまたいでもキャラクターの左右の向きが破綻しないよう全ステートに適用
     for (auto& pair : m_animations)
     {
-        pair.second->SetReverse(rev);
+        pair.second->SetReverse(reverse);
     }
 }

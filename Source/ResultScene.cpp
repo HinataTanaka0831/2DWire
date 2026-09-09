@@ -2,7 +2,7 @@
 #include "DxLib.h"
 #include "Utility.h"
 #include "Master.h"
-#include "MouseManager.h"
+#include "InputManager.h"
 #include "Button.h"
 
 ResultScene::ResultScene()
@@ -16,14 +16,14 @@ ResultScene::~ResultScene()
 
 void ResultScene::Initialize()
 {
-	if (mpTitleButton == nullptr)
+	if (m_titleButton == nullptr)
 	{
-		mpTitleButton = std::make_unique<Button>(StringX, TitleY - 10, StringX + 250, TitleY + 60, "タイトルへ", GetColor(70, 70, 90), GetColor(80, 130, 255), fontSize20);
+		m_titleButton = std::make_unique<Button>(DrawX, TitleY - 10, DrawX + 250, TitleY + 60, "タイトル", GetColor(70, 70, 90), GetColor(80, 130, 255), m_fontSize20);
 	}
 
-	if (mpQuitButton == nullptr)
+	if (m_quitButton == nullptr)
 	{
-		mpQuitButton = std::make_unique<Button>(StringX, QuitY - 10, StringX + 250, QuitY + 60, "終了", GetColor(70, 70, 90), GetColor(80, 130, 255), fontSize20);
+		m_quitButton = std::make_unique<Button>(DrawX, QuitY - 10, DrawX + 250, QuitY + 60, "終了", GetColor(70, 70, 90), GetColor(80, 130, 255), m_fontSize20);
 	}
 }
 
@@ -31,25 +31,25 @@ void ResultScene::Initialize()
 // 入力: なし / 出力: なし / 副作用: SCENE_TITLEへの遷移要求
 void ResultScene::Update()
 {
-	if (mpTitleButton)
+	if (m_titleButton)
 	{
-		mpTitleButton->Update();
+		m_titleButton->Update();
 
-		if (mpTitleButton->IsClick())
+		if (m_titleButton->IsClick())
 		{
-			Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
-			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_TITLE);
+			Master::m_soundManager->PlaySE(SoundManager::SE_DECIDE);
+			Master::m_sceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_TITLE);
 		}
 	}
 
-	if (mpQuitButton)
+	if (m_quitButton)
 	{
-		mpQuitButton->Update();
+		m_quitButton->Update();
 
-		if (mpQuitButton->IsClick())
+		if (m_quitButton->IsClick())
 		{
-			Master::mpSoundManager->PlaySE(SoundManager::SE_DECIDE);
-			Master::mpSceneManager->RequestQuit();
+			Master::m_soundManager->PlaySE(SoundManager::SE_DECIDE);
+			Master::m_sceneManager->RequestQuit();
 		}
 	}
 	Scene::Update();
@@ -59,16 +59,16 @@ void ResultScene::Update()
 // 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void ResultScene::Draw()
 {
-	DrawStringToHandle(Utility::SCREEN_WIDTH / 2 - 150, Utility::SCREEN_HEIGHT / 2 - 140, "Game Clear", GetColor(255, 255, 255), fontSize90);
+	DrawStringToHandle(Utility::SCREEN_WIDTH / 2 - 230, Utility::SCREEN_HEIGHT / 2 - 140, "Game Clear", GetColor(255, 255, 255), m_fontSize90);
 
-	if (mpTitleButton)
+	if (m_titleButton)
 	{
-		mpTitleButton->Draw();
+		m_titleButton->Draw();
 	}
 
-	if (mpQuitButton)
+	if (m_quitButton)
 	{
-		mpQuitButton->Draw();
+		m_quitButton->Draw();
 	}
 
 	Scene::Draw();

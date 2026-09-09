@@ -145,9 +145,8 @@
     <ClCompile Include="Source\InputManager.cpp" />
     <ClCompile Include="Source\Loading.cpp" />
     <ClCompile Include="Source\Main.cpp" />
-    <ClCompile Include="Source\MouseManager.cpp" />
     <ClCompile Include="Source\Object2D.cpp" />
-    <ClCompile Include="Source\ObjectManagercpp.cpp" />
+    <ClCompile Include="Source\ObjectManager.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\ResultScene.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
@@ -172,14 +171,12 @@
     <ClInclude Include="Source\InputManager.h" />
     <ClInclude Include="Source\Loading.h" />
     <ClInclude Include="Source\Master.h" />
-    <ClInclude Include="Source\MouseManager.h" />
     <ClInclude Include="Source\Object2D.h" />
     <ClInclude Include="Source\ObjectManager.h" />
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\ResultScene.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneManager.h" />
-    <ClInclude Include="Source\SelectScene.h" />
     <ClInclude Include="Source\SoundManager.h" />
     <ClInclude Include="Source\Texture.h" />
     <ClInclude Include="Source\TextureAnimation.h" />

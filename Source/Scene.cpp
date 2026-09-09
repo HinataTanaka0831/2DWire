@@ -1,21 +1,20 @@
 ﻿#include "Scene.h"
 #include "ObjectManager.h"
 #include "Master.h"
-#include "Bullet.h"
 
 Scene::Scene()
 {
 	// 各シーンごとに独立したオブジェクト管理領域を生成
-	mpObjectManager = new ObjectManager();
+	m_objectManager = new ObjectManager();
 }
 
 Scene::~Scene()
 {
 	// シーン破棄時に管理下のObjectManagerを確実に破棄
-	if (mpObjectManager != nullptr)
+	if (m_objectManager != nullptr)
 	{
-		delete mpObjectManager;
-		mpObjectManager = nullptr;
+		delete m_objectManager;
+		m_objectManager = nullptr;
 	}
 }
 
@@ -23,9 +22,9 @@ Scene::~Scene()
 // 入力: なし / 出力: なし / 副作用: mpObjectManager->Update()呼び出し
 void Scene::Update()
 {
-	if (mpObjectManager != nullptr)
+	if (m_objectManager != nullptr)
 	{
-		mpObjectManager->Update();
+		m_objectManager->Update();
 	}
 }
 
@@ -33,8 +32,8 @@ void Scene::Update()
 // 入力: なし / 出力: なし / 副作用: mpObjectManager->Draw()呼び出し
 void Scene::Draw()
 {
-	if (mpObjectManager != nullptr)
+	if (m_objectManager != nullptr)
 	{
-		mpObjectManager->Draw();
+		m_objectManager->Draw();
 	}
 }

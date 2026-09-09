@@ -8,6 +8,6 @@
 class Master
 {
 public:
-	static SceneManager* mpSceneManager;        // シーン遷移および現在シーンを管理するポインタ
-	static SoundManager* mpSoundManager;        // BGM/SE再生を統括するポインタ
+	static SceneManager* m_sceneManager;        // シーン遷移および現在シーンを管理するポインタ
+	static SoundManager* m_soundManager;        // BGM/SE再生を統括するポインタ
 };

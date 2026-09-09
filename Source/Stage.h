@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "DxLib.h"
 #include <vector>
 
 // 各ステージの初期座標・ゴール位置・カメラ移動限界を保持する構造体
@@ -27,8 +28,8 @@ public:
     // 入力: stageNum(ステージ番号) / 出力: なし / 副作用: WireTarget, Enemy, Goalの生成
     void LoadStage(int stageNum);
 
-    StageInfo GetStageInfo() const { return mStageInfo; }
+    StageInfo GetStageInfo() const { return m_stageInfo; }
 
 private:
-    StageInfo mStageInfo;
+    StageInfo m_stageInfo = {};
 };

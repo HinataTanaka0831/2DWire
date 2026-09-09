@@ -41,5 +41,5 @@ public:
 	std::vector<Object2D*> GetObject2DListByTag(Object2D::Tag tag);
 
 private:
-	std::list<Object2D*> mObject2DList;         // オブジェクト管理用双方向リスト
+	std::list<Object2D*> m_object2DList;         // オブジェクト管理用双方向リスト
 };

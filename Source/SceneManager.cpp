@@ -9,12 +9,10 @@
 #include <cstdlib>
 
 SceneManager::SceneManager()
-	: mnSceneType(SCENE_TYPE::SCENE_NONE)
-	, mnNextSceneType(SCENE_TYPE::SCENE_NONE)
-	, mpCurrentScene(nullptr)
-	, mTransitionType(TransitionType::NORMAL_BLACK)
-	, mnShakeOffsetX(0)
-	, mnShakeOffsetY(0)
+	: m_sceneType(SCENE_TYPE::SCENE_NONE)
+	, m_nextSceneType(SCENE_TYPE::SCENE_NONE)
+	, m_currentScene(nullptr)
+	, m_transitionType(TransitionType::NORMAL_BLACK)
 {
 }
 
@@ -25,19 +23,19 @@ SceneManager::~SceneManager()
 void SceneManager::Initialize()
 {
 	// 画面シェイクや全画面ポストエフェクト合成用の中間スクリーンバッファを生成
-	mnWorkScreenHandle = MakeScreen(Utility::SCREEN_WIDTH, Utility::SCREEN_HEIGHT, TRUE);
-	mnNextSceneType = SCENE_TYPE::SCENE_TITLE;
+	m_workScreenHandle = MakeScreen(Utility::SCREEN_WIDTH, Utility::SCREEN_HEIGHT, TRUE);
+	m_nextSceneType = SCENE_TYPE::SCENE_TITLE;
 	ChangeSceneIfNeeded();
 }
 
 void SceneManager::Update()
 {
-	if (mpCurrentScene != nullptr)
+	if (m_currentScene != nullptr)
 	{
-		mpCurrentScene->Update();
+		m_currentScene->Update();
 	}
 
-	if (mbIsTransition)
+	if (m_isTransition)
 	{
 		UpdateTransition();
 	}
@@ -45,20 +43,20 @@ void SceneManager::Update()
 
 void SceneManager::Draw()
 {
-	if (mpCurrentScene == nullptr) return;
+	if (m_currentScene == nullptr) return;
 
 	// シェイク演出を適用するため一旦ワークスクリーンへ全描画
-	SetDrawScreen(mnWorkScreenHandle);
+	SetDrawScreen(m_workScreenHandle);
 	ClearDrawScreen();
 
-	mpCurrentScene->Draw();
+	m_currentScene->Draw();
 
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	// シェイクオフセットを加算して本来のバックバッファへ転送
-	DrawGraph(mnShakeOffsetX, mnShakeOffsetY, mnWorkScreenHandle, FALSE);
+	DrawGraph(m_shakeOffsetX, m_shakeOffsetY, m_workScreenHandle, FALSE);
 
-	if (mbIsTransition)
+	if (m_isTransition)
 	{
 		DrawTransitionEffects();
 	}
@@ -66,133 +64,133 @@ void SceneManager::Draw()
 
 void SceneManager::Finalize()
 {
-	if (mnWorkScreenHandle != -1)
+	if (m_workScreenHandle != -1)
 	{
-		DeleteGraph(mnWorkScreenHandle);
-		mnWorkScreenHandle = -1;
+		DeleteGraph(m_workScreenHandle);
+		m_workScreenHandle = -1;
 	}
 }
 
 void SceneManager::ChangeSceneIfNeeded()
 {
-	if (mnSceneType == mnNextSceneType)
+	if (m_sceneType == m_nextSceneType)
 	{
 		return;
 	}
 
-	if (mpCurrentScene != nullptr)
+	if (m_currentScene != nullptr)
 	{
-		mpCurrentScene->Finalize();
-		delete mpCurrentScene;
-		mpCurrentScene = nullptr;
+		m_currentScene->Finalize();
+		delete m_currentScene;
+		m_currentScene = nullptr;
 	}
 
-	mnSceneType = mnNextSceneType;
+	m_sceneType = m_nextSceneType;
 
-	switch (mnSceneType)
+	switch (m_sceneType)
 	{
 	case SCENE_TYPE::SCENE_TITLE:
-		mpCurrentScene = new TitleScene();
+		m_currentScene = new TitleScene();
 		break;
 	case SCENE_TYPE::SCENE_GAME:
-		mpCurrentScene = new GameScene();
+		m_currentScene = new GameScene();
 		break;
 	case SCENE_TYPE::SCENE_RESULT:
-		mpCurrentScene = new ResultScene();
+		m_currentScene = new ResultScene();
 		break;
 	case SCENE_TYPE::SCENE_GAME_RULE:
-		mpCurrentScene = new GameRuleScene();
+		m_currentScene = new GameRuleScene();
 		break;
 	case SCENE_TYPE::SCENE_GAMEOVER:
-		mpCurrentScene = new GameOverScene();
+		m_currentScene = new GameOverScene();
 		break;
 	default:
 		break;
 	}
 
-	if (mpCurrentScene != nullptr)
+	if (m_currentScene != nullptr)
 	{
-		mpCurrentScene->Initialize();
+		m_currentScene->Initialize();
 	}
 }
 
 void SceneManager::SetNextScene(SCENE_TYPE next)
 {
-	if (mnSceneType == next) return;
+	if (m_sceneType == next) return;
 
-	mnNextSceneType = next;
+	m_nextSceneType = next;
 
 	// シーンの演出意図に応じてトランジション種別を分岐
 	if (next == SCENE_TYPE::SCENE_GAME)
 	{
-		mTransitionType = TransitionType::WHITE_FLASH;
+		m_transitionType = TransitionType::WHITE_FLASH;
 	}
 	else if (next == SCENE_TYPE::SCENE_GAMEOVER)
 	{
-		mTransitionType = TransitionType::RED_FLASH_SHAKE;
+		m_transitionType = TransitionType::RED_FLASH_SHAKE;
 	}
 	else
 	{
-		mTransitionType = TransitionType::NORMAL_BLACK;
+		m_transitionType = TransitionType::NORMAL_BLACK;
 	}
 
-	mbIsTransition = true;
-	mPhase = TransitionPhase::TRANS_FADEOUT;
-	mnTransitionTimer = 0;
-	mnShakeOffsetX = 0;
-	mnShakeOffsetY = 0;
+	m_isTransition = true;
+	m_phase = TransitionPhase::TRANS_FADEOUT;
+	m_transitionTimer = 0;
+	m_shakeOffsetX = 0;
+	m_shakeOffsetY = 0;
 }
 
 void SceneManager::UpdateTransition()
 {
-	mnTransitionTimer++;
+	m_transitionTimer++;
 
-	if (mTransitionType == TransitionType::RED_FLASH_SHAKE)
+	if (m_transitionType == TransitionType::RED_FLASH_SHAKE)
 	{
-		if (mPhase == TransitionPhase::TRANS_FADEOUT)
+		if (m_phase == TransitionPhase::TRANS_FADEOUT)
 		{
 			// 被弾・死亡の衝撃を表現するため時間経過とともに減衰するランダム振動を生成
-			int currentTime = mnTransitionTimer;
-			int limitTime = TRANSITION_TIME;
+			int currentTime = m_transitionTimer;
+			int limitTime = TransitionTime;
 			int maxShakeAmount = 15;
 
 			int shakeRange = maxShakeAmount * (limitTime - currentTime) / limitTime;
 			if (shakeRange > 0)
 			{
-				mnShakeOffsetX = (rand() % (shakeRange * 2 + 1)) - shakeRange;
-				mnShakeOffsetY = (rand() % (shakeRange * 2 + 1)) - shakeRange;
+				m_shakeOffsetX = (rand() % (shakeRange * 2 + 1)) - shakeRange;
+				m_shakeOffsetY = (rand() % (shakeRange * 2 + 1)) - shakeRange;
 			}
 			else
 			{
-				mnShakeOffsetX = 0;
-				mnShakeOffsetY = 0;
+				m_shakeOffsetX = 0;
+				m_shakeOffsetY = 0;
 			}
 		}
 		else
 		{
-			mnShakeOffsetX = 0;
-			mnShakeOffsetY = 0;
+			m_shakeOffsetX = 0;
+			m_shakeOffsetY = 0;
 		}
 	}
 
-	switch (mPhase)
+	switch (m_phase)
 	{
 	case TransitionPhase::TRANS_FADEOUT:
-		if (mnTransitionTimer >= TRANSITION_TIME)
+		if (m_transitionTimer >= TransitionTime)
 		{
 			ChangeSceneIfNeeded();
-			mPhase = TransitionPhase::TRANS_FADEIN;
-			mnTransitionTimer = 0;
+			m_phase = TransitionPhase::TRANS_FADEIN;
+			m_transitionTimer = 0;
 		}
 		break;
 
 	case TransitionPhase::TRANS_FADEIN:
-		if (mnTransitionTimer >= TRANSITION_TIME)
+		if (m_transitionTimer >= TransitionTime)
 		{
-			mbIsTransition = false;
-			mPhase = TransitionPhase::TRANS_NONE;
-			mnShakeOffsetX = 0;
-			mnShakeOffsetY = 0;
+			m_isTransition = false;
+			m_phase = TransitionPhase::TRANS_NONE;
+			m_shakeOffsetX = 0;
+			m_shakeOffsetY = 0;
 		}
 		break;
 	}
@@ -201,18 +199,18 @@ void SceneManager::UpdateTransition()
 void SceneManager::DrawTransitionEffects()
 {
 	int alpha = 0;
-	if (mPhase == TransitionPhase::TRANS_FADEOUT)
+	if (m_phase == TransitionPhase::TRANS_FADEOUT)
 	{
-		alpha = (mnTransitionTimer * 255) / TRANSITION_TIME;
+		alpha = (m_transitionTimer * 255) / TransitionTime;
 	}
-	else if (mPhase == TransitionPhase::TRANS_FADEIN)
+	else if (m_phase == TransitionPhase::TRANS_FADEIN)
 	{
-		alpha = ((TRANSITION_TIME - mnTransitionTimer) * 255) / TRANSITION_TIME;
+		alpha = ((TransitionTime - m_transitionTimer) * 255) / TransitionTime;
 	}
 
 	unsigned int color = GetColor(0, 0, 0);
 
-	switch (mTransitionType)
+	switch (m_transitionType)
 	{
 	case TransitionType::WHITE_FLASH:
 		color = GetColor(255, 255, 255);
@@ -233,5 +231,5 @@ void SceneManager::DrawTransitionEffects()
 
 void SceneManager::RequestQuit()
 {
-	mbQuitRequest = true;
+	m_quitRequest = true;
 }

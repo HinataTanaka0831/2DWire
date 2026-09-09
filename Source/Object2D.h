@@ -2,7 +2,6 @@
 
 #include "DxLib.h"
 #include <string>
-#include "SelectScene.h"
 
 class Texture;
 class TextureAnimation;
@@ -17,21 +16,18 @@ public:
 		Player2D = 2000,
 		Enemy2D = 2100,
 		BossEnemy2D = 2200,
-		Bullet2D = 2200,
-		HomingBullet2D = 2201,
 		WireTarget2D = 2300,
 		Goal2D = 2400,
-		Ground2D = 2500,
 	};
 
 public:
 	// 単一静止画テクスチャを持つオブジェクトの生成
-	// 入力: filename(画像パス), initPos(初期座標) / 出力: なし / 副作用: ObjectManagerへの自動登録
-	Object2D(std::string filename, VECTOR initPos);
+	// 入力: fileName(画像パス), initPosition(初期座標) / 出力: なし / 副作用: ObjectManagerへの自動登録
+	Object2D(std::string fileName, VECTOR initPosition);
 
 	// スプライトシートアニメーションを持つオブジェクトの生成
-	// 入力: filename, initPos, allNum, numX, numY, interval, scale, type / 出力: なし / 副作用: ObjectManagerへの自動登録
-	Object2D(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale = 1.0f, bool type = true);
+	// 入力: fileName, initPosition, allNum, numX, numY, interval, scale, type / 出力: なし / 副作用: ObjectManagerへの自動登録
+	Object2D(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale = 1.0f, bool type = true);
 
 	// 保持する画像リソースの破棄
 	// 入力: なし / 出力: なし / 副作用: テクスチャメモリの解放

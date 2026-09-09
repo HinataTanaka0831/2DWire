@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "DxLib.h"
 #include "Scene.h"
 #include "Utility.h"
 #include <memory>
@@ -30,10 +31,10 @@ public:
 	void Finalize() override;
 
 private:
-	std::unique_ptr<Button> mpBackButton = nullptr;
-	const int StringX = Utility::SCREEN_WIDTH / 2 - 150;
+	std::unique_ptr<Button> m_backButton = nullptr;
+	const int DrawX = Utility::SCREEN_WIDTH / 2 - 150;
 	const int BackY = 900;
-	int mnMoveLeftHandle = -1;
-	int mnMoveRightHandle = -1;
-	int mnJumpHandle = -1;
+	int m_moveLeftHandle = -1;
+	int m_moveRightHandle = -1;
+	int m_jumpHandle = -1;
 };

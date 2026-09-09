@@ -18,19 +18,19 @@ public:
 	~Collision() {}
 
 	// 2つの円同士の交差判定（三平方の定理による距離の二乗比較）
-	// 入力: centerPosA, radiusA, centerPosB, radiusB / 出力: 衝突していればtrue / 副作用: なし
+	// 入力: centerPositionA, radiusA, centerPositionB, radiusB / 出力: 衝突していればtrue / 副作用: なし
 	static bool CheckCircleToCircle(
-		const VECTOR& centerPosA,
+		const VECTOR& centerPositionA,
 		const float& radiusA,
-		const VECTOR& centerPosB,
+		const VECTOR& centerPositionB,
 		const float& radiusB
 	);
 
 	// 点と円の包含判定（カーソルや着弾点の接触検知）
-	// 入力: pointPos(点座標), centerPos(円の中心), radius(円の半径) / 出力: 内包していればtrue / 副作用: なし
+	// 入力: pointPosition(点座標), centerPosition(円の中心), radius(円の半径) / 出力: 内包していればtrue / 副作用: なし
 	static bool CheckPointToCircle(
-		const VECTOR& pointPos,
-		const VECTOR& centerPos,
+		const VECTOR& pointPosition,
+		const VECTOR& centerPosition,
 		const float& radius
 	);
 

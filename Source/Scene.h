@@ -28,13 +28,13 @@ public:
 	// 入力: なし / 出力: なし / 副作用: リソースの解放
 	virtual void Finalize() = 0;
 
-	ObjectManager* GetObjectManager() { return mpObjectManager; }
+	ObjectManager* GetObjectManager() { return m_objectManager; }
 
 protected:
-	int fontSize20 = CreateFontToHandle(NULL, 20, -1, -1);
-	int fontSize50 = CreateFontToHandle(NULL, 50, -1, -1);
-	int fontSize90 = CreateFontToHandle(NULL, 90, -1, -1);
+	int m_fontSize20 = CreateFontToHandle(NULL, 20, -1, -1);
+	int m_fontSize50 = CreateFontToHandle(NULL, 50, -1, -1);
+	int m_fontSize90 = CreateFontToHandle(NULL, 90, -1, -1);
 
 private:
-	ObjectManager* mpObjectManager; // シーン内のオブジェクトを管理するインスタンス
+	ObjectManager* m_objectManager; // シーン内のオブジェクトを管理するインスタンス
 };

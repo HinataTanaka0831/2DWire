@@ -31,13 +31,13 @@ public:
 	void Finalize() override;
 
 private:
-	std::unique_ptr<Button> mpPlayButton = nullptr;
-	std::unique_ptr<Button> mpPlayRuleButton = nullptr;
-	std::unique_ptr<Button> mpQuitButton = nullptr;
-	std::unique_ptr<TitleDemo> mpTitleDemo = nullptr;
-	const int StringX = Utility::SCREEN_WIDTH / 2 - 150;
+	std::unique_ptr<Button> m_playButton = nullptr;
+	std::unique_ptr<Button> m_playRuleButton = nullptr;
+	std::unique_ptr<Button> m_quitButton = nullptr;
+	std::unique_ptr<TitleDemo> m_titleDemo = nullptr;
+	const int DrawX = Utility::SCREEN_WIDTH / 2 - 150;
 	const int PlayY = 650;
 	const int PlayRuleY = 750;
 	const int QuitY = 850;
-	int mnBackGroundHandle = -1;
+	int m_backGroundHandle = -1;
 };

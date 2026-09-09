@@ -13,7 +13,7 @@ ObjectManager::~ObjectManager()
 // 入力: なし / 出力: なし / 副作用: 各オブジェクトのUpdate呼び出し
 void ObjectManager::Update()
 {
-	for (std::list<Object2D*>::iterator itr = mObject2DList.begin(); itr != mObject2DList.end(); itr++)
+	for (std::list<Object2D*>::iterator itr = m_object2DList.begin(); itr != m_object2DList.end(); itr++)
 	{
 		(*itr)->Update();
 	}
@@ -23,7 +23,7 @@ void ObjectManager::Update()
 // 入力: なし / 出力: なし / 副作用: 各オブジェクトのDraw呼び出し
 void ObjectManager::Draw()
 {
-	for (auto itr = mObject2DList.begin(); itr != mObject2DList.end(); itr++)
+	for (auto itr = m_object2DList.begin(); itr != m_object2DList.end(); itr++)
 	{
 		(*itr)->Draw();
 	}
@@ -33,18 +33,18 @@ void ObjectManager::Draw()
 // 入力: object2D(追加するオブジェクト) / 出力: なし / 副作用: 管理リストへのポインタ追加
 void ObjectManager::AddObject(Object2D* object2D)
 {
-	mObject2DList.push_back(object2D);
+	m_object2DList.push_back(object2D);
 }
 
 // シーン切り替え時等における全オブジェクトの即時破棄
 // 入力: なし / 出力: なし / 副作用: 全オブジェクトのdeleteおよびリストクリア
 void ObjectManager::DeleteAll2D()
 {
-	for (auto itr = mObject2DList.begin(); itr != mObject2DList.end(); )
+	for (auto itr = m_object2DList.begin(); itr != m_object2DList.end(); )
 	{
 		Object2D* temp = *itr;
 		// イテレータ無効化を防ぐためeraseの戻り値でイテレータを更新
-		itr = mObject2DList.erase(itr);
+		itr = m_object2DList.erase(itr);
 		delete temp;
 		temp = nullptr;
 	}
@@ -55,12 +55,12 @@ void ObjectManager::DeleteAll2D()
 void ObjectManager::DeleteAll2DIfNeeded()
 {
 	// Updateループ中の直接削除によるクラッシュ（不正メモリアクセス）を防ぐための遅延クリーンアップ
-	for (auto itr = mObject2DList.begin(); itr != mObject2DList.end(); )
+	for (auto itr = m_object2DList.begin(); itr != m_object2DList.end(); )
 	{
 		if ((*itr)->IsDeleteFlag())
 		{
 			Object2D* temp = *itr;
-			itr = mObject2DList.erase(itr);
+			itr = m_object2DList.erase(itr);
 			delete temp;
 			temp = nullptr;
 		}
@@ -76,12 +76,12 @@ void ObjectManager::DeleteAll2DIfNeeded()
 Object2D* ObjectManager::GetObject2DByTag(Object2D::Tag tag)
 {
 	auto itr = std::find_if(
-		mObject2DList.begin(),
-		mObject2DList.end(),
+		m_object2DList.begin(),
+		m_object2DList.end(),
 		[&](Object2D* obj) { return obj->GetTag() == tag; }
 	);
 
-	if (itr != mObject2DList.end())
+	if (itr != m_object2DList.end())
 	{
 		return (*itr);
 	}
@@ -94,7 +94,7 @@ Object2D* ObjectManager::GetObject2DByTag(Object2D::Tag tag)
 std::vector<Object2D*> ObjectManager::GetObject2DListByTag(Object2D::Tag tag)
 {
 	std::vector<Object2D*> ret;
-	for (auto itr = mObject2DList.begin(); itr != mObject2DList.end(); itr++)
+	for (auto itr = m_object2DList.begin(); itr != m_object2DList.end(); itr++)
 	{
 		if ((*itr)->GetTag() == tag)
 		{

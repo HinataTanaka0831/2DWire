@@ -25,38 +25,38 @@ GameScene::~GameScene()
 
 void GameScene::Initialize()
 {
-	if (mnBackGroundHandle == -1)
+	if (m_backGroundHandle == -1)
 	{
-		mnBackGroundHandle = LoadGraph("Resource/BackGround/bg_night.png");
+		m_backGroundHandle = LoadGraph("Resource/BackGround/bg_night.png");
 	}
 
 	LoadingManager loader;
 	loader.AddTask(std::make_unique<InitializeLoadStageData>());
-	loader.ExecuteGameScene();
+	loader.ExecuteAll();
 }
 
 void GameScene::LoadStageData()
 {
-	mpStage = new Stage();
-	mpStage->LoadStage(gCurrentStage);
-	mStageInfo = mpStage->GetStageInfo();
+	m_stage = new Stage();
+	m_stage->LoadStage(gCurrentStage);
+	m_stageInfo = m_stage->GetStageInfo();
 
-	mpPlayer = new Player(
-		"Resource/Player/anim_idle.png",
-		VGet(mStageInfo.playerStartX, mStageInfo.playerStartY, 0.0f),
-		3, 3, 1, 5, 1.0f, true
+	m_player = new Player(
+		"Resource/Player/player_idle.png",
+		VGet(m_stageInfo.playerStartX, m_stageInfo.playerStartY, 0.0f),
+		3, 3, 1, 8, 1.0f, true
 	);
 }
 
 void GameScene::Update()
 {
-	if (mpPlayer == nullptr)
+	if (m_player == nullptr)
 	{
 		return;
 	}
 
-		float playerX = mpPlayer->GetPosition().x;
-		float playerY = mpPlayer->GetPosition().y;
+		float playerX = m_player->GetPosition().x;
+		float playerY = m_player->GetPosition().y;
 
 		// プレイヤー進行方向の前方視界を確保するため画面左1/3位置にプレイヤーを配置
 		float targetCameraX = playerX - Utility::SCREEN_WIDTH / 3.0f;
@@ -72,42 +72,42 @@ void GameScene::Update()
 		gCameraY += (targetCameraY - gCameraY) * 0.1f;
 
 		// カメラおよびプレイヤーの移動をステージ境界内に制限
-		if (gCameraX < mStageInfo.cameraMinX)
+		if (gCameraX < m_stageInfo.cameraMinX)
 		{
-			gCameraX = mStageInfo.cameraMinX;
+			gCameraX = m_stageInfo.cameraMinX;
 		}
-		if (gCameraX > mStageInfo.cameraMaxX)
+		if (gCameraX > m_stageInfo.cameraMaxX)
 		{
-			gCameraX = mStageInfo.cameraMaxX;
-		}
-
-		if (playerX < mStageInfo.playerMinX)
-		{
-			VECTOR pos = mpPlayer->GetPosition();
-			pos.x = mStageInfo.playerMinX;
-			mpPlayer->SetPosition(pos);
-		}
-		if (playerX > mStageInfo.playerMaxX)
-		{
-			VECTOR pos = mpPlayer->GetPosition();
-			pos.x = mStageInfo.playerMaxX;
-			mpPlayer->SetPosition(pos);
+			gCameraX = m_stageInfo.cameraMaxX;
 		}
 
-		if (mpPlayer->IsDead())
+		if (playerX < m_stageInfo.playerMinX)
 		{
-			Master::mpSceneManager->SetNextScene(SceneManager::SCENE_GAMEOVER);
+			VECTOR pos = m_player->GetPosition();
+			pos.x = m_stageInfo.playerMinX;
+			m_player->SetPosition(pos);
+		}
+		if (playerX > m_stageInfo.playerMaxX)
+		{
+			VECTOR pos = m_player->GetPosition();
+			pos.x = m_stageInfo.playerMaxX;
+			m_player->SetPosition(pos);
+		}
+
+		if (m_player->IsDead())
+		{
+			Master::m_sceneManager->SetNextScene(SceneManager::SCENE_GAMEOVER);
 		}
 
 		// ゴール接触判定とステージ遷移/リザルト遷移のディスパッチ
 		if (!mIsGoalReached)
 		{
-			auto goalList = Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Goal2D);
+			auto goalList = Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Goal2D);
 
 			for (auto* goal : goalList)
 			{
-				float dx = mpPlayer->GetPosition().x - goal->GetPosition().x;
-				float dy = mpPlayer->GetPosition().y - goal->GetPosition().y;
+				float dx = m_player->GetPosition().x - goal->GetPosition().x;
+				float dy = m_player->GetPosition().y - goal->GetPosition().y;
 				float dist = std::sqrt(dx * dx + dy * dy);
 
 				Goal* pGoal = dynamic_cast<Goal*>(goal);
@@ -124,11 +124,11 @@ void GameScene::Update()
 					if (gCurrentStage < MaxStage)
 					{
 						gCurrentStage++;
-						Master::mpSceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_GAME);
+						Master::m_sceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_GAME);
 					}
 					else
 					{
-						Master::mpSceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_RESULT);
+						Master::m_sceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_RESULT);
 					}
 					break;
 				}
@@ -152,7 +152,7 @@ void GameScene::Draw()
 
 	// 視差（パララックス）効果を適用した都市遠景のループ描画
 	int bgWidth, bgHeight;
-	GetGraphSize(mnBackGroundHandle, &bgWidth, &bgHeight);
+	GetGraphSize(m_backGroundHandle, &bgWidth, &bgHeight);
 	
 	if (bgWidth > 0)
 	{
@@ -168,11 +168,11 @@ void GameScene::Draw()
 
 		for (int x = -offsetX; x < Utility::SCREEN_WIDTH; x += bgWidth)
 		{
-			if (mnBackGroundHandle != -1)
+			if (m_backGroundHandle != -1)
 			{
 
 			}
-			DrawGraph(x, -bgOffsetY + bgYOffset, mnBackGroundHandle, TRUE);
+			DrawGraph(x, -bgOffsetY + bgYOffset, m_backGroundHandle, TRUE);
 		}
 	}
 
@@ -181,18 +181,18 @@ void GameScene::Draw()
 
 void GameScene::Finalize()
 {
-	if (mnBackGroundHandle != -1)
+	if (m_backGroundHandle != -1)
 	{
-		DeleteGraph(mnBackGroundHandle);
-		mnBackGroundHandle = -1;
+		DeleteGraph(m_backGroundHandle);
+		m_backGroundHandle = -1;
 	}
 
-	Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->DeleteAll2D();
-	mpPlayer = nullptr;
+	Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->DeleteAll2D();
+	m_player = nullptr;
 
-	if (mpStage != nullptr)
+	if (m_stage != nullptr)
 	{
-		delete mpStage;
-		mpStage = nullptr;
+		delete m_stage;
+		m_stage = nullptr;
 	}
 }

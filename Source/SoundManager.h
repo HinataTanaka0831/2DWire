@@ -43,21 +43,21 @@ public:
 	void PlaySE(SOUND_SE se);
 
 	// BGM音声ファイルのロードとリスト登録（重複ロード防止）
-	// 入力: bgm(登録識別子), filename(ファイルパス) / 出力: なし / 副作用: リストへのハンドル追加
-	void LoadBGM(SOUND_BGM bgm, std::string filename);
+	// 入力: bgm(登録識別子), fileName(ファイルパス) / 出力: なし / 副作用: リストへのハンドル追加
+	void LoadBGM(SOUND_BGM bgm, std::string fileName);
 
 	// SE音声ファイルのロードとリスト登録（重複ロード防止）
-	// 入力: se(登録識別子), filename(ファイルパス) / 出力: なし / 副作用: リストへのハンドル追加
-	void LoadSE(SOUND_SE se, std::string filename);
+	// 入力: se(登録識別子), fileName(ファイルパス) / 出力: なし / 副作用: リストへのハンドル追加
+	void LoadSE(SOUND_SE se, std::string fileName);
 
 	// 現在再生中のBGMの停止
 	// 入力: なし / 出力: なし / 副作用: BGM再生停止
 	void StopBGM();
 
 private:
-	SOUND_BGM mnNowPlayingBgm;       // 現在再生中のBGM識別子（-1は未再生）
-	SOUND_SE mnNowPlayingSe;         // 直近に再生されたSE識別子
+	SOUND_BGM m_nowPlayingBgm;       // 現在再生中のBGM識別子（-1は未再生）
+	SOUND_SE m_nowPlayingSe;         // 直近に再生されたSE識別子
 
-	std::vector<std::pair<SOUND_BGM, int>> mnBgmHandleList;  // 登録済みBGMハンドル一覧
-	std::vector<std::pair<SOUND_SE, int>> mnSeHandleList;    // 登録済みSEハンドル一覧
+	std::vector<std::pair<SOUND_BGM, int>> m_bgmHandleList;  // 登録済みBGMハンドル一覧
+	std::vector<std::pair<SOUND_SE, int>> m_seHandleList;    // 登録済みSEハンドル一覧
 };

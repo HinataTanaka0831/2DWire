@@ -75,24 +75,24 @@ public:
 	// 入力: なし / 出力: なし / 副作用: mbQuitRequestでゲームループを続けるかどうかを決める
 	void RequestQuit();
 
-	bool IsQuitRequest() const { return mbQuitRequest; }
+	bool IsQuitRequest() const { return m_quitRequest; }
 
-	Scene* GetCurrentScene() { return mpCurrentScene; }
+	Scene* GetCurrentScene() { return m_currentScene; }
 
 private:
-	SCENE_TYPE mnSceneType;
-	SCENE_TYPE mnNextSceneType;
-	Scene* mpCurrentScene;
+	SCENE_TYPE m_sceneType;
+	SCENE_TYPE m_nextSceneType;
+	Scene* m_currentScene;
 
-	bool mbIsTransition = false;    // トランジション演出を行うかどうかのフラグ
-	int mnTransitionTimer = 0;      // トランジションを行う時間
-	const int TRANSITION_TIME = 15; // 遷移にかけるフレーム数（約0.25秒）
-	TransitionPhase mPhase = TransitionPhase::TRANS_NONE;
+	bool m_isTransition = false;    // トランジション演出を行うかどうかのフラグ
+	int m_transitionTimer = 0;      // トランジションを行う時間
+	const int TransitionTime = 15; // 遷移にかけるフレーム数（約0.25秒）
+	TransitionPhase m_phase = TransitionPhase::TRANS_NONE;
 
-	TransitionType mTransitionType = TransitionType::NORMAL_BLACK;
-	int mnShakeOffsetX = 0;
-	int mnShakeOffsetY = 0;
-	int mnWorkScreenHandle = -1;
+	TransitionType m_transitionType = TransitionType::NORMAL_BLACK;
+	int m_shakeOffsetX = 0;
+	int m_shakeOffsetY = 0;
+	int m_workScreenHandle = -1;
 
-	bool mbQuitRequest = false;
+	bool m_quitRequest = false;
 };

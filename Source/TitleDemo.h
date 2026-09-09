@@ -42,24 +42,24 @@ private:
 	void UpdateLandRun();
 	void UpdateWaitReset();
 
-	std::unique_ptr<TextureAnimation> m_playerAnim;
-	std::unique_ptr<TextureAnimation> m_enemyAnim;
+	std::unique_ptr<TextureAnimation> m_playerAnim = nullptr;
+	std::unique_ptr<TextureAnimation> m_enemyAnim = nullptr;
 
-	DemoState m_state;
-	int m_waitTimer;
-	int m_buildingHandle;
+	DemoState m_state = DemoState::StateRun;
+	int m_waitTimer = 0;
+	int m_buildingHandle = -1;
 
-	VECTOR m_playerPos;
-	VECTOR m_enemyPos;
-	VECTOR m_hookPos;
+	VECTOR m_playerPosition = VGet(0.0f, 0.0f, 0.0f);
+	VECTOR m_enemyPosition = VGet(0.0f, 0.0f, 0.0f);
+	VECTOR m_hookPosition = VGet(0.0f, 0.0f, 0.0f);
 
-	float m_playerVelY;
-	float m_enemyVelY;
-	float m_wireLength;
-	float m_pendulumAngle;
-	float m_pendulumAngularVelocity;
-	float m_wireExtendRatio;
-	bool m_isWireVisible;
+	float m_playerVelocityY = 0.0f;
+	float m_enemyVelocityY = 0.0f;
+	float m_wireLength = 0.0f;
+	float m_pendulumAngle = 0.0f;
+	float m_pendulumAngularVelocity = 0.0f;
+	float m_wireExtendRatio = 0.0f;
+	bool m_isWireVisible = false;
 
 	static constexpr float m_enemyGroundY = 850.0f;
 	static constexpr float m_playerGroundY = 900.0f;

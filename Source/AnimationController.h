@@ -27,8 +27,8 @@ public:
     void ChangeState(CharacterState newState);
 
     // 登録された全アニメーションに対して向き（反転フラグ）を一括適用
-    // 入力: rev(反転フラグ) / 出力: なし / 副作用: 全TextureAnimationの反転設定更新
-    void SetEnemyReverse(bool rev);
+    // 入力: reverse(反転フラグ) / 出力: なし / 副作用: 全TextureAnimationの反転設定更新
+    void SetEnemyReverse(bool reverse);
 
     // 現在アクティブなアニメーションの座標同期とフレーム更新
     // 入力: x, y(中心座標) / 出力: なし / 副作用: アニメーション状態の進行
@@ -42,6 +42,6 @@ public:
 
 private:
     std::map<CharacterState, std::unique_ptr<TextureAnimation>> m_animations;
-    CharacterState m_currentState;
-    bool m_isInitialized;
+    CharacterState m_currentState = CharacterState::Idle;
+    bool m_isInitialized = false;
 };

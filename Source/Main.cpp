@@ -7,14 +7,15 @@
 #include "Master.h"
 #include "ObjectManager.h"
 #include "Scene.h"
-#include "MouseManager.h"
+#include "InputManager.h"
+#include "Utility.h"
 #include "Loading.h"
 #include <memory>
 #include <cmath>
 
 // 全システムから参照されるシングルトン的マネージャーの静的インスタンス
-SceneManager* Master::mpSceneManager = new SceneManager();
-SoundManager* Master::mpSoundManager = new SoundManager();
+SceneManager* Master::m_sceneManager = new SceneManager();
+SoundManager* Master::m_soundManager = new SoundManager();
 
 // アプリケーションのエントリーポイントおよびメインループ制御
 // 入力: hInstance, hPrevInstance, lpCmdLine, nCmdShow / 出力: 0(正常終了), -1(初期化失敗) / 副作用: ウィンドウ生成、DXライブラリ初期化・終了、全リソース破棄
@@ -52,16 +53,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		int time = GetNowCount();
 
 		// 更新
-		Master::mpSceneManager->Update();
+		Master::m_sceneManager->Update();
 
 		// 毎フレームのクリック・リリース状態を検知するため入力状態を更新
-		MouseManager::MouseUpdate();
+		InputManager::GetInstance().MouseUpdate();
 
 		// 描画
-		Master::mpSceneManager->Draw();
+		Master::m_sceneManager->Draw();
 		
 
-		if (Master::mpSceneManager->IsQuitRequest())
+		if (Master::m_sceneManager->IsQuitRequest())
 		{
 			break;
 		}
@@ -74,17 +75,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		}
 
 		// イテレーション中の削除による不整合を防ぐため、フレーム終了時に不要オブジェクトを一括安全削除
-		Master::mpSceneManager->GetCurrentScene()->GetObjectManager()->DeleteAll2DIfNeeded();
+		Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->DeleteAll2DIfNeeded();
 
 		// 更新・描画完了後に安全に次フレーム用シーンへの切り替えを行う
-		Master::mpSceneManager->ChangeSceneIfNeeded();
+		Master::m_sceneManager->ChangeSceneIfNeeded();
 	}
 
 	// 静的マネージャーのメモリ解放およびDXライブラリリソースの破棄
-	Master::mpSceneManager->Finalize();
-	delete Master::mpSceneManager;
-	Master::mpSoundManager->Finalize();
-	delete Master::mpSoundManager;
+	Master::m_sceneManager->Finalize();
+	delete Master::m_sceneManager;
+	Master::m_soundManager->Finalize();
+	delete Master::m_soundManager;
 
 	DxLib_End();
 

@@ -1,5 +1,5 @@
 ﻿#include "Button.h"
-#include "MouseManager.h"
+#include "InputManager.h"
 
 Button::Button(int x1, int y1, int x2, int y2, std::string name, int color, int changeColor, int fontHandle)
 	: m_x1(x1)
@@ -25,8 +25,8 @@ void Button::Update()
 		return;
 	}
 
-	int mouseX = (int)MouseManager::GetMouseX();
-	int mouseY = (int)MouseManager::GetMouseY();
+	int mouseX = (int)InputManager::GetInstance().GetMouseX();
+	int mouseY = (int)InputManager::GetInstance().GetMouseY();
 
 	if (mouseX >= m_x1 && mouseX <= m_x2 && mouseY >= m_y1 && mouseY <= m_y2)
 	{
@@ -55,7 +55,7 @@ void Button::Draw()
 		m_scale = 1.1f;
 
 		// 左クリック押下時にクリック状態へ遷移し背景色を変更
-		if (MouseManager::CheckTriggerMouseClick(MOUSE_INPUT_LEFT))
+		if (InputManager::GetInstance().CheckTriggerMouseClick(MOUSE_INPUT_LEFT))
 		{
 			m_isClicked = true;
 			drawColor = m_changeColor;
