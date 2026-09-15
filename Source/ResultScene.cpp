@@ -59,7 +59,7 @@ void ResultScene::Update()
 // 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void ResultScene::Draw()
 {
-	DrawStringToHandle(Utility::SCREEN_WIDTH / 2 - 230, Utility::SCREEN_HEIGHT / 2 - 140, "Game Clear", GetColor(255, 255, 255), m_fontSize90);
+	DrawStringToHandle(Utility::ScreenWidth / 2 - 230, Utility::ScreenHeight / 2 - 140, "Game Clear", GetColor(255, 255, 255), m_fontSize90);
 
 	if (m_titleButton)
 	{

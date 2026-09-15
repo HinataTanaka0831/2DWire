@@ -27,7 +27,7 @@ void Stage::LoadStage(int stageNum)
 		m_stageInfo.goalX = 5600.0f;
 		m_stageInfo.goalY = 1000.0f;
 		m_stageInfo.cameraMinX = 0.0f;
-		m_stageInfo.cameraMaxX = 5600.0f - Utility::SCREEN_WIDTH / 1.0f;
+		m_stageInfo.cameraMaxX = 5600.0f - Utility::ScreenWidth / 1.0f;
 		m_stageInfo.playerMinX = 100.0f;
 		m_stageInfo.playerMaxX = 5600.0f;
 
@@ -58,7 +58,7 @@ void Stage::LoadStage(int stageNum)
 		m_stageInfo.goalX = 9000.0f;
 		m_stageInfo.goalY = 1000.0f;
 		m_stageInfo.cameraMinX = 0.0f;
-		m_stageInfo.cameraMaxX = 9000.0f - Utility::SCREEN_WIDTH / 1.0f;
+		m_stageInfo.cameraMaxX = 9000.0f - Utility::ScreenWidth / 1.0f;
 		m_stageInfo.playerMinX = 100.0f;
 		m_stageInfo.playerMaxX = 9000.0f;
 

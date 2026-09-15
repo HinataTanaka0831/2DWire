@@ -35,7 +35,7 @@ private:
 	std::unique_ptr<Button> m_playRuleButton = nullptr;
 	std::unique_ptr<Button> m_quitButton = nullptr;
 	std::unique_ptr<TitleDemo> m_titleDemo = nullptr;
-	const int DrawX = Utility::SCREEN_WIDTH / 2 - 150;
+	const int DrawX = Utility::ScreenWidth / 2 - 150;
 	const int PlayY = 650;
 	const int PlayRuleY = 750;
 	const int QuitY = 850;

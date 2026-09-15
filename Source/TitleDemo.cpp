@@ -158,7 +158,7 @@ void TitleDemo::UpdateSwing()
 	}
 
 	// 落下等の予期せぬ挙動発生時の自動リカバリ
-	if (m_playerPosition.y > Utility::SCREEN_HEIGHT + 80.0f)
+	if (m_playerPosition.y > Utility::ScreenHeight + 80.0f)
 	{
 		Reset();
 	}
@@ -171,7 +171,7 @@ void TitleDemo::UpdateLandRun()
 	m_enemyPosition.x += m_enemyRunSpeed;
 	m_enemyPosition.y = m_enemyGroundY;
 
-	if (m_playerPosition.x > Utility::SCREEN_WIDTH + 140.0f && m_enemyPosition.x > Utility::SCREEN_WIDTH + 200.0f)
+	if (m_playerPosition.x > Utility::ScreenWidth + 140.0f && m_enemyPosition.x > Utility::ScreenWidth + 200.0f)
 	{
 		m_state = DemoState::StateWaitReset;
 		m_waitTimer = 40;

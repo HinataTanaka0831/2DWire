@@ -28,7 +28,7 @@ public:
 private:
 	std::unique_ptr<Button> m_titleButton = nullptr;
 	std::unique_ptr<Button> m_quitButton = nullptr;
-	const int DrawX = Utility::SCREEN_WIDTH / 2 - 150;
+	const int DrawX = Utility::ScreenWidth / 2 - 150;
 	const int TitleY = 750;
 	const int QuitY = 850;
 };

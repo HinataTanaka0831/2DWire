@@ -45,12 +45,12 @@ public:
 
 	// 被弾によるHP減算とゲームオーバー遷移トリガー
 	// 入力: damage(ダメージ量) / 出力: なし / 副作用: HP減算、HP<=0時のSCENE_GAMEOVER遷移要求
-	void PDamage(int damage);
+	void Damage(int damage);
 
-	float GetVelocityX() const { return m_velocityX; }
-	bool IsFacingLeft() const { return m_facingLeft; }
-	float GetAngularAcceleration() const { return m_angularAcceleration; } 
-	bool IsWireActive() const { return m_isWireActive; } 
+	float GetVelocityX()  { return m_velocityX; }
+	bool IsFacingLeft()  { return m_facingLeft; }
+	float GetAngularAcceleration() { return m_angularAcceleration; } 
+	bool IsWireActive() { return m_isWireActive; } 
 	bool IsDead() const { return m_isDead; }
 
 private:      

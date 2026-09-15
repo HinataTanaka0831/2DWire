@@ -23,7 +23,7 @@ SceneManager::~SceneManager()
 void SceneManager::Initialize()
 {
 	// 画面シェイクや全画面ポストエフェクト合成用の中間スクリーンバッファを生成
-	m_workScreenHandle = MakeScreen(Utility::SCREEN_WIDTH, Utility::SCREEN_HEIGHT, TRUE);
+	m_workScreenHandle = MakeScreen(Utility::ScreenWidth, Utility::ScreenHeight, TRUE);
 	m_nextSceneType = SCENE_TYPE::SCENE_TITLE;
 	ChangeSceneIfNeeded();
 }
@@ -225,7 +225,7 @@ void SceneManager::DrawTransitionEffects()
 	}
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-	DrawBox(0, 0, Utility::SCREEN_WIDTH, Utility::SCREEN_HEIGHT, color, TRUE);
+	DrawBox(0, 0, Utility::ScreenWidth, Utility::ScreenHeight, color, TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 

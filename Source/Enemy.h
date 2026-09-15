@@ -35,7 +35,7 @@ public:
 
 	// プレイヤーからの被弾処理と死亡時削除フラグ設定
 	// 入力: damage(ダメージ量) / 出力: なし / 副作用: hp減算、被弾点滅タイマー開始、SetDeleteFlag
-	void EDamage(int damage);
+	void Damage(int damage);
 
 	// 敵同士が同じ座標に密集して固まるのを防ぐ斥力（位置補正）処理
 	// 入力: なし / 出力: なし / 副作用: mvPositionの微小補正

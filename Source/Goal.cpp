@@ -27,8 +27,8 @@ void Goal::Update()
 // 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void Goal::Draw()
 {
-	int drawX = (int)(m_position.x - gCameraX);
-	int drawY = (int)(m_position.y - gCameraY);
+	int drawX = (int)(m_position.x - g_cameraX);
+	int drawY = (int)(m_position.y - g_cameraY);
 
 	int left = drawX - m_width / 2;
 	int top = drawY - m_height / 2;

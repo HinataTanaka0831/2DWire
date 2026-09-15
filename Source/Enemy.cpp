@@ -7,8 +7,6 @@
 #include "Player.h"
 #include "Texture.h"
 
-static bool gCurrentEnemyFlip = false;
-extern bool gEnemyReverseX;
 
 Enemy::Enemy(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool type)
 	: Object2D(fileName, initPosition, allNum, numX, numY, interval, scale, type)
@@ -93,7 +91,7 @@ void Enemy::Draw()
 		SetDrawBright(255, 96, 96);
 	}
 
-	m_animController.Draw(gCameraX, gCameraY);
+	m_animController.Draw(g_cameraX, g_cameraY);
 	SetDrawBright(255, 255, 255);
 	HPGaugeDraw();
 }
@@ -125,7 +123,7 @@ void Enemy::Move()
 			// クールダウン満了時にプレイヤーへダメージ適用
 			if (m_attackCooldown <= 0)
 			{
-				pPlayer->PDamage(5);
+				pPlayer->Damage(5);
 				m_attackCooldown = m_attackInterval;
 			}
 		}
@@ -159,7 +157,7 @@ bool Enemy::IsScreenOut()
 
 // プレイヤーからの被弾処理と死亡時削除フラグ設定
 // 入力: damage(ダメージ量) / 出力: なし / 副作用: hp減算、被弾点滅タイマー開始、SetDeleteFlag
-void Enemy::EDamage(int damage)
+void Enemy::Damage(int damage)
 {
 	m_hp -= damage;
 	m_hitFlashTimer = HitFlashDuration;
@@ -212,8 +210,8 @@ void Enemy::ResolveEnemyOverlap()
 // 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void Enemy::HPGaugeDraw()
 {
-	int gaugeX = (int)(m_position.x - gCameraX) - 110;
-	int gaugeY = (int)(m_position.y - gCameraY) - 190;
+	int gaugeX = (int)(m_position.x - g_cameraX) - 110;
+	int gaugeY = (int)(m_position.y - g_cameraY) - 190;
 
 	DrawBox(gaugeX, gaugeY, gaugeX + m_width, gaugeY + m_gaugeHeight, GetColor(0, 0, 0), TRUE);
 	DrawBox(gaugeX, gaugeY, gaugeX + m_damageWidth, gaugeY + m_gaugeHeight, GetColor(255, 0, 0), TRUE);

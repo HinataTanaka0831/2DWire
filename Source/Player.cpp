@@ -67,12 +67,12 @@ void Player::Draw()
 	// ワイヤー係留中はプレイヤーとターゲット間にラインを描画
 	if (m_isWireActive)
 	{
-		DrawLine((int)(m_position.x - gCameraX), (int)(m_position.y - gCameraY),
-		         (int)(m_wireTargetPos.x - gCameraX), (int)(m_wireTargetPos.y - gCameraY),
+		DrawLine((int)(m_position.x - g_cameraX), (int)(m_position.y - g_cameraY),
+		         (int)(m_wireTargetPos.x - g_cameraX), (int)(m_wireTargetPos.y - g_cameraY),
 		         GetColor(200, 255, 255), 3);
 	}
 
-	m_animController.Draw(gCameraX, gCameraY);
+	m_animController.Draw(g_cameraX, g_cameraY);
 	HPGaugeDraw();
 }
 
@@ -90,8 +90,8 @@ void Player::Move()
 		std::vector<Object2D*> targets = Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::WireTarget2D);
 		
 		// スクロールに依存せず判定するためスクリーン座標をワールド座標へ変換
-		float worldClickX = mouseX + gCameraX;
-		float worldClickY = mouseY + gCameraY; 
+		float worldClickX = mouseX + g_cameraX;
+		float worldClickY = mouseY + g_cameraY; 
 		
 		for (auto* obj : targets)
 		{
@@ -224,8 +224,8 @@ void Player::Move()
 				pEnemy->GetPosition(),
 				pEnemy->GetRadius()))
 			{
-				float dirToEnemy = pEnemy->GetPosition().x - m_position.x;
-				float dirToEnemyY = pEnemy->GetPosition().y - m_position.y;
+				float directionToEnemyX = pEnemy->GetPosition().x - m_position.x;
+				float directionToEnemyY = pEnemy->GetPosition().y - m_position.y;
 
 				// ワイヤー移動中に敵上部へ接触した際は頭上を滑走させる演出
 				bool isOnTopOfEnemy = m_position.y < pEnemy->GetPosition().y;
@@ -256,8 +256,9 @@ void Player::Move()
 
 				bool blocked = false;
 
-				if ((dirToEnemy > 0.0f && moveX > 0.0f) ||
-					(dirToEnemy < 0.0f && moveX < 0.0f))
+				// 敵が接触し衝突した方向にいる場合は進めず、反対方向には移動することできるようにする
+				if ((directionToEnemyX > 0.0f && moveX > 0.0f) ||
+					(directionToEnemyX < 0.0f && moveX < 0.0f))
 				{
 					m_position.x = prevPosition.x;
 					if (!m_isWireActive)
@@ -267,8 +268,9 @@ void Player::Move()
 					blocked = true;
 				}
 
-				if ((dirToEnemyY > 0.0f && moveY > 0.0f) ||
-					(dirToEnemyY < 0.0f && moveY < 0.0f))
+				// 敵上部にいる場合にはプレイヤーが移動できない。ジャンプは行えるようにする。
+				if ((directionToEnemyY > 0.0f && moveY > 0.0f) ||
+					(directionToEnemyY < 0.0f && moveY < 0.0f))
 				{
 					m_position.y = prevPosition.y;
 					m_isJump = false;
@@ -279,6 +281,7 @@ void Player::Move()
 					blocked = true;
 				}
 
+				// 衝突している場合のワイヤーのたわみ波状を防ぐため固定長と角度を再同期
 				if (blocked && m_isWireActive && m_wireLength > 0.0f)
 				{
 					float diffX = m_position.x - m_wireTargetPos.x;
@@ -290,7 +293,7 @@ void Player::Move()
 
 				if (m_damageCooldown <= 0)
 				{
-					PDamage(1);
+					Damage(3);
 					m_damageCooldown = DamageInterval;
 				}
 
@@ -378,7 +381,7 @@ void Player::Attack()
 			(float)pEnemy->GetSizeY()
 		))
 		{
-			pEnemy->EDamage(10);
+			pEnemy->Damage(10);
 			m_hasHitThisAttack = true;
 			break;
 		}
@@ -387,8 +390,8 @@ void Player::Attack()
 
 void Player::HPGaugeDraw()
 {
-	int gaugeX = (int)(m_position.x - gCameraX) - 110;
-	int gaugeY = (int)(m_position.y - gCameraY) - 160;
+	int gaugeX = (int)(m_position.x - g_cameraX) - 110;
+	int gaugeY = (int)(m_position.y - g_cameraY) - 160;
 
 	DrawBox(gaugeX, gaugeY, gaugeX + m_width, gaugeY + m_gaugeHeight, GetColor(0, 0, 0), TRUE);
 	DrawBox(gaugeX, gaugeY, gaugeX + m_damageWidth, gaugeY + m_gaugeHeight, GetColor(255, 0, 0), TRUE);
@@ -430,7 +433,7 @@ void Player::HPGaugeUpdate()
 	m_gaugeWidth = (int)((float)displayHp / m_maxHP * m_width);
 }
 
-void Player::PDamage(int damage)
+void Player::Damage(int damage)
 {
 	m_hp -= damage;
 	if (m_hp <= 0)

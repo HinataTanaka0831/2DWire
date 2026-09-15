@@ -4,7 +4,7 @@
 #include "InputManager.h"
 #include "Button.h"
 
-;
+
 GameOverScene::GameOverScene()
 	: Scene()
 {
@@ -55,7 +55,7 @@ void GameOverScene::Update()
 
 void GameOverScene::Draw()
 {
-	DrawStringToHandle(Utility::SCREEN_WIDTH / 2 - 230, Utility::SCREEN_HEIGHT / 2 - 140, "Game Over", GetColor(255, 255, 255), m_fontSize90);
+	DrawStringToHandle(Utility::ScreenWidth / 2 - 230, Utility::ScreenHeight / 2 - 140, "Game Over", GetColor(255, 255, 255), m_fontSize90);
 
 	if (m_titleButton)
 	{

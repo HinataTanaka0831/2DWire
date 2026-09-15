@@ -32,7 +32,7 @@ public:
 
 private:
 	std::unique_ptr<Button> m_backButton = nullptr;
-	const int DrawX = Utility::SCREEN_WIDTH / 2 - 150;
+	const int DrawX = Utility::ScreenWidth / 2 - 150;
 	const int BackY = 900;
 	int m_moveLeftHandle = -1;
 	int m_moveRightHandle = -1;

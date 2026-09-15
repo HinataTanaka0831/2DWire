@@ -10,9 +10,9 @@
 #include "Goal.h"
 #include <cmath>
 
-float gCameraX = 0.0f;
-float gCameraY = 0.0f;
-int gCurrentStage = 1;
+float g_cameraX = 0.0f;
+float g_cameraY = 0.0f;
+int g_currentStage = 1;
 
 GameScene::GameScene()
 	: Scene()
@@ -38,7 +38,7 @@ void GameScene::Initialize()
 void GameScene::LoadStageData()
 {
 	m_stage = new Stage();
-	m_stage->LoadStage(gCurrentStage);
+	m_stage->LoadStage(g_currentStage);
 	m_stageInfo = m_stage->GetStageInfo();
 
 	m_player = new Player(
@@ -59,26 +59,26 @@ void GameScene::Update()
 		float playerY = m_player->GetPosition().y;
 
 		// プレイヤー進行方向の前方視界を確保するため画面左1/3位置にプレイヤーを配置
-		float targetCameraX = playerX - Utility::SCREEN_WIDTH / 3.0f;
-		gCameraX = targetCameraX;
+		float targetCameraX = playerX - Utility::ScreenWidth / 3.0f;
+		g_cameraX = targetCameraX;
 
 		// 上空へのジャンプ時にスムーズにカメラを追従（地面以下への潜り込みは防止）
-		float screenCenterY = Utility::SCREEN_HEIGHT / 1.5f;
+		float screenCenterY = Utility::ScreenHeight / 1.5f;
 		float targetCameraY = playerY - screenCenterY;
-		if (gCameraY > Utility::SCREEN_HEIGHT)
+		if (g_cameraY > Utility::ScreenHeight)
 		{
-			gCameraY = (float)Utility::SCREEN_HEIGHT;
+			g_cameraY = (float)Utility::ScreenHeight;
 		}
-		gCameraY += (targetCameraY - gCameraY) * 0.1f;
+		g_cameraY += (targetCameraY - g_cameraY) * 0.1f;
 
 		// カメラおよびプレイヤーの移動をステージ境界内に制限
-		if (gCameraX < m_stageInfo.cameraMinX)
+		if (g_cameraX < m_stageInfo.cameraMinX)
 		{
-			gCameraX = m_stageInfo.cameraMinX;
+			g_cameraX = m_stageInfo.cameraMinX;
 		}
-		if (gCameraX > m_stageInfo.cameraMaxX)
+		if (g_cameraX > m_stageInfo.cameraMaxX)
 		{
-			gCameraX = m_stageInfo.cameraMaxX;
+			g_cameraX = m_stageInfo.cameraMaxX;
 		}
 
 		if (playerX < m_stageInfo.playerMinX)
@@ -121,9 +121,9 @@ void GameScene::Update()
 				{
 					// 多重遷移防止フラグを立ててステージ進行を分岐
 					mIsGoalReached = true;
-					if (gCurrentStage < MaxStage)
+					if (g_currentStage < MaxStage)
 					{
-						gCurrentStage++;
+						g_currentStage++;
 						Master::m_sceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_GAME);
 					}
 					else
@@ -142,12 +142,12 @@ void GameScene::Update()
 void GameScene::Draw()
 {
 	// 深度感を演出する空の縦グラデーション背景
-	for (int y = 0; y < Utility::SCREEN_HEIGHT; y++)
+	for (int y = 0; y < Utility::ScreenHeight; y++)
 	{
-		int r = (int)(10 + 30.0f * (1.0f - (float)y / Utility::SCREEN_HEIGHT));
-		int g = (int)(10 + 50.0f * (1.0f - (float)y / Utility::SCREEN_HEIGHT));
-		int b = (int)(30 + 120.0f * (1.0f - (float)y / Utility::SCREEN_HEIGHT));
-		DrawLine(0, y, Utility::SCREEN_WIDTH, y, GetColor(r, g, b));
+		int r = (int)(10 + 30.0f * (1.0f - (float)y / Utility::ScreenHeight));
+		int g = (int)(10 + 50.0f * (1.0f - (float)y / Utility::ScreenHeight));
+		int b = (int)(30 + 120.0f * (1.0f - (float)y / Utility::ScreenHeight));
+		DrawLine(0, y, Utility::ScreenWidth, y, GetColor(r, g, b));
 	}
 
 	// 視差（パララックス）効果を適用した都市遠景のループ描画
@@ -157,16 +157,16 @@ void GameScene::Draw()
 	if (bgWidth > 0)
 	{
 		float scrollSpeed = 0.5f;
-		int offsetX = (int)(gCameraX * scrollSpeed) % bgWidth;
+		int offsetX = (int)(g_cameraX * scrollSpeed) % bgWidth;
 		if (offsetX < 0)
 		{
 			offsetX += bgWidth;
 		}
 
-		int bgOffsetY = (int)gCameraY;
+		int bgOffsetY = (int)g_cameraY;
 		const int bgYOffset = 120;
 
-		for (int x = -offsetX; x < Utility::SCREEN_WIDTH; x += bgWidth)
+		for (int x = -offsetX; x < Utility::ScreenWidth; x += bgWidth)
 		{
 			if (m_backGroundHandle != -1)
 			{
