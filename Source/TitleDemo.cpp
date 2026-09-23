@@ -7,16 +7,16 @@ TitleDemo::TitleDemo()
 {
 	// デモ用のため本編Player検索を無効化(type=false)して直接アニメーションを制御
 	m_playerAnim = std::make_unique<TextureAnimation>(
-		"Resource/Player/anim_walk.png",
+		"Resource/Player/player_walk.png",
 		VGet(0.0f, 0.0f, 0.0f),
 		4, 4, 1, 7, 1.0f, false);
 
 	m_enemyAnim = std::make_unique<TextureAnimation>(
-		"Resource/Enemy/anim_monster01walk.png",
+		"Resource/Enemy/enemy_monster01_walk.png",
 		VGet(0.0f, 0.0f, 0.0f),
 		6, 6, 1, 8, 1.0f, false);
 
-	m_buildingHandle = LoadGraph("Resource/WireTarget/Building.png");
+	m_buildingHandle = LoadGraph("Resource/WireTarget/wiretarget_building02.png");
 
 	Reset();
 }
@@ -158,7 +158,7 @@ void TitleDemo::UpdateSwing()
 	}
 
 	// 落下等の予期せぬ挙動発生時の自動リカバリ
-	if (m_playerPosition.y > Utility::SCREEN_HEIGHT + 80.0f)
+	if (m_playerPosition.y > Utility::ScreenHeight + 80.0f)
 	{
 		Reset();
 	}
@@ -171,7 +171,7 @@ void TitleDemo::UpdateLandRun()
 	m_enemyPosition.x += m_enemyRunSpeed;
 	m_enemyPosition.y = m_enemyGroundY;
 
-	if (m_playerPosition.x > Utility::SCREEN_WIDTH + 140.0f && m_enemyPosition.x > Utility::SCREEN_WIDTH + 200.0f)
+	if (m_playerPosition.x > Utility::ScreenWidth + 140.0f && m_enemyPosition.x > Utility::ScreenWidth + 200.0f)
 	{
 		m_state = DemoState::StateWaitReset;
 		m_waitTimer = 40;
@@ -193,7 +193,7 @@ void TitleDemo::Draw()
 {
 	if (m_buildingHandle != -1)
 	{
-		DrawRotaGraph((int)m_hookPosition.x, (int)m_hookPosition.y + 100, 1.0f, 0.0f, m_buildingHandle, TRUE);
+		DrawExtendGraph((int)m_hookPosition.x - 200, (int)m_hookPosition.y - 300, (int)m_hookPosition.x + 437 / 2, (int)m_hookPosition.y + 1526 / 2.4, m_buildingHandle, TRUE);
 	}
 
 

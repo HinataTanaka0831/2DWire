@@ -67,12 +67,12 @@ void Player::Draw()
 	// ワイヤー係留中はプレイヤーとターゲット間にラインを描画
 	if (m_isWireActive)
 	{
-		DrawLine((int)(m_position.x - gCameraX), (int)(m_position.y - gCameraY),
-		         (int)(m_wireTargetPos.x - gCameraX), (int)(m_wireTargetPos.y - gCameraY),
+		DrawLine((int)(m_position.x - g_cameraX), (int)(m_position.y - g_cameraY),
+		         (int)(m_wireTargetPos.x - g_cameraX), (int)(m_wireTargetPos.y - g_cameraY),
 		         GetColor(200, 255, 255), 3);
 	}
 
-	m_animController.Draw(gCameraX, gCameraY);
+	m_animController.Draw(g_cameraX, g_cameraY);
 	HPGaugeDraw();
 }
 
@@ -90,8 +90,8 @@ void Player::Move()
 		std::vector<Object2D*> targets = Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::WireTarget2D);
 		
 		// スクロールに依存せず判定するためスクリーン座標をワールド座標へ変換
-		float worldClickX = mouseX + gCameraX;
-		float worldClickY = mouseY + gCameraY; 
+		float worldClickX = mouseX + g_cameraX;
+		float worldClickY = mouseY + g_cameraY; 
 		
 		for (auto* obj : targets)
 		{
@@ -387,8 +387,8 @@ void Player::Attack()
 
 void Player::HPGaugeDraw()
 {
-	int gaugeX = (int)(m_position.x - gCameraX) - 110;
-	int gaugeY = (int)(m_position.y - gCameraY) - 160;
+	int gaugeX = (int)(m_position.x - g_cameraX) - 110;
+	int gaugeY = (int)(m_position.y - g_cameraY) - 160;
 
 	DrawBox(gaugeX, gaugeY, gaugeX + m_width, gaugeY + m_gaugeHeight, GetColor(0, 0, 0), TRUE);
 	DrawBox(gaugeX, gaugeY, gaugeX + m_damageWidth, gaugeY + m_gaugeHeight, GetColor(255, 0, 0), TRUE);

@@ -39,8 +39,8 @@ void TitleScene::Initialize()
 	}
 
 	// 前シーンのカメラオフセットがタイトル画面の描画に影響しないよう初期化
-	gCameraX = 0.0f;
-	gCameraY = 0.0f;
+	g_cameraX = 0.0f;
+	g_cameraY = 0.0f;
 
 	if (m_titleDemo == nullptr)
 	{
@@ -56,9 +56,9 @@ void TitleScene::Update()
 
 		if (m_playButton->IsClick())
 		{
-			gCurrentStage = 1;
+			g_currentStage = 1;
 			Master::m_soundManager->PlaySE(SoundManager::SE_DECIDE);
-			Master::m_sceneManager->SetNextScene(SceneManager::SCENE_GAME);
+			Master::m_sceneManager->SetNextScene(SceneManager::SceneType::SceneGameStage1);
 		}
 	}
 
@@ -69,7 +69,7 @@ void TitleScene::Update()
 		if (m_playRuleButton->IsClick())
 		{
 			Master::m_soundManager->PlaySE(SoundManager::SE_DECIDE);
-			Master::m_sceneManager->SetNextScene(SceneManager::SCENE_GAME_RULE);
+			Master::m_sceneManager->SetNextScene(SceneManager::SceneGameRule);
 		}
 	}
 
@@ -100,16 +100,16 @@ void TitleScene::Draw()
 	if (bgWidth > 0)
 	{
 		float scrollSpeed = 0.5f;
-		int offsetX = (int)(gCameraX * scrollSpeed) % bgWidth;
+		int offsetX = (int)(g_cameraX * scrollSpeed) % bgWidth;
 
 		if (offsetX < 0)
 		{
 			offsetX += bgWidth;
 		}
 
-		int bgOffsetY = (int)gCameraY;
+		int bgOffsetY = (int)g_cameraY;
 
-		for (int x = -offsetX; x < Utility::SCREEN_WIDTH; x += bgWidth)
+		for (int x = -offsetX; x < Utility::ScreenWidth; x += bgWidth)
 		{
 			DrawGraph(x, -bgOffsetY, m_backGroundHandle, TRUE);
 		}

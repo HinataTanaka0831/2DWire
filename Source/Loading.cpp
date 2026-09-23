@@ -71,21 +71,21 @@ const char* InitializeSceneManagerTask::GetTaskName() const {
 // ========================
 // InitializeLoadStageData 実装
 // ========================
-InitializeLoadStageData::InitializeLoadStageData() {}
+InitializeLoadData::InitializeLoadData() {}
 
 // 現在のゲームシーンに対してステージ地形・オブジェクトデータの構築を要求
 // 入力: なし / 出力: 0 / 副作用: GameSceneのステージデータロード実行
-int InitializeLoadStageData::Execute() {
+int InitializeLoadData::Execute() {
     GameScene* pGameScene = dynamic_cast<GameScene*>(Master::m_sceneManager->GetCurrentScene());
     if (pGameScene != nullptr)
     {
-        pGameScene->LoadStageData();
+        pGameScene->LoadData();
     }
     return 0;
 }
 
-const char* InitializeLoadStageData::GetTaskName() const {
-    return "Initialize LoadStageData";
+const char* InitializeLoadData::GetTaskName() const {
+    return "Initialize LoadData";
 }
 
 // ========================

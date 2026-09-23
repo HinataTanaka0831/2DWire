@@ -57,9 +57,6 @@
     <ClCompile Include="Source\Enemy.cpp">
       <Filter>ソース ファイル\Object</Filter>
     </ClCompile>
-    <ClCompile Include="Source\GameOverScene.cpp">
-      <Filter>ソース ファイル\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
@@ -133,9 +130,6 @@
     </ClInclude>
     <ClInclude Include="Source\Enemy.h">
       <Filter>ヘッダー ファイル\Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\GameOverScene.h">
-      <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameRuleScene.h">
       <Filter>ヘッダー ファイル\Scene</Filter>

@@ -26,7 +26,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	ChangeWindowMode(true);
 
 	// ゲーム描画解像度を固定仕様（1920x1080）に設定
-	SetGraphMode(Utility::SCREEN_WIDTH, Utility::SCREEN_HEIGHT, 32);
+	SetGraphMode(Utility::ScreenWidth, Utility::ScreenHeight, 32);
 
 	// DXライブラリ初期化失敗時はプロセスを終了し後続の不正アクセスを防ぐ
 	if(DxLib_Init() == -1)

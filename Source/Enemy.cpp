@@ -7,8 +7,6 @@
 #include "Player.h"
 #include "Texture.h"
 
-static bool gCurrentEnemyFlip = false;
-extern bool gEnemyReverseX;
 
 Enemy::Enemy(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool type)
 	: Object2D(fileName, initPosition, allNum, numX, numY, interval, scale, type)
@@ -93,7 +91,7 @@ void Enemy::Draw()
 		SetDrawBright(255, 96, 96);
 	}
 
-	m_animController.Draw(gCameraX, gCameraY);
+	m_animController.Draw(g_cameraX, g_cameraY);
 	SetDrawBright(255, 255, 255);
 	HPGaugeDraw();
 }
@@ -212,8 +210,8 @@ void Enemy::ResolveEnemyOverlap()
 // 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void Enemy::HPGaugeDraw()
 {
-	int gaugeX = (int)(m_position.x - gCameraX) - 110;
-	int gaugeY = (int)(m_position.y - gCameraY) - 190;
+	int gaugeX = (int)(m_position.x - g_cameraX) - 110;
+	int gaugeY = (int)(m_position.y - g_cameraY) - 190;
 
 	DrawBox(gaugeX, gaugeY, gaugeX + m_width, gaugeY + m_gaugeHeight, GetColor(0, 0, 0), TRUE);
 	DrawBox(gaugeX, gaugeY, gaugeX + m_damageWidth, gaugeY + m_gaugeHeight, GetColor(255, 0, 0), TRUE);

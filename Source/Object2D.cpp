@@ -67,12 +67,12 @@ void Object2D::Draw()
 {
 	if (m_texture != nullptr)
 	{
-		m_texture->Draw(gCameraX, gCameraY);
+		m_texture->Draw(g_cameraX, g_cameraY);
 	}
 
 	if (m_textureAnimation != nullptr)
 	{
-		m_textureAnimation->Draw(gCameraX, gCameraY);
+		m_textureAnimation->Draw(g_cameraX, g_cameraY);
 	}
 }
 

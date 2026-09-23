@@ -45,7 +45,7 @@ void GameRuleScene::Update()
 		if (m_backButton->IsClick())
 		{
 			Master::m_soundManager->PlaySE(SoundManager::SE_DECIDE);
-			Master::m_sceneManager->SetNextScene(SceneManager::SCENE_TYPE::SCENE_TITLE);
+			Master::m_sceneManager->SetNextScene(SceneManager::SceneType::SceneTitle);
 		}
 	}
 	Scene::Update();
@@ -53,16 +53,16 @@ void GameRuleScene::Update()
 
 void GameRuleScene::Draw()
 {
-	DrawBox(Utility::SCREEN_WIDTH / 2 - 850, 50, Utility::SCREEN_WIDTH / 2 + 850, 1000, GetColor(255, 255, 255), false);
+	DrawBox(Utility::ScreenWidth / 2 - 850, 50, Utility::ScreenWidth / 2 + 850, 1000, GetColor(255, 255, 255), false);
 
-	DrawStringToHandle(Utility::SCREEN_WIDTH / 2 - 400, 100, "～～ 操作説明 ～～", GetColor(255, 255, 255), m_fontSize90);
+	DrawStringToHandle(Utility::ScreenWidth / 2 - 400, 100, "～～ 操作説明 ～～", GetColor(255, 255, 255), m_fontSize90);
 
 	DrawExtendGraph(480, 350, 480 + 210 / 2, 350 + 214 / 2, m_moveLeftHandle, true);
 	DrawExtendGraph(730, 350, 730 + 209 / 2, 350 + 214 / 2, m_moveRightHandle, true);
-	DrawStringToHandle(Utility::SCREEN_WIDTH / 2 - 500, 470, "左移動　　右移動", GetColor(255, 255, 255), m_fontSize50);
+	DrawStringToHandle(Utility::ScreenWidth / 2 - 500, 470, "左移動　　右移動", GetColor(255, 255, 255), m_fontSize50);
 
 	DrawExtendGraph(510, 620, 510 + 614 / 2, 620 + 186 / 2, m_jumpHandle, true);
-	DrawStringToHandle(Utility::SCREEN_WIDTH / 2 - 391, Utility::SCREEN_HEIGHT / 2 + 190, "ジャンプ", GetColor(255, 255, 255), m_fontSize50);
+	DrawStringToHandle(Utility::ScreenWidth / 2 - 391, Utility::ScreenHeight / 2 + 190, "ジャンプ", GetColor(255, 255, 255), m_fontSize50);
 
 	if (m_backButton)
 	{

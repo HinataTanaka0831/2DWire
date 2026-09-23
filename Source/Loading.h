@@ -42,9 +42,9 @@ public:
 };
 
 // ゲームステージデータ読み込みタスク
-class InitializeLoadStageData : public ILoadTask {
+class InitializeLoadData : public ILoadTask {
 public:
-    InitializeLoadStageData();
+    InitializeLoadData();
     int Execute() override;
     const char* GetTaskName() const override;
 };

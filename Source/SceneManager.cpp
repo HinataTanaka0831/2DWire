@@ -4,15 +4,10 @@
 #include "GameScene.h"
 #include "ResultScene.h"
 #include "GameRuleScene.h"
-#include "GameOverScene.h"
 #include "Utility.h"
 #include <cstdlib>
 
 SceneManager::SceneManager()
-	: m_sceneType(SCENE_TYPE::SCENE_NONE)
-	, m_nextSceneType(SCENE_TYPE::SCENE_NONE)
-	, m_currentScene(nullptr)
-	, m_transitionType(TransitionType::NORMAL_BLACK)
 {
 }
 
@@ -23,8 +18,8 @@ SceneManager::~SceneManager()
 void SceneManager::Initialize()
 {
 	// 画面シェイクや全画面ポストエフェクト合成用の中間スクリーンバッファを生成
-	m_workScreenHandle = MakeScreen(Utility::SCREEN_WIDTH, Utility::SCREEN_HEIGHT, TRUE);
-	m_nextSceneType = SCENE_TYPE::SCENE_TITLE;
+	m_workScreenHandle = MakeScreen(Utility::ScreenWidth, Utility::ScreenHeight, TRUE);
+	m_nextSceneType = SceneType::SceneTitle;
 	ChangeSceneIfNeeded();
 }
 
@@ -89,20 +84,20 @@ void SceneManager::ChangeSceneIfNeeded()
 
 	switch (m_sceneType)
 	{
-	case SCENE_TYPE::SCENE_TITLE:
+	case SceneType::SceneTitle:
 		m_currentScene = new TitleScene();
 		break;
-	case SCENE_TYPE::SCENE_GAME:
+	case SceneType::SceneGameStage1:
 		m_currentScene = new GameScene();
 		break;
-	case SCENE_TYPE::SCENE_RESULT:
+	case SceneType::SceneGameStage2:
+		m_currentScene = new GameScene();
+		break;
+	case SceneType::SceneResult:
 		m_currentScene = new ResultScene();
 		break;
-	case SCENE_TYPE::SCENE_GAME_RULE:
+	case SceneType::SceneGameRule:
 		m_currentScene = new GameRuleScene();
-		break;
-	case SCENE_TYPE::SCENE_GAMEOVER:
-		m_currentScene = new GameOverScene();
 		break;
 	default:
 		break;
@@ -114,40 +109,47 @@ void SceneManager::ChangeSceneIfNeeded()
 	}
 }
 
-void SceneManager::SetNextScene(SCENE_TYPE next)
+void SceneManager::SetNextScene(SceneType next)
 {
 	if (m_sceneType == next) return;
 
 	m_nextSceneType = next;
 
 	// シーンの演出意図に応じてトランジション種別を分岐
-	if (next == SCENE_TYPE::SCENE_GAME)
+	if (next == SceneType::SceneGameStage1 || next == SceneType::SceneGameStage2)
 	{
-		m_transitionType = TransitionType::WHITE_FLASH;
+		m_transitionType = TransitionType::WhiteFlash;
 	}
-	else if (next == SCENE_TYPE::SCENE_GAMEOVER)
+	else if (next == SceneType::SceneResult && m_resultType == ResultType::ResultGameOver)
 	{
-		m_transitionType = TransitionType::RED_FLASH_SHAKE;
+		m_transitionType = TransitionType::RedFlashShake;
 	}
 	else
 	{
-		m_transitionType = TransitionType::NORMAL_BLACK;
+		m_transitionType = TransitionType::NormalBlack;
 	}
 
 	m_isTransition = true;
-	m_phase = TransitionPhase::TRANS_FADEOUT;
+	m_phase = TransitionPhase::TransFadeOut;
 	m_transitionTimer = 0;
 	m_shakeOffsetX = 0;
 	m_shakeOffsetY = 0;
+}
+
+void SceneManager::SetResultType(ResultType result)
+{
+	if (m_resultType == result) return;
+
+	m_resultType = result;
 }
 
 void SceneManager::UpdateTransition()
 {
 	m_transitionTimer++;
 
-	if (m_transitionType == TransitionType::RED_FLASH_SHAKE)
+	if (m_transitionType == TransitionType::RedFlashShake)
 	{
-		if (m_phase == TransitionPhase::TRANS_FADEOUT)
+		if (m_phase == TransitionPhase::TransFadeOut)
 		{
 			// 被弾・死亡の衝撃を表現するため時間経過とともに減衰するランダム振動を生成
 			int currentTime = m_transitionTimer;
@@ -175,20 +177,20 @@ void SceneManager::UpdateTransition()
 
 	switch (m_phase)
 	{
-	case TransitionPhase::TRANS_FADEOUT:
+	case TransitionPhase::TransFadeOut:
 		if (m_transitionTimer >= TransitionTime)
 		{
 			ChangeSceneIfNeeded();
-			m_phase = TransitionPhase::TRANS_FADEIN;
+			m_phase = TransitionPhase::TransFadeIn;
 			m_transitionTimer = 0;
 		}
 		break;
 
-	case TransitionPhase::TRANS_FADEIN:
+	case TransitionPhase::TransFadeIn:
 		if (m_transitionTimer >= TransitionTime)
 		{
 			m_isTransition = false;
-			m_phase = TransitionPhase::TRANS_NONE;
+			m_phase = TransitionPhase::TransNone;
 			m_shakeOffsetX = 0;
 			m_shakeOffsetY = 0;
 		}
@@ -199,11 +201,11 @@ void SceneManager::UpdateTransition()
 void SceneManager::DrawTransitionEffects()
 {
 	int alpha = 0;
-	if (m_phase == TransitionPhase::TRANS_FADEOUT)
+	if (m_phase == TransitionPhase::TransFadeOut)
 	{
 		alpha = (m_transitionTimer * 255) / TransitionTime;
 	}
-	else if (m_phase == TransitionPhase::TRANS_FADEIN)
+	else if (m_phase == TransitionPhase::TransFadeIn)
 	{
 		alpha = ((TransitionTime - m_transitionTimer) * 255) / TransitionTime;
 	}
@@ -212,20 +214,20 @@ void SceneManager::DrawTransitionEffects()
 
 	switch (m_transitionType)
 	{
-	case TransitionType::WHITE_FLASH:
+	case TransitionType::WhiteFlash:
 		color = GetColor(255, 255, 255);
 		break;
-	case TransitionType::RED_FLASH_SHAKE:
+	case TransitionType::RedFlashShake:
 		color = GetColor(255, 0, 0);
 		break;
-	case TransitionType::NORMAL_BLACK:
+	case TransitionType::NormalBlack:
 	default:
 		color = GetColor(0, 0, 0);
 		break;
 	}
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
-	DrawBox(0, 0, Utility::SCREEN_WIDTH, Utility::SCREEN_HEIGHT, color, TRUE);
+	DrawBox(0, 0, Utility::ScreenWidth, Utility::ScreenHeight, color, TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 }
 

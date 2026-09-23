@@ -27,7 +27,7 @@ void Stage::LoadStage(int stageNum)
 		m_stageInfo.goalX = 5600.0f;
 		m_stageInfo.goalY = 1000.0f;
 		m_stageInfo.cameraMinX = 0.0f;
-		m_stageInfo.cameraMaxX = 5600.0f - Utility::SCREEN_WIDTH / 1.0f;
+		m_stageInfo.cameraMaxX = 5600.0f - Utility::ScreenWidth / 1.0f;
 		m_stageInfo.playerMinX = 100.0f;
 		m_stageInfo.playerMaxX = 5600.0f;
 
@@ -41,13 +41,13 @@ void Stage::LoadStage(int stageNum)
 		new WireTarget("Resource/WireTarget/Apartment building_Nolight.png", VGet(4900.0f, 800.0f, 0.0f));
 
 		// 進行ルートに沿って敵キャラクターを順次配置
-		new Enemy("Resource/Enemy/enemy_monster01.png", VGet(1000.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-		new Enemy("Resource/Enemy/enemy_monster01.png", VGet(1800.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-		new Enemy("Resource/Enemy/enemy_monster01.png", VGet(2500.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-		new Enemy("Resource/Enemy/enemy_monster01.png", VGet(3300.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-		new Enemy("Resource/Enemy/enemy_monster01.png", VGet(4100.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-		new Enemy("Resource/Enemy/enemy_monster01.png", VGet(4800.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-		new Enemy("Resource/Enemy/enemy_monster01.png", VGet(5400.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+		new Enemy("Resource/Enemy/enemy_monster01_idle.png", VGet(1000.0f, 1000.0f, 0.0f), 4, 4, 1, 6, 1.0f, false);
+		new Enemy("Resource/Enemy/enemy_monster01_idle.png", VGet(1800.0f, 1000.0f, 0.0f), 4, 4, 1, 6, 1.0f, false);
+		new Enemy("Resource/Enemy/enemy_monster01_idle.png", VGet(2500.0f, 1000.0f, 0.0f), 4, 4, 1, 6, 1.0f, false);
+		new Enemy("Resource/Enemy/enemy_monster01_idle.png", VGet(3300.0f, 1000.0f, 0.0f), 4, 4, 1, 6, 1.0f, false);
+		new Enemy("Resource/Enemy/enemy_monster01_idle.png", VGet(4100.0f, 1000.0f, 0.0f), 4, 4, 1, 6, 1.0f, false);
+		new Enemy("Resource/Enemy/enemy_monster01_idle.png", VGet(4800.0f, 1000.0f, 0.0f), 4, 4, 1, 6, 1.0f, false);
+		new Enemy("Resource/Enemy/enemy_monster01_idle.png", VGet(5400.0f, 1000.0f, 0.0f), 4, 4, 1, 6, 1.0f, false);
 
 		new Goal(VGet(m_stageInfo.goalX, m_stageInfo.goalY, 0.0f), 150, 150);
 	}
@@ -58,7 +58,7 @@ void Stage::LoadStage(int stageNum)
 		m_stageInfo.goalX = 9000.0f;
 		m_stageInfo.goalY = 1000.0f;
 		m_stageInfo.cameraMinX = 0.0f;
-		m_stageInfo.cameraMaxX = 9000.0f - Utility::SCREEN_WIDTH / 1.0f;
+		m_stageInfo.cameraMaxX = 9000.0f - Utility::ScreenWidth / 1.0f;
 		m_stageInfo.playerMinX = 100.0f;
 		m_stageInfo.playerMaxX = 9000.0f;
 
@@ -70,13 +70,13 @@ void Stage::LoadStage(int stageNum)
 		new WireTarget("Resource/WireTarget/Building.png", VGet(4200.0f, 800.0f, 0.0f));
 		new WireTarget("Resource/WireTarget/Apartment building_Nolight.png", VGet(4900.0f, 800.0f, 0.0f));
 
-		new Enemy("Resource/Enemy/Character_Monster01_Idle.png", VGet(1000.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-		new Enemy("Resource/Enemy/Character_Monster01_Idle.png", VGet(1800.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-		new Enemy("Resource/Enemy/Character_Monster01_Idle.png", VGet(2500.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-		new Enemy("Resource/Enemy/Character_Monster01_Idle.png", VGet(3300.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-		new Enemy("Resource/Enemy/Character_Monster01_Idle.png", VGet(4100.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
-		new Enemy("Resource/Enemy/Character_Monster01_Idle.png", VGet(4800.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);				
-		new Enemy("Resource/Enemy/Character_Monster01_Idle.png", VGet(5400.0f, 1000.0f, 0.0f), 1, 1, 1, 10, 1.0f, false);
+		new Enemy("Resource/Enemy/enemy_Monster01_Idle.png", VGet(1000.0f, 1000.0f, 0.0f), 4, 4, 1, 6, 1.0f, false);
+		new Enemy("Resource/Enemy/enemy_Monster01_Idle.png", VGet(1800.0f, 1000.0f, 0.0f), 4, 4, 1, 6, 1.0f, false);
+		new Enemy("Resource/Enemy/enemy_Monster01_Idle.png", VGet(2500.0f, 1000.0f, 0.0f), 4, 4, 1, 6, 1.0f, false);
+		new Enemy("Resource/Enemy/enemy_Monster01_Idle.png", VGet(3300.0f, 1000.0f, 0.0f), 4, 4, 1, 6, 1.0f, false);
+		new Enemy("Resource/Enemy/enemy_Monster01_Idle.png", VGet(4100.0f, 1000.0f, 0.0f), 4, 4, 1, 6, 1.0f, false);
+		new Enemy("Resource/Enemy/enemy_Monster01_Idle.png", VGet(4800.0f, 1000.0f, 0.0f), 4, 4, 1, 6, 1.0f, false);				
+		new Enemy("Resource/Enemy/enemy_Monster01_Idle.png", VGet(5400.0f, 1000.0f, 0.0f), 4, 4, 1, 6, 1.0f, false);
 		
 		new Goal(VGet(m_stageInfo.goalX, m_stageInfo.goalY, 0.0f), 150, 150);
 	}
