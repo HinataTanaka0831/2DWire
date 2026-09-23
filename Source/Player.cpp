@@ -224,8 +224,8 @@ void Player::Move()
 				pEnemy->GetPosition(),
 				pEnemy->GetRadius()))
 			{
-				float dirToEnemy = pEnemy->GetPosition().x - m_position.x;
-				float dirToEnemyY = pEnemy->GetPosition().y - m_position.y;
+				float directionToEnemyX = pEnemy->GetPosition().x - m_position.x;
+				float directionToEnemyY = pEnemy->GetPosition().y - m_position.y;
 
 				// ワイヤー移動中に敵上部へ接触した際は頭上を滑走させる演出
 				bool isOnTopOfEnemy = m_position.y < pEnemy->GetPosition().y;
@@ -256,8 +256,9 @@ void Player::Move()
 
 				bool blocked = false;
 
-				if ((dirToEnemy > 0.0f && moveX > 0.0f) ||
-					(dirToEnemy < 0.0f && moveX < 0.0f))
+				// 敵が接触し衝突した方向にいる場合は進めず、反対方向には移動することできるようにする
+				if ((directionToEnemyX > 0.0f && moveX > 0.0f) ||
+					(directionToEnemyX < 0.0f && moveX < 0.0f))
 				{
 					m_position.x = prevPosition.x;
 					if (!m_isWireActive)
@@ -267,8 +268,9 @@ void Player::Move()
 					blocked = true;
 				}
 
-				if ((dirToEnemyY > 0.0f && moveY > 0.0f) ||
-					(dirToEnemyY < 0.0f && moveY < 0.0f))
+				// 敵上部にいる場合にはプレイヤーが移動できない。ジャンプは行えるようにする。
+				if ((directionToEnemyY > 0.0f && moveY > 0.0f) ||
+					(directionToEnemyY < 0.0f && moveY < 0.0f))
 				{
 					m_position.y = prevPosition.y;
 					m_isJump = false;
@@ -279,6 +281,7 @@ void Player::Move()
 					blocked = true;
 				}
 
+				// 衝突している場合のワイヤーのたわみ波状を防ぐため固定長と角度を再同期
 				if (blocked && m_isWireActive && m_wireLength > 0.0f)
 				{
 					float diffX = m_position.x - m_wireTargetPos.x;
@@ -290,7 +293,7 @@ void Player::Move()
 
 				if (m_damageCooldown <= 0)
 				{
-					PDamage(1);
+					Damage(3);
 					m_damageCooldown = DamageInterval;
 				}
 
@@ -378,7 +381,7 @@ void Player::Attack()
 			(float)pEnemy->GetSizeY()
 		))
 		{
-			pEnemy->EDamage(10);
+			pEnemy->Damage(10);
 			m_hasHitThisAttack = true;
 			break;
 		}
@@ -430,7 +433,7 @@ void Player::HPGaugeUpdate()
 	m_gaugeWidth = (int)((float)displayHp / m_maxHP * m_width);
 }
 
-void Player::PDamage(int damage)
+void Player::Damage(int damage)
 {
 	m_hp -= damage;
 	if (m_hp <= 0)

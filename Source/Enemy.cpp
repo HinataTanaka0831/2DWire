@@ -123,7 +123,7 @@ void Enemy::Move()
 			// クールダウン満了時にプレイヤーへダメージ適用
 			if (m_attackCooldown <= 0)
 			{
-				pPlayer->PDamage(5);
+				pPlayer->Damage(5);
 				m_attackCooldown = m_attackInterval;
 			}
 		}
@@ -157,7 +157,7 @@ bool Enemy::IsScreenOut()
 
 // プレイヤーからの被弾処理と死亡時削除フラグ設定
 // 入力: damage(ダメージ量) / 出力: なし / 副作用: hp減算、被弾点滅タイマー開始、SetDeleteFlag
-void Enemy::EDamage(int damage)
+void Enemy::Damage(int damage)
 {
 	m_hp -= damage;
 	m_hitFlashTimer = HitFlashDuration;
