@@ -27,8 +27,6 @@ void ResultScene::Initialize()
 	}
 }
 
-// 決定キー入力によるタイトル画面への復帰
-// 入力: なし / 出力: なし / 副作用: SCENE_TITLEへの遷移要求
 void ResultScene::Update()
 {
 	if (m_retryButton)
@@ -56,8 +54,6 @@ void ResultScene::Update()
 	Scene::Update();
 }
 
-// クリア謝辞メッセージの描画
-// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void ResultScene::Draw()
 {
 	if (Master::m_sceneManager->GetResultType() == SceneManager::ResultType::ResultClear)

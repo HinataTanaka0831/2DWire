@@ -13,7 +13,7 @@ TextureAnimation::TextureAnimation(
 	int numY,
 	int interval,
 	float scale,
-	bool type
+	bool isPlayer
 )
 	: m_position(initPosition)
 	, m_counter(0)
@@ -21,7 +21,7 @@ TextureAnimation::TextureAnimation(
 	, m_currentNum(0)
 	, m_allNum(allNum)
 	, m_scale(scale)
-	, m_type(type)
+	, m_isPlayer(isPlayer)
 {
 	m_handleList = new int[allNum];
 
@@ -60,7 +60,7 @@ TextureAnimation::~TextureAnimation()
 // 入力: なし / 出力: なし / 副作用: アニメーションコマと反転フラグの更新
 void TextureAnimation::Update()
 {
-	if (m_type)
+	if (m_isPlayer)
 	{													
 		auto pObj = Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
 		Player* pPlayer = dynamic_cast<Player*>(pObj);
@@ -85,7 +85,7 @@ void TextureAnimation::Update()
 // 入力: cameraX, cameraY(カメラ座標) / 出力: なし / 副作用: バックバッファへの描画
 void TextureAnimation::Draw(float cameraX, float cameraY)
 {
-	if (m_type)
+	if (m_isPlayer)
 	{
 		DrawRotaGraph((int)(m_position.x - cameraX), (int)(m_position.y - cameraY), m_scale, 0.0f, m_handleList[m_currentNum], true, m_playerReverseX);
 	}

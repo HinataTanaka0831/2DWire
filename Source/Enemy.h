@@ -15,8 +15,8 @@ private:
 
 public:
 	// 敵キャラクターの初期化とアニメーションの登録
-	// 入力: fileName, initPosition, allNum, numX, numY, interval, scale, type / 出力: なし / 副作用: AnimationControllerへのステート登録
-	Enemy(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool type);
+	// 入力: fileName, initPosition, allNum, numX, numY, interval, scale, isPlayer / 出力: なし / 副作用: AnimationControllerへのステート登録
+	Enemy(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool isPlayer);
 	~Enemy();
 
 	// 毎フレームのAI思考、移動、被弾点滅、HP更新

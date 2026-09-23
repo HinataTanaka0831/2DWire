@@ -8,21 +8,21 @@
 #include "Texture.h"
 
 
-Enemy::Enemy(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool type)
-	: Object2D(fileName, initPosition, allNum, numX, numY, interval, scale, type)
+Enemy::Enemy(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool isPlayer)
+	: Object2D(fileName, initPosition, allNum, numX, numY, interval, scale, isPlayer)
 {
 	m_direction = VGet(-1.0f, 0.0f, 0.0f);
 	SetTag(Object2D::Enemy2D);
 
 	m_animController.RegisterAnimation(CharacterState::Idle,
-		std::make_unique<TextureAnimation>(fileName, initPosition, allNum, numX, numY, interval, scale, type));
+		std::make_unique<TextureAnimation>(fileName, initPosition, allNum, numX, numY, interval, scale, isPlayer));
 	
 	m_animController.RegisterAnimation(CharacterState::Moving,
-		std::make_unique<TextureAnimation>("Resource/Enemy/enemy_monster01_walk.png", initPosition, 6, 6, 1, 8, scale, type));
+		std::make_unique<TextureAnimation>("Resource/Enemy/enemy_monster01_walk.png", initPosition, 6, 6, 1, 8, scale, isPlayer));
 
 	// 攻撃モーションの俊敏さを演出するため再生速度を調整して登録
 	m_animController.RegisterAnimation(CharacterState::Attacking,
-		std::make_unique<TextureAnimation>("Resource/Enemy/enemy_monster01_attack.png", initPosition, 4, 4, 1, 10, scale, type));
+		std::make_unique<TextureAnimation>("Resource/Enemy/enemy_monster01_attack.png", initPosition, 4, 4, 1, 10, scale, isPlayer));
 	m_animController.ChangeState(CharacterState::Idle);
 }
 

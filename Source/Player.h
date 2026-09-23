@@ -15,8 +15,8 @@ private:
 
 public:
 	// プレイヤーオブジェクトおよび初期ステートの初期化
-	// 入力: fileName, initPosition, allNum, numX, numY, interval, scale, type / 出力: なし / 副作用: 各種アニメーションの登録
-	Player(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool type);
+	// 入力: fileName, initPosition, allNum, numX, numY, interval, scale, isPlayer / 出力: なし / 副作用: 各種アニメーションの登録
+	Player(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool isPlayer);
 	~Player();
 
 	// 毎フレームの物理挙動、入力検知、攻撃・HPゲージ更新

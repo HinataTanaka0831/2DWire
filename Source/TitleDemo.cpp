@@ -30,8 +30,6 @@ TitleDemo::~TitleDemo()
 	}
 }
 
-// デモ状態・キャラクター座標の初期化
-// 入力: なし / 出力: なし / 副作用: 座標・タイマー・ステートのリセット
 void TitleDemo::Reset()
 {
 	m_playerPosition = VGet(-220.0f, m_playerGroundY, 0.0f);
@@ -48,8 +46,6 @@ void TitleDemo::Reset()
 	m_state = DemoState::StateRun;
 }
 
-// デモステートマシンおよびスプライトアニメーションの進行
-// 入力: なし / 出力: なし / 副作用: プレイヤー・敵の座標および振り子角度の更新
 void TitleDemo::Update()
 {
 	UpdateState();
@@ -83,7 +79,6 @@ void TitleDemo::UpdateAnimation()
 	if (m_playerAnim != nullptr)
 	{
 		m_playerAnim->SetPosition(m_playerPosition);
-		m_playerAnim->SetReverse(false);
 		m_playerAnim->Update();
 	}
 	if (m_enemyAnim != nullptr)
@@ -187,8 +182,6 @@ void TitleDemo::UpdateWaitReset()
 	}
 }
 
-// ワイヤー・プレイヤー・敵スプライトの描画
-// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void TitleDemo::Draw()
 {
 	if (m_buildingHandle != -1)

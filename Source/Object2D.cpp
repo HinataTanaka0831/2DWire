@@ -19,14 +19,14 @@ Object2D::Object2D(std::string fileName, VECTOR initPosition)
 }
 
 // スプライトシートアニメーションを持つオブジェクトの生成
-// 入力: filename, initPos, allNum, numX, numY, interval, scale, type / 出力: なし / 副作用: ObjectManagerへの自動登録
-Object2D::Object2D(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool type)
+// 入力: filename, initPos, allNum, numX, numY, interval, scale, isPlayer / 出力: なし / 副作用: ObjectManagerへの自動登録
+Object2D::Object2D(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool isPlayer)
 	: m_position(initPosition)
 	, m_deleteFlag(false)
 	, m_texture(nullptr)
 {
 	Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->AddObject(this);
-	m_textureAnimation = new TextureAnimation(fileName, initPosition, allNum, numX, numY, interval, scale, type);
+	m_textureAnimation = new TextureAnimation(fileName, initPosition, allNum, numX, numY, interval, scale, isPlayer);
 }
 
 // 保持する画像リソースの破棄

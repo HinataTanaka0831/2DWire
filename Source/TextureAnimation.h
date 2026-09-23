@@ -7,7 +7,7 @@ class TextureAnimation
 {
 public:
 	// スプライトシート画像を分割ロードし、アニメーションリソースを初期化
-	// 入力: fileName(画像パス), initPosition(初期座標), allNum(総コマ数), numX/numY(分割数), interval(更新間隔), scale(拡縮率), type(プレイヤー種別フラグ) / 出力: なし / 副作用: 画像配列の動的確保
+	// 入力: fileName(画像パス), initPosition(初期座標), allNum(総コマ数), numX/numY(分割数), interval(更新間隔), scale(拡縮率), isPlayer(プレイヤー種別フラグ) / 出力: なし / 副作用: 画像配列の動的確保
 	TextureAnimation(
 		std::string fileName,
 		VECTOR initPosition,
@@ -16,7 +16,7 @@ public:
 		int numY,
 		int interval,
 		float scale = 1.0f,
-		bool type = true
+		bool isPlayer = true
 	);  
 
 	// 動的確保したグラフィックハンドル配列の破棄
@@ -56,5 +56,5 @@ private:
 	float m_scale;            // 描画拡縮倍率
 	bool m_playerReverseX;    // プレイヤー用左右反転フラグ
 	bool m_enemyReverseX;     // 敵キャラクター用左右反転フラグ
-	bool m_type;              // true: プレイヤー / false: 敵
+	bool m_isPlayer;          // true: プレイヤー / false: 敵
 };

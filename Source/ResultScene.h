@@ -13,13 +13,15 @@ public:
 	ResultScene();
 	~ResultScene();
 
+	// ボタンUIの初期化
+	// 入力: なし / 出力: なし / 副作用: ボタンの生成
 	void Initialize() override;
 
 	// 決定キー入力によるタイトル画面への復帰
 	// 入力: なし / 出力: なし / 副作用: SCENE_TITLEへの遷移要求
 	void Update() override;
 
-	// クリア謝辞メッセージの描画
+	// クリアもしくはゲームオーバーメッセージの描画
 	// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 	void Draw() override;
 

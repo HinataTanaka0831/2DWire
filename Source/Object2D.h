@@ -27,7 +27,7 @@ public:
 
 	// スプライトシートアニメーションを持つオブジェクトの生成
 	// 入力: fileName, initPosition, allNum, numX, numY, interval, scale, type / 出力: なし / 副作用: ObjectManagerへの自動登録
-	Object2D(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale = 1.0f, bool type = true);
+	Object2D(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale = 1.0f, bool isPlayer = true);
 
 	// 保持する画像リソースの破棄
 	// 入力: なし / 出力: なし / 副作用: テクスチャメモリの解放
