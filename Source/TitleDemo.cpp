@@ -4,6 +4,30 @@
 #include <cmath>
 
 TitleDemo::TitleDemo()
+	: m_playerAnim(nullptr)
+	, m_enemyAnim(nullptr)
+	, m_state(DemoState::StateRun)
+	, m_waitTimer(0)
+	, m_buildingHandle(-1)
+	, m_playerPosition(VGet(0.0f, 0.0f, 0.0f))
+	, m_enemyPosition(VGet(0.0f, 0.0f, 0.0f))
+	, m_hookPosition(VGet(0.0f, 0.0f, 0.0f))
+	, m_playerVelocityY(0.0f)
+	, m_enemyVelocityY(0.0f)
+	, m_wireLength(0.0f)
+	, m_pendulumAngle(0.0f)
+	, m_pendulumAngularVelocity(0.0f)
+	, m_wireExtendRatio(0.0f)
+	, m_isWireVisible(false)
+	, m_enemyGroundY(850.0f)
+	, m_playerGroundY(900.0f)
+	, m_platformTopY(980.0f)
+	, m_leftCliffEndX(780.0f)
+	, m_rightCliffStartX(1180.0f)
+	, m_playerRunSpeed(6.0f)
+	, m_enemyRunSpeed(4.2f)
+	, m_gravity(0.5f)
+
 {
 	// デモ用のため本編Player検索を無効化(type=false)して直接アニメーションを制御
 	m_playerAnim = std::make_unique<TextureAnimation>(

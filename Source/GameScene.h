@@ -34,9 +34,9 @@ public:
 	void Finalize() override;
 
 private:
-	Player* m_player = nullptr;
-	Stage* m_stage = nullptr;
-	StageInfo m_stageInfo = {};
-	int m_backGroundHandle = -1;
-	bool mIsGoalReached = false;
+	Player* m_player;          // プレイヤーオブジェクトのポインタ
+	Stage* m_stage;            // ステージオブジェクトのポインタ
+	StageInfo m_stageInfo;     // ステージ情報構造体（プレイヤー初期位置、ゴール位置、カメラ制限座標など）
+	int m_backGroundHandle;    // 視差スクロール背景のグラフィックハンドル
+	bool mIsGoalReached;       // ゴール到達フラグ（true: ゴールに接触済み、false: 未接触）
 };

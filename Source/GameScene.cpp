@@ -16,6 +16,12 @@ int g_currentStage = 1;
 
 GameScene::GameScene()
 	: Scene()
+	, m_player(nullptr)
+	, m_stage(nullptr)
+	, m_stageInfo{}
+	, m_backGroundHandle(-1)
+	, mIsGoalReached(false)
+
 {
 }
 

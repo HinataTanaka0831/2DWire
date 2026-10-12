@@ -65,10 +65,6 @@ public:
     // 入力: なし / 出力: なし / 副作用: 画面描画、各タスクのExecute呼び出し
     void ExecuteAll();
 
-    // ゲームシーン用のステージ画像付きローディングを実行
-    // 入力: なし / 出力: なし / 副作用: 画面描画、各タスクのExecute呼び出し
-    void ExecuteGameScene();
-
     const std::vector<std::unique_ptr<ILoadTask>>& GetTasks() const {
         return tasks;
     }

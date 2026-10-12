@@ -3,6 +3,11 @@
 #include "Master.h"
 
 Scene::Scene()
+	: m_fontSize20(CreateFontToHandle(NULL, 20, -1, -1))
+	, m_fontSize50(CreateFontToHandle(NULL, 50, -1, -1))
+	, m_fontSize90(CreateFontToHandle(NULL, 90, -1, -1))
+	, m_objectManager(nullptr)
+
 {
 	// 各シーンごとに独立したオブジェクト管理領域を生成
 	m_objectManager = new ObjectManager();

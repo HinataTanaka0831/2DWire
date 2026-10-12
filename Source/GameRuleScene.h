@@ -31,10 +31,10 @@ public:
 	void Finalize() override;
 
 private:
-	std::unique_ptr<Button> m_backButton = nullptr;
-	const int DrawX = Utility::ScreenWidth / 2 - 150;
-	const int BackY = 900;
-	int m_moveLeftHandle = -1;
-	int m_moveRightHandle = -1;
-	int m_jumpHandle = -1;
+	std::unique_ptr<Button> m_backButton;   // 戻るボタンのスマートポインタ
+	const int DrawX;                        // 操作キー画像の描画X座標
+	const int BackY;                        // 戻るボタンの描画Y座標
+	int m_moveLeftHandle;                   // 左移動キー画像のハンドル
+	int m_moveRightHandle;                  // 右移動キー画像のハンドル
+	int m_jumpHandle;                       // ジャンプキー画像のハンドル
 };

@@ -31,13 +31,13 @@ public:
 	void Finalize() override;
 
 private:
-	std::unique_ptr<Button> m_playButton = nullptr;
-	std::unique_ptr<Button> m_playRuleButton = nullptr;
-	std::unique_ptr<Button> m_quitButton = nullptr;
-	std::unique_ptr<TitleDemo> m_titleDemo = nullptr;
-	const int DrawX = Utility::ScreenWidth / 2 - 150;
-	const int PlayY = 650;
-	const int PlayRuleY = 750;
-	const int QuitY = 850;
-	int m_backGroundHandle = -1;
+	std::unique_ptr<Button> m_playButton;        // プレイボタン
+	std::unique_ptr<Button> m_playRuleButton;    // 操作方法ボタン
+	std::unique_ptr<Button> m_quitButton;        // 終了ボタン
+	std::unique_ptr<TitleDemo> m_titleDemo;      // タイトル画面のワイヤー操作プレビューデモ
+	const int DrawX;                            // ボタン描画のX座標
+	const int PlayY;                            // プレイボタンのY座標
+	const int PlayRuleY;                        // 操作方法ボタンのY座標
+	const int QuitY;                            // 終了ボタンのY座標
+	int m_backGroundHandle;                     // タイトル背景画像のグラフィックハンドル
 };

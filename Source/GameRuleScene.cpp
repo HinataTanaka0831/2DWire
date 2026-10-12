@@ -6,6 +6,13 @@
 
 GameRuleScene::GameRuleScene()
 	: Scene()
+	, m_backButton(nullptr)
+	, DrawX(Utility::ScreenWidth / 2 - 150)
+	, BackY(900)
+	, m_moveLeftHandle(-1)
+	, m_moveRightHandle(-1)
+	, m_jumpHandle(-1)
+
 {
 }
 

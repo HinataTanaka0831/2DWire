@@ -28,9 +28,9 @@ public:
 	void Finalize() override;
 
 private:
-	std::unique_ptr<Button> m_retryButton = nullptr;
-	std::unique_ptr<Button> m_titleButton = nullptr;
-	const int DrawX = Utility::ScreenWidth / 2 - 150;
-	const int TitleY = 750;
-	const int QuitY = 850;
+	std::unique_ptr<Button> m_retryButton;       // リトライボタン
+	std::unique_ptr<Button> m_titleButton;       // タイトルボタン
+	const int DrawX;                             // ボタン描画のX座標
+	const int TitleY;                            // タイトルボタン描画のY座標
+	const int RetryY;                             // リトライボタン描画のY座標
 };

@@ -62,31 +62,31 @@ private:
 	// 入力: なし / 出力: なし / 副作用: m_waitTimerの更新、m_stateのStateRunへの遷移
 	void UpdateWaitReset();
 
-	std::unique_ptr<TextureAnimation> m_playerAnim = nullptr;       // プレイヤーのスプライトアニメーション
-	std::unique_ptr<TextureAnimation> m_enemyAnim = nullptr;        // 敵キャラクターのスプライトアニメーション
+	std::unique_ptr<TextureAnimation> m_playerAnim;       // プレイヤーのスプライトアニメーション
+	std::unique_ptr<TextureAnimation> m_enemyAnim;        // 敵キャラクターのスプライトアニメーション
 
-	DemoState m_state = DemoState::StateRun;                       // デモステートマシンの現在ステート
-	int m_waitTimer = 0;                                           // デモループ待機用タイマー
-	int m_buildingHandle = -1;                                     // 背景ビル画像のグラフィックハンドル
+	DemoState m_state;                                    // デモステートマシンの現在ステート
+	int m_waitTimer;                                      // デモループ待機用タイマー
+	int m_buildingHandle;                                 // 背景ビル画像のグラフィックハンドル
 
-	VECTOR m_playerPosition = VGet(0.0f, 0.0f, 0.0f);             // プレイヤーの座標
-	VECTOR m_enemyPosition = VGet(0.0f, 0.0f, 0.0f);              // 敵キャラクターの座標
-	VECTOR m_hookPosition = VGet(0.0f, 0.0f, 0.0f);               // ワイヤーの係留先アンカー座標
+	VECTOR m_playerPosition;                              // プレイヤーの座標
+	VECTOR m_enemyPosition;                               // 敵キャラクターの座標
+	VECTOR m_hookPosition;                                // ワイヤーの係留先アンカー座標
 
-	float m_playerVelocityY = 0.0f;                              // プレイヤーの鉛直方向速度
-	float m_enemyVelocityY = 0.0f;                              // 敵キャラクターの鉛直方向速度
-	float m_wireLength = 0.0f;                                  // ワイヤーの固定長さ（係留時）
-	float m_pendulumAngle = 0.0f;                               // 振り子の現在角度(rad)
-	float m_pendulumAngularVelocity = 0.0f;                     // 振り子の角速度
-	float m_wireExtendRatio = 0.0f;                             // ワイヤー射出伸張の進行比率（0.0～1.0）
-	bool m_isWireVisible = false;                               // ワイヤーの可視状態
+	float m_playerVelocityY;                              // プレイヤーの鉛直方向速度
+	float m_enemyVelocityY;                               // 敵キャラクターの鉛直方向速度
+	float m_wireLength;                                   // ワイヤーの固定長さ（係留時）
+	float m_pendulumAngle;                                // 振り子の現在角度(rad)
+	float m_pendulumAngularVelocity;                      // 振り子の角速度
+	float m_wireExtendRatio;                              // ワイヤー射出伸張の進行比率（0.0～1.0）
+	bool m_isWireVisible;                                 // ワイヤーの可視状態
 
-	static constexpr float m_enemyGroundY = 850.0f;             // 敵キャラクターの地面Y座標
-	static constexpr float m_playerGroundY = 900.0f;            // プレイヤーの地面Y座標
-	static constexpr float m_platformTopY = 980.0f;            // 崖の上面Y座標
-	static constexpr float m_leftCliffEndX = 780.0f;           // 左岸の崖端X座標
-	static constexpr float m_rightCliffStartX = 1180.0f;       // 右岸の崖端X座標
-	static constexpr float m_playerRunSpeed = 6.0f;            // プレイヤーの走行速度
-	static constexpr float m_enemyRunSpeed = 4.2f;             // 敵キャラクターの走行速度
-	static constexpr float m_gravity = 0.5f;                   // 重力加速度定数
+	const float m_enemyGroundY;                           // 敵キャラクターの地面Y座標
+	const float m_playerGroundY;                          // プレイヤーの地面Y座標
+	const float m_platformTopY;                           // 崖の上面Y座標
+	const float m_leftCliffEndX;                          // 左岸の崖端X座標
+	const float m_rightCliffStartX;                       // 右岸の崖端X座標
+	const float m_playerRunSpeed;                         // プレイヤーの走行速度
+	const float m_enemyRunSpeed;                          // 敵キャラクターの走行速度
+	const float m_gravity;                                // 重力加速度定数
 };

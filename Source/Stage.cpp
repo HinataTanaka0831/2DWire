@@ -5,6 +5,8 @@
 #include "Enemy.h"
 
 Stage::Stage()
+	: m_stageInfo{}
+
 {
 }
 

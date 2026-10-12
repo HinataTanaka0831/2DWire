@@ -8,6 +8,16 @@
 
 TitleScene::TitleScene() 
 	: Scene()
+	, m_playButton(nullptr)
+	, m_playRuleButton(nullptr)
+	, m_quitButton(nullptr)
+	, m_titleDemo(nullptr)
+	, DrawX(Utility::ScreenWidth / 2 - 150)
+	, PlayY(650)
+	, PlayRuleY(750)
+	, QuitY(850)
+	, m_backGroundHandle(-1)
+
 {
 
 }

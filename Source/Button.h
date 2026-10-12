@@ -21,15 +21,17 @@ public:
 	bool IsClick() const { return m_isHover && m_isClicked; }
 
 private:
-	int m_x1, m_y1, m_x2, m_y2;  // ボタンの矩形領域
-	std::string m_name;           // ボタンラベル文字列
+	int m_x1;                    // ボタン矩形の左上X座標
+	int m_y1;                    // ボタン矩形の左上Y座標
+	int m_x2;                    // ボタン矩形の右下X座標
+	int m_y2;                    // ボタン矩形の右下Y座標
+	std::string m_name;          // ボタンラベル文字列
 	int m_color;                 // 通常時・ホバー時の背景色
 	int m_changeColor;           // クリック時の背景色
-	int m_fontHandle;            // ラベル描画用フォントハンドル
-	
+	int m_fontHandle;            // ラベル描画用フォントハンドル	
 	int m_stringColor;           // 文字列カラー
 	float m_scale;               // ホバー演出用拡大率
-	bool m_isHover = false;      // カーソルがボタン上にあるか
-	bool m_isEnabled = true;     // ボタンの操作有効フラグ
-	bool m_isClicked = false;    // クリックされたか
+	bool m_isHover;              // カーソルがボタン上にあるか
+	bool m_isEnabled;            // ボタンの操作有効フラグ
+	bool m_isClicked;            // クリックされたか
 };

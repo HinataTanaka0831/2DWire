@@ -3,9 +3,14 @@
 
 Texture::Texture(std::string fileName, VECTOR centerPosition, int transFlag)
     : m_position(centerPosition)
+    , m_handle(-1)
+    , m_sizeX(0)
+    , m_sizeY(0)
+    , m_radius(0.0f)
     , m_transFlag(transFlag)
 {
     m_handle = LoadGraph(fileName.c_str());
+
     GetGraphSize(m_handle, &m_sizeX, &m_sizeY);
 
     // 矩形の中央基準で円形判定を行うための簡易半径（横幅の半分）

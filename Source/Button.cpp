@@ -12,6 +12,10 @@ Button::Button(int x1, int y1, int x2, int y2, std::string name, int color, int 
 	, m_fontHandle(fontHandle)
 	, m_stringColor(GetColor(255, 255, 255))
 	, m_scale(1.0f)
+	, m_isHover(false)
+	, m_isEnabled(true)
+	, m_isClicked(false)
+
 {
 }
 

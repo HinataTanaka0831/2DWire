@@ -22,6 +22,12 @@ TextureAnimation::TextureAnimation(
 	, m_allNum(allNum)
 	, m_scale(scale)
 	, m_isPlayer(isPlayer)
+	, m_sizeX(0)
+	, m_sizeY(0)
+	, m_radius(90.0f)
+	, m_playerReverseX(false)
+	, m_enemyReverseX(false)
+	
 {
 	m_handleList = new int[allNum];
 

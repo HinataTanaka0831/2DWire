@@ -27,10 +27,10 @@ public:
 	float GetRadius() { return m_radius; }
 	
 private:
-	int m_handle = -1;      // DXライブラリグラフィックハンドル
 	VECTOR m_position; // 中心ワールド座標
-	int m_sizeX = 0;       // テクスチャ横幅（ピクセル）
-	int m_sizeY = 0;       // テクスチャ縦幅（ピクセル）
-	int m_transFlag;   // 透過描画フラグ
+	int m_handle;      // DXライブラリグラフィックハンドル
+	int m_sizeX;       // テクスチャ横幅（ピクセル）
+	int m_sizeY;       // テクスチャ縦幅（ピクセル）
 	float m_radius;    // 衝突判定等で使用する近似半径
+	int m_transFlag;   // 透過描画フラグ
 };

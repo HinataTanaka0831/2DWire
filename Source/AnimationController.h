@@ -49,6 +49,6 @@ public:
 
 private:
     std::map<CharacterState, std::unique_ptr<TextureAnimation>> m_animations;
-    CharacterState m_currentState = CharacterState::Idle;
-    bool m_isInitialized = false;
+    CharacterState m_currentState;
+    bool m_isInitialized;
 };

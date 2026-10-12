@@ -1,6 +1,9 @@
 ﻿#include "AnimationController.h"
 
 AnimationController::AnimationController()
+    : m_currentState(CharacterState::Idle)
+    , m_isInitialized(false)
+
 {
 }
 

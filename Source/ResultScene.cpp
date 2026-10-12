@@ -7,6 +7,12 @@
 
 ResultScene::ResultScene()
 	: Scene()
+	, m_retryButton(nullptr)
+	, m_titleButton(nullptr)
+	, DrawX(Utility::ScreenWidth / 2 - 150)
+	, TitleY(850)
+	, RetryY(750)
+
 {
 }
 
@@ -18,12 +24,12 @@ void ResultScene::Initialize()
 {
 	if (m_retryButton == nullptr)
 	{
-		m_retryButton = std::make_unique<Button>(DrawX, TitleY - 10, DrawX + 250, TitleY + 60, "リトライ", GetColor(70, 70, 90), GetColor(80, 130, 255), m_fontSize20);
+		m_retryButton = std::make_unique<Button>(DrawX, RetryY - 10, DrawX + 250, RetryY + 60, "リトライ", GetColor(70, 70, 90), GetColor(80, 130, 255), m_fontSize20);
 	}
 
 	if (m_titleButton == nullptr)
 	{
-		m_titleButton = std::make_unique<Button>(DrawX, QuitY - 10, DrawX + 250, QuitY + 60, "タイトル", GetColor(70, 70, 90), GetColor(80, 130, 255), m_fontSize20);
+		m_titleButton = std::make_unique<Button>(DrawX, TitleY - 10, DrawX + 250, TitleY + 60, "タイトル", GetColor(70, 70, 90), GetColor(80, 130, 255), m_fontSize20);
 	}
 }
 

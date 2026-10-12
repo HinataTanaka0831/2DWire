@@ -52,11 +52,11 @@ private:
 	int m_currentNum;         // 現在再生中のフレームインデックス
 	int* m_handleList;        // 分割ロードされた画像ハンドル配列
 	int m_allNum;             // 総コマ数
-	int m_sizeX = 0;          // 1コマあたりの横幅
-	int m_sizeY = 0;          // 1コマあたりの縦幅
-	float m_radius = 90.0f;   // 当たり判定用半径
 	float m_scale;            // 描画拡縮倍率
+	bool m_isPlayer;          // true: プレイヤー / false: 敵
+	int m_sizeX;          // 1コマあたりの横幅
+	int m_sizeY;          // 1コマあたりの縦幅
+	float m_radius;   // 当たり判定用半径
 	bool m_playerReverseX;    // プレイヤー用左右反転フラグ
 	bool m_enemyReverseX;     // 敵キャラクター用左右反転フラグ
-	bool m_isPlayer;          // true: プレイヤー / false: 敵
 };
