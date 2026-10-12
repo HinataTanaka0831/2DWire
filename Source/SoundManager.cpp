@@ -2,8 +2,8 @@
 #include "DxLib.h"
 
 SoundManager::SoundManager()
-	: m_nowPlayingBgm((SOUND_BGM)-1)
-	, m_nowPlayingSe((SOUND_SE)-1)
+	: m_nowPlayingBgm((SoundBgm)-1)
+	, m_nowPlayingSe((SoundSe)-1)
 {
 }
 
@@ -15,8 +15,8 @@ SoundManager::~SoundManager()
 // 入力: なし / 出力: なし / 副作用: 各種音声ファイルのメモリロード
 void SoundManager::Initialize()
 {
-	LoadBGM(SOUND_BGM::BGM_TITLE, "Resource/BGM/maou_14_shining_star.mp3");
-	LoadSE(SOUND_SE::SE_DECIDE, "Resource/SE/maou_se_system49.mp3");
+	LoadBGM(SoundBgm::BgmTitle, "Resource/BGM/maou_14_shining_star.mp3");
+	LoadSE(SoundSe::SeDecide, "Resource/SE/maou_se_system49.mp3");
 }
 
 // ロード済み全サウンドハンドルの破棄
@@ -37,7 +37,7 @@ void SoundManager::Finalize()
 
 // 指定BGMのループ再生（既に同一BGMが再生中の場合は無駄な再頭出しを防止）
 // 入力: bgm(対象BGM), isTop(先頭から再生するか) / 出力: なし / 副作用: BGM再生、再生中BGM番号の更新
-void SoundManager::PlayBGM(SOUND_BGM bgm, bool isTop)
+void SoundManager::PlayBGM(SoundBgm bgm, bool isTop)
 {
 	// 同一曲が既に再生中かつ頭出し不要なら再生を継続
 	if (m_nowPlayingBgm == bgm && !isTop)
@@ -58,7 +58,7 @@ void SoundManager::PlayBGM(SOUND_BGM bgm, bool isTop)
 
 // 指定SEの単発再生
 // 入力: se(対象SE) / 出力: なし / 副作用: SE再生、再生中SE番号の更新
-void SoundManager::PlaySE(SOUND_SE se)
+void SoundManager::PlaySE(SoundSe se)
 {
 	for (auto it = m_seHandleList.begin(); it != m_seHandleList.end(); it++)
 	{
@@ -74,7 +74,7 @@ void SoundManager::PlaySE(SOUND_SE se)
 
 // BGM音声ファイルのロードとリスト登録（重複ロード防止）
 // 入力: bgm(登録識別子), fileName(ファイルパス) / 出力: なし / 副作用: リストへのハンドル追加
-void SoundManager::LoadBGM(SOUND_BGM bgm, std::string fileName)
+void SoundManager::LoadBGM(SoundBgm bgm, std::string fileName)
 {
 	// 同一BGM識別子の多重ロードを防止
 	for (auto it = m_bgmHandleList.begin(); it != m_bgmHandleList.end(); it++)
@@ -91,12 +91,12 @@ void SoundManager::LoadBGM(SOUND_BGM bgm, std::string fileName)
 		return;
 	}
 
-	m_bgmHandleList.push_back(std::pair<SOUND_BGM, int>(bgm, handle));
+	m_bgmHandleList.push_back(std::pair<SoundBgm, int>(bgm, handle));
 }
 
 // SE音声ファイルのロードとリスト登録（重複ロード防止）
 // 入力: se(登録識別子), fileName(ファイルパス) / 出力: なし / 副作用: リストへのハンドル追加
-void SoundManager::LoadSE(SOUND_SE se, std::string fileName)
+void SoundManager::LoadSE(SoundSe se, std::string fileName)
 {
 	// 同一SE識別子の多重ロードを防止
 	for (auto it = m_seHandleList.begin(); it != m_seHandleList.end(); it++)
@@ -113,7 +113,7 @@ void SoundManager::LoadSE(SOUND_SE se, std::string fileName)
 		return;
 	}
 
-	m_seHandleList.push_back(std::pair<SOUND_SE, int>(se, handle));
+	m_seHandleList.push_back(std::pair<SoundSe, int>(se, handle));
 }
 
 // 現在再生中のBGMの停止

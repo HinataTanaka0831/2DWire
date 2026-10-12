@@ -5,9 +5,23 @@
 #include "ResultScene.h"
 #include "GameRuleScene.h"
 #include "Utility.h"
-#include <cstdlib>
+
 
 SceneManager::SceneManager()
+	: m_sceneType(SceneType::SceneNone)
+	, m_nextSceneType(SceneType::SceneNone)
+	, m_resultType(ResultType::ResultNone)
+	, m_currentScene(nullptr)
+	, m_isTransition(false)
+	, m_transitionTimer(0)
+	, TransitionTime(15)
+	, m_phase(TransitionPhase::TransNone)
+	, m_transitionType(TransitionType::NormalBlack)
+	, m_shakeOffsetX(0)
+	, m_shakeOffsetY(0)
+	, m_workScreenHandle(-1)
+	, m_quitRequest(false)
+
 {
 }
 

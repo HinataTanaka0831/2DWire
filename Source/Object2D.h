@@ -13,6 +13,7 @@ public:
 	// 衝突判定やシーン横断検索でオブジェクト種別を識別するためのタグ
 	enum Tag
 	{
+		None = 0,
 		Player2D = 2000,
 		Enemy2D = 2100,
 		BossEnemy2D = 2200,
@@ -45,23 +46,21 @@ public:
 
 public:
 	void SetPosition(VECTOR pos) { m_position = pos; }
-	VECTOR GetPosition() { return m_position; }
+	VECTOR GetPosition() const { return m_position; }
 	void SetDeleteFlag(bool flag) { m_deleteFlag = flag; }
-	bool IsDeleteFlag() { return m_deleteFlag; }
+	bool IsDeleteFlag() const { return m_deleteFlag; }
 	void SetTag(Tag tag) { m_tag = tag; }
-	Tag GetTag() { return m_tag; }
+	Tag GetTag() const { return m_tag; }
 
 	float GetRadius();
 	int GetSizeX();
 	int GetSizeY();
 
 protected:
-	Texture* m_texture;                    // 静止画描画用テクスチャ
-	TextureAnimation* m_textureAnimation;  // 連番アニメーション描画用テクスチャ
 	VECTOR m_position;                     // ワールド座標
 	VECTOR m_direction;                    // 移動方向ベクトル
-	float m_angle;                         // 向き・回転角度
-	int m_count;
+	Texture* m_texture;                    // 静止画描画用テクスチャ
+	TextureAnimation* m_textureAnimation;  // 連番アニメーション描画用テクスチャ
 
 private:
 	bool m_deleteFlag;                     // フレーム終了時の安全削除対象フラグ

@@ -11,6 +11,37 @@
 
 Player::Player(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool isPlayer)
 	: Object2D(filename, initPos, allNum, numX, numY, interval, scale, isPlayer)
+	, MoveSpeed(5)
+	, m_maxHp(100)
+	, m_hp(m_maxHp)
+	, m_gaugeWidth(250)
+	, m_nowHpGaugeWidth(0)
+	, m_gaugeHeight(20)
+	, m_damageBarWidth(0)
+	, m_minWidth(0)
+	, m_damage(m_maxHp)
+	, m_hpGaugeTimer(0)
+	, GaugeFrame(3.0f)
+	, m_isAttack(false)
+	, m_hasHitThisAttack(false)
+	, m_attackAnimationTimer(0)
+	, m_attackCooldown(0)
+	, AttackInterval(16)
+	, m_damageCooldown(0)
+	, DamageInterval(10)
+	, m_isWireActive(false)
+	, m_wireTargetPos(VGet(0.0f, 0.0f, 0.0f))
+	, m_pendulumAngle(0.0f)
+	, m_pendulumAngularVelocity(0.0f)
+	, m_wireLength(0.0f)
+	, m_angularAcceleration(0.0f)
+	, m_velocityY(0.0f)
+	, m_velocityX(0.0f)
+	, m_facingLeft(false)
+	, m_gravity(0.5f)
+	, m_isJump(false)
+	, m_isDead(false)
+
 {
 	SetTag(Object2D::Player2D);
 
@@ -44,10 +75,7 @@ void Player::Update()
 	}
 
 	// 状態優先度（死亡 ＞ 攻撃 ＞ 移動/ワイヤー ＞ 待機）に従ってアニメーションを決定
-	if (m_hp <= 0) {
-		m_animController.ChangeState(CharacterState::Dead);
-	}
-	else if (m_isAttack)
+	if (m_isAttack)
 	{
 		m_animController.ChangeState(CharacterState::Attacking);
 	}
@@ -392,10 +420,10 @@ void Player::HPGaugeDraw()
 	int gaugeX = (int)(m_position.x - g_cameraX) - 110;
 	int gaugeY = (int)(m_position.y - g_cameraY) - 160;
 
-	DrawBox(gaugeX, gaugeY, gaugeX + m_width, gaugeY + m_gaugeHeight, GetColor(0, 0, 0), TRUE);
-	DrawBox(gaugeX, gaugeY, gaugeX + m_damageWidth, gaugeY + m_gaugeHeight, GetColor(255, 0, 0), TRUE);
-	DrawBox(gaugeX, gaugeY, gaugeX + m_gaugeWidth, gaugeY + m_gaugeHeight, GetColor(51, 204, 51), TRUE);
-	DrawBox(gaugeX, gaugeY, gaugeX + m_width, gaugeY + m_gaugeHeight, GetColor(255, 255, 255), FALSE);
+	DrawBox(gaugeX, gaugeY, gaugeX + m_gaugeWidth, gaugeY + m_gaugeHeight, GetColor(0, 0, 0), TRUE);
+	DrawBox(gaugeX, gaugeY, gaugeX + m_damageBarWidth, gaugeY + m_gaugeHeight, GetColor(255, 0, 0), TRUE);
+	DrawBox(gaugeX, gaugeY, gaugeX + m_nowHpGaugeWidth, gaugeY + m_gaugeHeight, GetColor(51, 204, 51), TRUE);
+	DrawBox(gaugeX, gaugeY, gaugeX + m_gaugeWidth, gaugeY + m_gaugeHeight, GetColor(255, 255, 255), FALSE);
 }
 
 void Player::HPGaugeUpdate()
@@ -404,32 +432,32 @@ void Player::HPGaugeUpdate()
 
 	if (m_hpGaugeTimer >= GaugeFrame)
 	{
-		if (m_displayDamage > m_hp)
+		if (m_damage > m_hp)
 		{
 			// 被弾演出として赤ゲージを徐々に減少させて追従
-			m_displayDamage--;
-			if (m_displayDamage < m_hp)
+			m_damage--;
+			if (m_damage < m_hp)
 			{
-				m_displayDamage = m_hp;
+				m_damage = m_hp;
 			}
 		}
 		m_hpGaugeTimer = 0;
 	}
 
-	int display = m_displayDamage;
-	if (display < 0 && display > m_minWidth)
+	int displayDamage = m_damage;
+	if (displayDamage > -1 && displayDamage < m_minWidth)
 	{
-		display = m_minWidth;
+		displayDamage = m_minWidth;
 	}
 
 	int displayHp = m_hp;
-	if (displayHp < 0 && displayHp > m_minWidth)
+	if (displayHp > -1 && displayHp < m_minWidth)
 	{
 		displayHp = m_minWidth;
 	}
 
-	m_damageWidth = (int)((float)display / m_maxHP * m_width); 
-	m_gaugeWidth = (int)((float)displayHp / m_maxHP * m_width);
+	m_damageBarWidth = (int)((float)displayDamage / m_maxHp * m_gaugeWidth); 
+	m_nowHpGaugeWidth = (int)((float)displayHp / m_maxHp * m_gaugeWidth);
 }
 
 void Player::Damage(int damage)

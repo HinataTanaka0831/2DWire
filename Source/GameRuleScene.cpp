@@ -44,7 +44,7 @@ void GameRuleScene::Update()
 
 		if (m_backButton->IsClick())
 		{
-			Master::m_soundManager->PlaySE(SoundManager::SE_DECIDE);
+			Master::m_soundManager->PlaySE(SoundManager::SeDecide);
 			Master::m_sceneManager->SetNextScene(SceneManager::SceneType::SceneTitle);
 		}
 	}

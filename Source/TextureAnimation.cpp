@@ -76,8 +76,13 @@ void TextureAnimation::Update()
 	m_counter++;
 	if (m_counter % m_interval == 0)
 	{
-		m_counter = 0;
-		m_currentNum = (m_currentNum + 1) % m_allNum;
+		m_counter = 0;   // カウンタを戻す
+		m_currentNum++;  // テクスチャ番号を進める
+		if (m_currentNum >= m_allNum)  // 分割数を超えるならループさせる
+		{
+			m_currentNum = 0;   // ループさせる
+		}
+
 	}
 }
 

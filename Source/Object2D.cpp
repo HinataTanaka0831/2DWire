@@ -10,23 +10,38 @@
 // 入力: fileName(画像パス), initPosition(初期座標) / 出力: なし / 副作用: ObjectManagerへの自動登録
 Object2D::Object2D(std::string fileName, VECTOR initPosition)
 	: m_position(initPosition)
-	, m_deleteFlag(false)
+	, m_direction(VGet(0.0f, 0.0f, 0.0f))
+	, m_texture(nullptr)
 	, m_textureAnimation(nullptr)
+	, m_deleteFlag(false)
+	, m_tag(Tag::None)
+
 {
 	// シーン管理下へ自身を登録し、一括更新・描画の対象にする
 	Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->AddObject(this);
-	m_texture = new Texture(fileName, initPosition, true);
+
+	if (m_texture == nullptr)
+	{
+		m_texture = new Texture(fileName, initPosition, true);
+	}
 }
 
 // スプライトシートアニメーションを持つオブジェクトの生成
 // 入力: filename, initPos, allNum, numX, numY, interval, scale, isPlayer / 出力: なし / 副作用: ObjectManagerへの自動登録
 Object2D::Object2D(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool isPlayer)
 	: m_position(initPosition)
-	, m_deleteFlag(false)
+	, m_direction(VGet(0.0f, 0.0f, 0.0f))
 	, m_texture(nullptr)
+	, m_textureAnimation(nullptr)
+	, m_deleteFlag(false)
+	, m_tag(Tag::None)
 {
 	Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->AddObject(this);
-	m_textureAnimation = new TextureAnimation(fileName, initPosition, allNum, numX, numY, interval, scale, isPlayer);
+
+	if (m_textureAnimation == nullptr)
+	{
+		m_textureAnimation = new TextureAnimation(fileName, initPosition, allNum, numX, numY, interval, scale, isPlayer);
+	}
 }
 
 // 保持する画像リソースの破棄

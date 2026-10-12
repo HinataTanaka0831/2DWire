@@ -7,12 +7,6 @@
 // プレイヤーキャラクターの入力制御・ワイヤー振り子物理演算・近接攻撃・HPUIを統括するクラス
 class Player : public Object2D
 {
-private:
-	static const int MoveSpeed = 5;
-
-private:
-	AnimationController m_animController; // プレイヤーの状態別アニメーション管理
-
 public:
 	// プレイヤーオブジェクトおよび初期ステートの初期化
 	// 入力: fileName, initPosition, allNum, numX, numY, interval, scale, isPlayer / 出力: なし / 副作用: 各種アニメーションの登録
@@ -47,45 +41,46 @@ public:
 	// 入力: damage(ダメージ量) / 出力: なし / 副作用: HP減算、HP<=0時のSCENE_GAMEOVER遷移要求
 	void Damage(int damage);
 
-	float GetVelocityX()  { return m_velocityX; }
-	bool IsFacingLeft()  { return m_facingLeft; }
-	float GetAngularAcceleration() { return m_angularAcceleration; } 
-	bool IsWireActive() { return m_isWireActive; } 
+	float GetVelocityX() const { return m_velocityX; }
+	bool IsFacingLeft() const { return m_facingLeft; }
+	float GetAngularAcceleration() const { return m_angularAcceleration; } 
+	bool IsWireActive() const { return m_isWireActive; } 
 	bool IsDead() const { return m_isDead; }
 
 private:      
-	bool m_isWireActive = false;                                 // ワイヤー射出・係留中フラグ
-	VECTOR m_wireTargetPos = VGet(0.0f, 0.0f, 0.0f);             // ワイヤーの係留先アンカー座標
-	float m_pendulumAngle = 0.0f;                                // 振り子の現在角度(rad)
-	float m_pendulumAngularVelocity = 0.0f;                      // 振り子の角速度
-	float m_wireLength = 0.0f;                                   // 係留時のワイヤー固定長
-	float m_angularAcceleration = 0.0f;                          // 振り子運動の角加速度
+	AnimationController m_animController; // プレイヤーの状態別アニメーション管理
+
+	const int MoveSpeed;
+	int m_maxHp;                          // 最大HP
+	int m_hp;                             // 現在HP
+	int m_gaugeWidth;                     // HPゲージUIの横幅
+	int m_gaugeHeight;                    // HPゲージUIの縦幅
+	int m_nowHpGaugeWidth;                // 現在HPゲージの描画幅
+	int m_damageBarWidth;                 // 遅延ダメージバーの描画幅
+	int m_minWidth;                       // ゲージ最小描画幅
+	int m_damage;                         // 遅延追従用HP表示値
+	int m_hpGaugeTimer;                   // ゲージ更新間隔カウンタ
+	const float GaugeFrame;               // HPゲージ更新間隔フレーム数
+	bool m_isAttack;                      // 攻撃アクション中フラグ
+	bool m_hasHitThisAttack;              // 1回のアクションでの多重ヒット防止フラグ
+	int m_attackAnimationTimer;           // 攻撃アニメーション持続タイマー
+	int m_attackCooldown;                 // 次の攻撃実行までのクールダウン
+	const int AttackInterval;             // 攻撃間隔フレーム数
+	int m_damageCooldown;                 // 次のプレイヤーが受けるダメージ実行までのクールダウン
+	const int DamageInterval;             // プレイヤーが受けるダメージ間隔フレーム数
+
+	bool m_isWireActive;                  // ワイヤー射出・係留中フラグ
+	VECTOR m_wireTargetPos;               // ワイヤーの係留先アンカー座標
+	float m_pendulumAngle;                // 振り子の現在角度(rad)
+	float m_pendulumAngularVelocity;      // 振り子の角速度
+	float m_wireLength;                   // 係留時のワイヤー固定長
+	float m_angularAcceleration;          // 振り子運動の角加速度
 	
-	float m_velocityY = 0.0f;                                   // Y軸移動速度
-	float m_velocityX = 0.0f;                                   // X軸移動速度
-	bool m_facingLeft = false;                                  // 水平方向の向き保持フラグ(true: 左向き)
-	static constexpr float m_gravity = 0.5f;                   // 重力加速度定数
+	float m_velocityY;                    // Y軸移動速度
+	float m_velocityX;                    // X軸移動速度
+	bool m_facingLeft;                    // 水平方向の向き保持フラグ(true: 左向き)
+	const float m_gravity;                // 重力加速度定数
 
-	int m_hp = 100;                         // 現在HP
-	int m_maxHP = 100;                      // 最大HP
-	int m_width = 250;                      // HPゲージUIの横幅
-	int m_gaugeWidth = 0;                   // 実HPバーの描画幅
-	int m_gaugeHeight = 20;                 // HPゲージUIの縦幅
-	int m_damageWidth = 0;                  // 遅延ダメージバーの描画幅
-	int m_minWidth = 5;                     // ゲージ最小描画幅
-	int m_displayDamage = m_maxHP;          // 遅延追従用HP表示値
-	int m_hpGaugeTimer = 0;                 // ゲージ更新間隔カウンタ
-	const float GaugeFrame = 3.0f;          // HPゲージ更新間隔フレーム数
-	bool m_isAttack = false;                // 攻撃アクション中フラグ
-	bool m_hasHitThisAttack = false;        // 1回のアクションでの多重ヒット防止フラグ
-	int m_attackAnimationTimer = 0;         // 攻撃アニメーション持続タイマー
-	int m_attackCooldown = 0;               // 次の攻撃実行までのクールダウン
-	const int AttackInterval = 16;          // 攻撃間隔フレーム数
-
-	int m_damageCooldown = 0;              // 次のプレイヤーが受けるダメージ実行までのクールダウン
-	const int DamageInterval = 10;          // プレイヤーが受けるダメージ間隔フレーム数
-
-	bool m_isJump = false;                 // ジャンプアクション中のフラグ
-
-	bool m_isDead = false;                 // プレイヤーがやられたかどうかのフラグ
+	bool m_isJump;                        // ジャンプアクション中のフラグ
+	bool m_isDead;                        // プレイヤーがやられたかどうかのフラグ
 };

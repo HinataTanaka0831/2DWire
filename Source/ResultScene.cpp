@@ -36,7 +36,7 @@ void ResultScene::Update()
 		if (m_retryButton->IsClick())
 		{
 			g_currentStage = 1;
-			Master::m_soundManager->PlaySE(SoundManager::SE_DECIDE);
+			Master::m_soundManager->PlaySE(SoundManager::SeDecide);
 			Master::m_sceneManager->SetNextScene(SceneManager::SceneType::SceneGameStage1);
 		}
 	}
@@ -47,7 +47,7 @@ void ResultScene::Update()
 
 		if (m_titleButton->IsClick())
 		{
-			Master::m_soundManager->PlaySE(SoundManager::SE_DECIDE);
+			Master::m_soundManager->PlaySE(SoundManager::SeDecide);
 			Master::m_sceneManager->SetNextScene(SceneManager::SceneType::SceneTitle);
 		}
 	}

@@ -57,7 +57,7 @@ void TitleScene::Update()
 		if (m_playButton->IsClick())
 		{
 			g_currentStage = 1;
-			Master::m_soundManager->PlaySE(SoundManager::SE_DECIDE);
+			Master::m_soundManager->PlaySE(SoundManager::SeDecide);
 			Master::m_sceneManager->SetNextScene(SceneManager::SceneType::SceneGameStage1);
 		}
 	}
@@ -68,7 +68,7 @@ void TitleScene::Update()
 
 		if (m_playRuleButton->IsClick())
 		{
-			Master::m_soundManager->PlaySE(SoundManager::SE_DECIDE);
+			Master::m_soundManager->PlaySE(SoundManager::SeDecide);
 			Master::m_sceneManager->SetNextScene(SceneManager::SceneGameRule);
 		}
 	}
@@ -79,7 +79,7 @@ void TitleScene::Update()
 
 		if (m_quitButton->IsClick())
 		{
-			Master::m_soundManager->PlaySE(SoundManager::SE_DECIDE);
+			Master::m_soundManager->PlaySE(SoundManager::SeDecide);
 			Master::m_sceneManager->RequestQuit();
 		}
 	}

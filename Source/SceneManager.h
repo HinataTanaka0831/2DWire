@@ -95,20 +95,20 @@ public:
 
 
 private:
-	SceneType m_sceneType = SceneType::SceneNone;
-	SceneType m_nextSceneType = SceneType::SceneNone;
-	ResultType m_resultType = ResultType::ResultNone;
-	Scene* m_currentScene = nullptr;
+	SceneType m_sceneType;            // 現在のシーン種別
+	SceneType m_nextSceneType;        // 次に遷移すべきシーン種別
+	ResultType m_resultType;          // リザルト演出の種類（クリア/ゲームオーバー）
+	Scene* m_currentScene;            // 現在のシーンインスタンス
 
-	bool m_isTransition = false;    // トランジション演出を行うかどうかのフラグ
-	int m_transitionTimer = 0;      // トランジションを行う時間
-	const int TransitionTime = 15; // 遷移にかけるフレーム数（約0.25秒）
-	TransitionPhase m_phase = TransitionPhase::TransNone;
+	bool m_isTransition;              // トランジション演出を行うかどうかのフラグ
+	int m_transitionTimer;            // トランジションを行う時間
+	const int TransitionTime;         // 遷移にかけるフレーム数（約0.25秒）
+	TransitionPhase m_phase;          // 遷移演出の進行フェーズ
 
-	TransitionType m_transitionType = TransitionType::NormalBlack;
-	int m_shakeOffsetX = 0;
-	int m_shakeOffsetY = 0;
-	int m_workScreenHandle = -1;
+	TransitionType m_transitionType;  // 遷移演出の種類（黒フェード/白フラッシュ/赤フラッシュ＋シェイク）
+	int m_shakeOffsetX;               // シェイクオフセットX
+	int m_shakeOffsetY;               // シェイクオフセットY
+	int m_workScreenHandle;           // ワークスクリーンハンドル
 
-	bool m_quitRequest = false;
+	bool m_quitRequest;               // ゲームループを終了するかどうかのフラグ
 };

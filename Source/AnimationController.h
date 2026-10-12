@@ -8,12 +8,12 @@ enum class CharacterState {
     Idle,
     Moving,
     Attacking,
-    Damaged,
     Dead
 };
 
 // 状態に応じたTextureAnimationの切り替え・同期制御を行うコントローラー
-class AnimationController {
+class AnimationController 
+{
 public:
     AnimationController();
     ~AnimationController();
@@ -21,6 +21,14 @@ public:
     // 状態に対応するアニメーションを登録
     // 入力: state(状態), anim(アニメーションポインタ) / 出力: なし / 副作用: 内部マップへの所有権移動
     void RegisterAnimation(CharacterState state, std::unique_ptr<TextureAnimation> anim);
+
+    // 現在アクティブなアニメーションの座標同期とフレーム更新
+    // 入力: x, y(中心座標) / 出力: なし / 副作用: アニメーション状態の進行
+    void Update(float x, float y);
+
+    // 現在アクティブなアニメーションの描画
+    // 入力: cameraX, cameraY(カメラ座標) / 出力: なし / 副作用: バックバッファへの描画
+    void Draw(float cameraX, float cameraY);
 
     // キャラクター状態を変更し、アニメーションを切り替え
     // 入力: newState(新規状態) / 出力: なし / 副作用: 現在状態の更新
@@ -30,13 +38,12 @@ public:
     // 入力: reverse(反転フラグ) / 出力: なし / 副作用: 全TextureAnimationの反転設定更新
     void SetEnemyReverse(bool reverse);
 
-    // 現在アクティブなアニメーションの座標同期とフレーム更新
-    // 入力: x, y(中心座標) / 出力: なし / 副作用: アニメーション状態の進行
-    void Update(float x, float y);
-
-    // 現在アクティブなアニメーションの描画
-    // 入力: cameraX, cameraY(カメラ座標) / 出力: なし / 副作用: バックバッファへの描画
-    void Draw(float cameraX, float cameraY);
+    bool StopCurrentAnimation() {
+        if (m_animations.count(m_currentState)) {
+             return m_animations[m_currentState]->StopAnimation();
+        }
+        return false;
+    }
 
     CharacterState GetCurrentState() const { return m_currentState; }
 

@@ -19,8 +19,8 @@ public:
 	// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 	void Draw() override;
 
-	int GetWidth() { return m_width; }
-	int GetHeight() { return m_height; }
+	int GetWidth() const{ return m_width; }
+	int GetHeight() const{ return m_height; }
 
 private:
 	int m_width;       // ゴール領域の横幅

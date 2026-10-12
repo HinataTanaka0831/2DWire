@@ -17,8 +17,8 @@ public:
 	int CheckUpKey(int keyCode);
 
 	// 指定キーが押し続けられているかを判定
-	// 入力: KeyCode(キーコード) / 出力: 押下中なら1、それ以外は0 / 副作用: なし
-	int CheckPressKey(int KeyCode);
+	// 入力: keyCode(キーコード) / 出力: 押下中なら1、それ以外は0 / 副作用: なし
+	int CheckPressKey(int keyCode);
 
 
 	//----- マウス入力関連 -----//
@@ -52,12 +52,12 @@ private:
 	InputManager& operator=(InputManager&&) = delete;
 
 private:
-	int m_downBuffer[256] = { 0 };	    // 押下エッジ検出用の前フレームキー状態保持バッファ
-	int m_upBuffer[256] = { 0 };		// 離脱エッジ検出用の前フレームキー状態保持バッファ
+	int m_downBuffer[256];	    // 押下エッジ検出用の前フレームキー状態保持バッファ
+	int m_upBuffer[256];		// 離脱エッジ検出用の前フレームキー状態保持バッファ
 
-	float m_mouseX = 0.0f;                 // 現在のマウスX座標
-	float m_mouseY = 0.0f;                 // 現在のマウスY座標
-	int m_currentMouseInput = 0;     // 現フレームのマウス入力ビットフラグ
-	int m_previousMouseInput = 0;    // 前フレームのマウス入力ビットフラグ（エッジ検出用）
+	float m_mouseX;             // 現在のマウスX座標
+	float m_mouseY;             // 現在のマウスY座標
+	int m_currentMouseInput;    // 現フレームのマウス入力ビットフラグ
+	int m_previousMouseInput;   // 前フレームのマウス入力ビットフラグ（エッジ検出用）
 
 };

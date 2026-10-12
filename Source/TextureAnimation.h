@@ -35,13 +35,15 @@ public:
 	// 入力: なし / 出力: なし / 副作用: カウンタおよび現在コマの初期化
 	void Reset(); 
 
+	bool StopAnimation() { return (m_currentNum >= m_allNum - 1); }
+
 	void SetPosition(VECTOR position) { m_position = position; } 
 	void SetReverse(bool reverse) { m_enemyReverseX = reverse; }
-	int GetSizeX() { return m_sizeX; }    
-	int GetSizeY() { return m_sizeY; }    
-	float GetRadius() { return m_radius; }    
+	int GetSizeX() const { return m_sizeX; }    
+	int GetSizeY() const { return m_sizeY; }    
+	float GetRadius() const { return m_radius; }    
 	void SetScale(float scale) { m_scale = scale; }    
-	float GetScale() { return m_scale; }    
+	float GetScale() const { return m_scale; }    
 
 private:
 	VECTOR m_position;        // 中心座標

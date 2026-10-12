@@ -8,6 +8,13 @@ InputManager& InputManager::GetInstance()
 }
 
 InputManager::InputManager()
+	: m_downBuffer{0}
+	, m_upBuffer{0}
+    , m_mouseX(0.0f)
+	, m_mouseY(0.0f)
+	, m_currentMouseInput(0)
+	, m_previousMouseInput(0)
+
 {
 }
 
@@ -16,44 +23,44 @@ InputManager::~InputManager()
 }
 
 // 指定キーが押された瞬間かどうかを判定
-// 入力: KeyCode(キーコード) / 出力: 押下瞬間なら1、それ以外は0 / 副作用: 前フレーム状態バッファを更新
-int InputManager::CheckDownKey(int KeyCode)
+// 入力: keyCode(キーコード) / 出力: 押下瞬間なら1、それ以外は0 / 副作用: 前フレーム状態バッファを更新
+int InputManager::CheckDownKey(int keyCode)
 {
 	int result = 0;
-	int keyState = CheckHitKey(KeyCode);
+	int keyState = CheckHitKey(keyCode);
 
 	// 前フレームで非押下かつ現フレームで押下の場合にトリガー成立
-	if(m_downBuffer[KeyCode] == 0 && keyState == 1)
+	if(m_downBuffer[keyCode] == 0 && keyState == 1)
 	{
 		result = 1;
 	}
 
-	m_downBuffer[KeyCode] = keyState;
+	m_downBuffer[keyCode] = keyState;
 	return result;
 }
 
 // 指定キーが離された瞬間かどうかを判定
-// 入力: KeyCode(キーコード) / 出力: 離された瞬間なら1、それ以外は0 / 副作用: 前フレーム状態バッファを更新
-int InputManager::CheckUpKey(int KeyCode)
+// 入力: keyCode(キーコード) / 出力: 離された瞬間なら1、それ以外は0 / 副作用: 前フレーム状態バッファを更新
+int InputManager::CheckUpKey(int keyCode)
 {
 	int result = 0;
-	int keyState = CheckHitKey(KeyCode);
+	int keyState = CheckHitKey(keyCode);
 
 	// 前フレームで押下かつ現フレームで非押下の場合にリリース成立
-	if(m_upBuffer[KeyCode] == 1 && keyState == 0)
+	if(m_upBuffer[keyCode] == 1 && keyState == 0)
 	{
 		result = 1;
 	}
 
-	m_upBuffer[KeyCode] = keyState;
+	m_upBuffer[keyCode] = keyState;
 	return result;
 }
 
 // 指定キーが押し続けられているかを判定
-// 入力: KeyCode(キーコード) / 出力: 押下中なら1、それ以外は0 / 副作用: なし
-int InputManager::CheckPressKey(int KeyCode)
+// 入力: keyCode(キーコード) / 出力: 押下中なら1、それ以外は0 / 副作用: なし
+int InputManager::CheckPressKey(int keyCode)
 {
-	return CheckHitKey(KeyCode);
+	return CheckHitKey(keyCode);
 }
 
 

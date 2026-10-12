@@ -10,6 +10,30 @@
 
 Enemy::Enemy(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool isPlayer)
 	: Object2D(fileName, initPosition, allNum, numX, numY, interval, scale, isPlayer)
+	, MoveSpeed(3)
+	, m_maxHp(100)
+	, m_hp(m_maxHp)
+	, m_gaugeWidth(250)
+	, m_gaugeHeight(20)
+	, m_nowHpGaugeWidth(0)
+	, m_damageBarWidth(0)
+	, m_minWidth(0)
+	, m_damage(m_maxHp)
+	, m_hpGaugeTimer(0)
+	, GaugeFrame(3.0f)
+	, m_hitFlashTimer(0)
+	, m_attackAnimationTimer(0)
+	, m_deadAnimationTimer(0)
+	, m_attackCooldown(0)
+	, HitFlashDuration(60)
+	, HitFlashInterval(6)
+	, m_searchRange(700.0f)
+	, m_attackRange(230.0f)
+	, m_attackInterval(40)
+	, m_isAttack(false)
+	, m_isDead(false)
+	, m_isCollidingWithPlayer(false)
+
 {
 	m_direction = VGet(-1.0f, 0.0f, 0.0f);
 	SetTag(Object2D::Enemy2D);
@@ -23,6 +47,10 @@ Enemy::Enemy(std::string fileName, VECTOR initPosition, int allNum, int numX, in
 	// 攻撃モーションの俊敏さを演出するため再生速度を調整して登録
 	m_animController.RegisterAnimation(CharacterState::Attacking,
 		std::make_unique<TextureAnimation>("Resource/Enemy/enemy_monster01_attack.png", initPosition, 4, 4, 1, 10, scale, isPlayer));
+
+	m_animController.RegisterAnimation(CharacterState::Dead,
+		std::make_unique<TextureAnimation>("Resource/Enemy/enemy_monster01_dead.png", VGet(1000.0f, 1000.0f, 0.0f), 5, 5, 1, 8, scale, isPlayer));
+
 	m_animController.ChangeState(CharacterState::Idle);
 }
 
@@ -30,12 +58,11 @@ Enemy::~Enemy()
 {
 }
 
-// 毎フレームのAI思考、移動、被弾点滅、HP更新
-// 入力: なし / 出力: なし / 副作用: 座標・アニメーション・HPの更新
 void Enemy::Update()
 {
 	HPGaugeUpdate();
 	Move();
+
 	if (m_hitFlashTimer > 0)
 	{
 		m_hitFlashTimer--;
@@ -43,6 +70,7 @@ void Enemy::Update()
 
 	if (m_attackAnimationTimer > 0)
 	{
+
 		m_attackAnimationTimer--;
 
 		if (m_attackAnimationTimer <= 0)
@@ -51,8 +79,16 @@ void Enemy::Update()
 		}
 	}
 
-	if (m_hp <= 0) {
+
+	if (m_isDead) {
 		m_animController.ChangeState(CharacterState::Dead);
+
+		if (m_animController.StopCurrentAnimation())
+		{
+			// 死亡アニメーションが完了した場合、削除フラグを立てる
+			SetDeleteFlag(true);
+		}
+
 	} 
 	else {
 		auto pTarget = Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
@@ -81,8 +117,6 @@ void Enemy::Update()
 	m_animController.Update(m_position.x, m_position.y);
 }
 
-// カメラ座標を加味した敵スプライト（被弾フラッシュ含む）とHPゲージの描画
-// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void Enemy::Draw()
 {
 	// 被弾フィードバックとして一定周期で赤色点滅表示
@@ -92,12 +126,12 @@ void Enemy::Draw()
 	}
 
 	m_animController.Draw(g_cameraX, g_cameraY);
+
 	SetDrawBright(255, 255, 255);
+
 	HPGaugeDraw();
 }
 
-// プレイヤーとの距離に応じた追跡・攻撃AIルーチンおよび他敵との重なり分離
-// 入力: なし / 出力: なし / 副作用: mvPosition, mvDirection, mnAttackCooldownの更新
 void Enemy::Move()
 {
 	auto pTarget = Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DByTag(Object2D::Player2D);
@@ -150,25 +184,22 @@ void Enemy::Move()
 	ResolveEnemyOverlap();
 }
 
-bool Enemy::IsScreenOut()
-{
-	return (m_position.x + m_texture->GetSizeX() / 2) < 0.0f;
-}
 
-// プレイヤーからの被弾処理と死亡時削除フラグ設定
-// 入力: damage(ダメージ量) / 出力: なし / 副作用: hp減算、被弾点滅タイマー開始、SetDeleteFlag
 void Enemy::Damage(int damage)
 {
-	m_hp -= damage;
-	m_hitFlashTimer = HitFlashDuration;
-	if (m_hp <= 0)
+	if (m_hp > 0)
 	{
-		SetDeleteFlag(true);
+		m_hp -= damage;
+		m_hitFlashTimer = HitFlashDuration;
 	}
+
+	if (m_hp <= 0 && !m_isDead)
+	{
+		m_isDead = true;
+	}
+
 }
 
-// 敵同士が同じ座標に密集して固まるのを防ぐ斥力（位置補正）処理
-// 入力: なし / 出力: なし / 副作用: mvPositionの微小補正
 void Enemy::ResolveEnemyOverlap()
 {
 	auto enemyList = Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Enemy2D);
@@ -206,44 +237,40 @@ void Enemy::ResolveEnemyOverlap()
 	}
 }
 
-// 敵頭上にHPゲージ（現在値＋ダメージ演出バー）を描画
-// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 void Enemy::HPGaugeDraw()
 {
 	int gaugeX = (int)(m_position.x - g_cameraX) - 110;
 	int gaugeY = (int)(m_position.y - g_cameraY) - 190;
 
-	DrawBox(gaugeX, gaugeY, gaugeX + m_width, gaugeY + m_gaugeHeight, GetColor(0, 0, 0), TRUE);
-	DrawBox(gaugeX, gaugeY, gaugeX + m_damageWidth, gaugeY + m_gaugeHeight, GetColor(255, 0, 0), TRUE);
-	DrawBox(gaugeX, gaugeY, gaugeX + m_gaugeWidth, gaugeY + m_gaugeHeight, GetColor(51, 204, 51), TRUE);
-	DrawBox(gaugeX, gaugeY, gaugeX + m_width, gaugeY + m_gaugeHeight, GetColor(255, 255, 255), FALSE);
+	DrawBox(gaugeX, gaugeY, gaugeX + m_gaugeWidth, gaugeY + m_gaugeHeight, GetColor(0, 0, 0), TRUE);
+	DrawBox(gaugeX, gaugeY, gaugeX + m_damageBarWidth, gaugeY + m_gaugeHeight, GetColor(255, 0, 0), TRUE);
+	DrawBox(gaugeX, gaugeY, gaugeX + m_nowHpGaugeWidth, gaugeY + m_gaugeHeight, GetColor(51, 204, 51), TRUE);
+	DrawBox(gaugeX, gaugeY, gaugeX + m_gaugeWidth, gaugeY + m_gaugeHeight, GetColor(255, 255, 255), FALSE);
 }
 
-// 被弾時に減少分を滑らかに追従させるHP演出ゲージの幅計算
-// 入力: なし / 出力: なし / 副作用: displayDamage, damageWidth, gaugeWidthの更新
 void Enemy::HPGaugeUpdate()
 {
 	m_hpGaugeTimer++;
 
 	if (m_hpGaugeTimer >= GaugeFrame)
 	{
-		if (m_displayDamage > m_hp)
+		if (m_damage > m_hp)
 		{
 			// 被弾演出としてダメージ減少幅を段階的に追従
-			m_displayDamage--;
-			if (m_displayDamage < m_hp)
+			m_damage--;
+			if (m_damage < m_hp)
 			{
-				m_displayDamage = m_hp;
+				m_damage = m_hp;
 			}
 		}
 		m_hpGaugeTimer = 0;
 	}
 
-	int display = m_displayDamage;
 	// 負値による反転描画バグを防ぐための境界ガード
-	if (display < 0 && display > m_minWidth)
+	int displayDamage = m_damage;
+	if (displayDamage < 0 && displayDamage > m_minWidth)
 	{
-		display = m_minWidth;
+		displayDamage = m_minWidth;
 	}
 
 	int displayHp = m_hp;
@@ -252,6 +279,6 @@ void Enemy::HPGaugeUpdate()
 		displayHp = m_minWidth;
 	}
 
-	m_damageWidth = (int)((float)display / m_maxHP * m_width);
-	m_gaugeWidth = (int)((float)displayHp / m_maxHP * m_width);
+	m_damageBarWidth = (int)((float)displayDamage / m_maxHp * m_gaugeWidth);
+	m_nowHpGaugeWidth = (int)((float)displayHp / m_maxHp * m_gaugeWidth);
 }
