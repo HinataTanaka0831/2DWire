@@ -61,7 +61,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		// 描画
 		Master::m_sceneManager->Draw();
 		
-
+		// 各シーンの終了ボタンを押したらゲームループを終了させる
 		if (Master::m_sceneManager->IsQuitRequest())
 		{
 			break;

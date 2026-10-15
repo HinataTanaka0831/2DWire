@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "DxLib.h"
-#include "TextureAnimation.h"
 #include "Object2D.h"
 #include "AnimationController.h"
 

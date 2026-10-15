@@ -8,7 +8,7 @@ class Scene
 {
 public:
 	// シーン固有のObjectManagerの生成
-	// 入力: なし / 出力: なし / 副作用: mpObjectManagerのインスタンス化
+	// 入力: なし / 出力: なし / 副作用: m_ObjectManagerのインスタンス化
 	Scene();
 	virtual ~Scene();
 
@@ -17,11 +17,11 @@ public:
 	virtual void Initialize() = 0;
 
 	// シーン内の全オブジェクトの更新
-	// 入力: なし / 出力: なし / 副作用: mpObjectManager->Update()呼び出し
+	// 入力: なし / 出力: なし / 副作用: m_ObjectManager->Update()呼び出し
 	virtual void Update();
 
 	// シーン内の全オブジェクトの描画
-	// 入力: なし / 出力: なし / 副作用: mpObjectManager->Draw()呼び出し
+	// 入力: なし / 出力: なし / 副作用: m_ObjectManager->Draw()呼び出し
 	virtual void Draw();
 
 	// シーン終了時のリソース破棄およびオブジェクト解放

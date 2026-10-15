@@ -3,11 +3,11 @@
 #include "Master.h"
 #include "ObjectManager.h"
 #include "Scene.h"
-#include "GameScene.h"
 #include "Utility.h"
 #include <cmath>
 #include "InputManager.h"
 #include "Enemy.h"
+#include "TextureAnimation.h"
 
 Player::Player(std::string filename, VECTOR initPos, int allNum, int numX, int numY, int interval, float scale, bool isPlayer)
 	: Object2D(filename, initPos, allNum, numX, numY, interval, scale, isPlayer)
@@ -45,12 +45,13 @@ Player::Player(std::string filename, VECTOR initPos, int allNum, int numX, int n
 {
 	SetTag(Object2D::Player2D);
 
+	// プレイヤーの各状態アニメーションを初期化
 	m_animController.RegisterAnimation(CharacterState::Idle,
-		std::make_unique<TextureAnimation>(filename, initPos, allNum, numX, numY, interval, scale, isPlayer));
+		new TextureAnimation(filename, initPos, allNum, numX, numY, interval, scale, isPlayer));
 	m_animController.RegisterAnimation(CharacterState::Moving,
-		std::make_unique<TextureAnimation>("Resource/Player/player_walk.png", initPos, 4, 4, 1, 7, 1.0f, isPlayer));
+		new TextureAnimation("Resource/Player/player_walk.png", initPos, 4, 4, 1, 7, 1.0f, isPlayer));
 	m_animController.RegisterAnimation(CharacterState::Attacking,
-		std::make_unique<TextureAnimation>("Resource/Player/player_attack.png", initPos, 6, 3, 2, 5, 1.0f, isPlayer));
+		new TextureAnimation("Resource/Player/player_attack.png", initPos, 6, 3, 2, 5, 1.0f, isPlayer));
 	m_animController.ChangeState(CharacterState::Idle);
 }
 

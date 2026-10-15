@@ -23,8 +23,6 @@ Scene::~Scene()
 	}
 }
 
-// シーン内の全オブジェクトの更新
-// 入力: なし / 出力: なし / 副作用: mpObjectManager->Update()呼び出し
 void Scene::Update()
 {
 	if (m_objectManager != nullptr)
@@ -33,8 +31,6 @@ void Scene::Update()
 	}
 }
 
-// シーン内の全オブジェクトの描画
-// 入力: なし / 出力: なし / 副作用: mpObjectManager->Draw()呼び出し
 void Scene::Draw()
 {
 	if (m_objectManager != nullptr)

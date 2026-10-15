@@ -5,7 +5,7 @@
 #include "Scene.h"
 #include "Collision.h"
 #include "Player.h"
-#include "Texture.h"
+#include "TextureAnimation.h"
 
 
 Enemy::Enemy(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool isPlayer)
@@ -38,18 +38,18 @@ Enemy::Enemy(std::string fileName, VECTOR initPosition, int allNum, int numX, in
 	m_direction = VGet(-1.0f, 0.0f, 0.0f);
 	SetTag(Object2D::Enemy2D);
 
+	// 敵の各状態アニメーションを初期化
 	m_animController.RegisterAnimation(CharacterState::Idle,
-		std::make_unique<TextureAnimation>(fileName, initPosition, allNum, numX, numY, interval, scale, isPlayer));
+		new TextureAnimation(fileName, initPosition, allNum, numX, numY, interval, scale, isPlayer));
 	
 	m_animController.RegisterAnimation(CharacterState::Moving,
-		std::make_unique<TextureAnimation>("Resource/Enemy/enemy_monster01_walk.png", initPosition, 6, 6, 1, 8, scale, isPlayer));
+		new TextureAnimation("Resource/Enemy/enemy_monster01_walk.png", initPosition, 6, 6, 1, 8, scale, isPlayer));
 
-	// 攻撃モーションの俊敏さを演出するため再生速度を調整して登録
 	m_animController.RegisterAnimation(CharacterState::Attacking,
-		std::make_unique<TextureAnimation>("Resource/Enemy/enemy_monster01_attack.png", initPosition, 4, 4, 1, 10, scale, isPlayer));
+		new TextureAnimation("Resource/Enemy/enemy_monster01_attack.png", initPosition, 4, 4, 1, 10, scale, isPlayer));
 
 	m_animController.RegisterAnimation(CharacterState::Dead,
-		std::make_unique<TextureAnimation>("Resource/Enemy/enemy_monster01_dead.png", VGet(1000.0f, 1000.0f, 0.0f), 5, 5, 1, 8, scale, isPlayer));
+		new TextureAnimation("Resource/Enemy/enemy_monster01_dead.png", VGet(1000.0f, 1000.0f, 0.0f), 5, 5, 1, 8, scale, isPlayer));
 
 	m_animController.ChangeState(CharacterState::Idle);
 }
@@ -83,7 +83,7 @@ void Enemy::Update()
 	if (m_isDead) {
 		m_animController.ChangeState(CharacterState::Dead);
 
-		if (m_animController.StopCurrentAnimation())
+		if (m_animController.EndAnimation())
 		{
 			// 死亡アニメーションが完了した場合、削除フラグを立てる
 			SetDeleteFlag(true);

@@ -1,7 +1,8 @@
 ﻿#pragma once
 #include <map>
 #include <memory>
-#include "TextureAnimation.h"
+
+class TextureAnimation;
 
 // アニメーションを切り替えるためのキャラクター状態定義
 enum class CharacterState {
@@ -20,7 +21,7 @@ public:
 
     // 状態に対応するアニメーションを登録
     // 入力: state(状態), anim(アニメーションポインタ) / 出力: なし / 副作用: 内部マップへの所有権移動
-    void RegisterAnimation(CharacterState state, std::unique_ptr<TextureAnimation> anim);
+    void RegisterAnimation(CharacterState state, TextureAnimation* anim);
 
     // 現在アクティブなアニメーションの座標同期とフレーム更新
     // 入力: x, y(中心座標) / 出力: なし / 副作用: アニメーション状態の進行
@@ -38,17 +39,14 @@ public:
     // 入力: reverse(反転フラグ) / 出力: なし / 副作用: 全TextureAnimationの反転設定更新
     void SetEnemyReverse(bool reverse);
 
-    bool StopCurrentAnimation() {
-        if (m_animations.count(m_currentState)) {
-             return m_animations[m_currentState]->StopAnimation();
-        }
-        return false;
-    }
+    // アニメーションをループ再生せずに1回だけ再生する
+    // 入力: なし / 出力: trueならEndAnimation()を呼び出す、falseなら終了 / 副作用: アニメーションのループ制御
+    bool EndAnimation();
 
     CharacterState GetCurrentState() const { return m_currentState; }
 
 private:
-    std::map<CharacterState, std::unique_ptr<TextureAnimation>> m_animations;
+    std::map<CharacterState, TextureAnimation*> m_animations;
     CharacterState m_currentState;
     bool m_isInitialized;
 };

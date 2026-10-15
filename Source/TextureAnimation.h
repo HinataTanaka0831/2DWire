@@ -35,7 +35,8 @@ public:
 	// 入力: なし / 出力: なし / 副作用: カウンタおよび現在コマの初期化
 	void Reset(); 
 
-	bool StopAnimation() { return (m_currentNum >= m_allNum - 1); }
+	// アニメーションを1回だけ再生させる
+	bool EndAnimation() { return (m_currentNum >= m_allNum - 1); }
 
 	void SetPosition(VECTOR position) { m_position = position; } 
 	void SetReverse(bool reverse) { m_enemyReverseX = reverse; }
