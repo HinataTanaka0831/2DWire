@@ -7,6 +7,7 @@ ObjectManager::ObjectManager()
 
 ObjectManager::~ObjectManager()
 {
+	DeleteAll2D();
 }
 
 // 管理下の全2Dオブジェクトの一括更新

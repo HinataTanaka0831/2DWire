@@ -27,6 +27,11 @@ SceneManager::SceneManager()
 
 SceneManager::~SceneManager()
 {
+	if (m_currentScene != nullptr)
+	{
+		delete m_currentScene;
+		m_currentScene = nullptr;
+	}
 }
 
 void SceneManager::Initialize()
@@ -52,7 +57,10 @@ void SceneManager::Update()
 
 void SceneManager::Draw()
 {
-	if (m_currentScene == nullptr) return;
+	if (m_currentScene == nullptr)
+	{
+		return;
+	}
 
 	// シェイク演出を適用するため一旦ワークスクリーンへ全描画
 	SetDrawScreen(m_workScreenHandle);

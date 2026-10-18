@@ -44,8 +44,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	// ウィンドウ破棄またはESCキー押下までフレーム処理を継続
-	int animationCounter = 0;
-	int textureCurrentNum = 0;
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
 		ClearDrawScreen();

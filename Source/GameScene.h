@@ -11,7 +11,7 @@ class GameScene : public Scene
 {
 public:
 	GameScene();
-	~GameScene();
+	~GameScene() override;
 
 	// 背景リソースロードおよびローダーを介したステージ初期化の実行
 	// 入力: なし / 出力: なし / 副作用: ローディング画面実行、ステージ構築
@@ -38,5 +38,5 @@ private:
 	Stage* m_stage;            // ステージオブジェクトのポインタ
 	StageInfo m_stageInfo;     // ステージ情報構造体（プレイヤー初期位置、ゴール位置、カメラ制限座標など）
 	int m_backGroundHandle;    // 視差スクロール背景のグラフィックハンドル
-	bool mIsGoalReached;       // ゴール到達フラグ（true: ゴールに接触済み、false: 未接触）
+	bool m_IsGoalReached;       // ゴール到達フラグ（true: ゴールに接触済み、false: 未接触）
 };

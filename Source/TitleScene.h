@@ -12,7 +12,7 @@ class TitleScene : public Scene
 {
 public:
 	TitleScene();
-	~TitleScene();
+	~TitleScene() override;
 
 	// タイトル背景、ボタンUI、自動プレビューデモの初期化
 	// 入力: なし / 出力: なし / 副作用: 画像ロード、Button/TitleDemoの生成
@@ -27,7 +27,7 @@ public:
 	void Draw() override;
 
 	// デモおよびリソースの解放
-	// 入力: なし / 出力: なし / 副作用: mpTitleDemoの破棄
+	// 入力: なし / 出力: なし / 副作用: m_titleDemoの破棄
 	void Finalize() override;
 
 private:

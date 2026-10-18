@@ -5,19 +5,10 @@
 class Collision
 {
 public:
-	// AABB矩形判定用構造体
-	struct Rect {
-		float x;
-		float y;
-		float width;
-		float height;
-	};
-
-public:
 	Collision() {}
 	~Collision() {}
 
-	// 2つの円同士の交差判定（三平方の定理による距離の二乗比較）
+	// 2つの円同士の交差判定（三平方の定理による距離の二乗比較、平方根計算を回避し二乗のまま比較して高速化）
 	// 入力: centerPositionA, radiusA, centerPositionB, radiusB / 出力: 衝突していればtrue / 副作用: なし
 	static bool CheckCircleToCircle(
 		const VECTOR& centerPositionA,
@@ -35,13 +26,13 @@ public:
 	);
 
 	// 2つの軸平行境界ボックス（AABB）同士の矩形重なり判定
-	// 入力: rectPositionA, rectWidthA, rectHeightA, rectPositionB, rectWidthB, rectHeightB / 出力: 重なっていればtrue / 副作用: なし
+	// 入力: leftTopPositionA, widthA, heightA, leftTopPositionB, widthB, heightB / 出力: 重なっていればtrue / 副作用: なし
 	static bool CheckRectToRect(
-		const VECTOR& rectPositionA,
-		const float& rectWidthA,
-		const float& rectHeightA,
-		const VECTOR& rectPositionB,
-		const float& rectWidthB,
-		const float& rectHeightB
+		const VECTOR& leftTopPositionA,
+		const float& widthA,
+		const float& heightA,
+		const VECTOR& leftTopPositionB,
+		const float& widthB,
+		const float& heightB
 	);
 };

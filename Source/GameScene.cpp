@@ -20,13 +20,24 @@ GameScene::GameScene()
 	, m_stage(nullptr)
 	, m_stageInfo{}
 	, m_backGroundHandle(-1)
-	, mIsGoalReached(false)
+	, m_IsGoalReached(false)
 
 {
 }
 
 GameScene::~GameScene()
 {
+	if (m_player != nullptr)
+	{
+		delete m_player;
+	}
+
+	if (m_stage != nullptr)
+	{
+		delete m_stage;
+		m_stage = nullptr;
+	}
+
 }
 
 void GameScene::Initialize()
@@ -108,7 +119,7 @@ void GameScene::Update()
 		}
 
 		// ゴール接触判定とステージ遷移/リザルト遷移のディスパッチ
-		if (!mIsGoalReached)
+		if (!m_IsGoalReached)
 		{
 			auto goalList = Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->GetObject2DListByTag(Object2D::Goal2D);
 
@@ -128,7 +139,7 @@ void GameScene::Update()
 				if (dist < pGoal->GetWidth() / 2.0f + 50.0f)
 				{
 					// 多重遷移防止フラグを立ててステージ進行を分岐
-					mIsGoalReached = true;
+					m_IsGoalReached = true;
 					if (g_currentStage < MaxStage)
 					{
 						g_currentStage++;
@@ -194,14 +205,5 @@ void GameScene::Finalize()
 	{
 		DeleteGraph(m_backGroundHandle);
 		m_backGroundHandle = -1;
-	}
-
-	Master::m_sceneManager->GetCurrentScene()->GetObjectManager()->DeleteAll2D();
-	m_player = nullptr;
-
-	if (m_stage != nullptr)
-	{
-		delete m_stage;
-		m_stage = nullptr;
 	}
 }

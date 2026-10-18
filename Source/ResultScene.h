@@ -11,7 +11,7 @@ class ResultScene : public Scene
 {
 public:
 	ResultScene();
-	~ResultScene();
+	~ResultScene() override;
 
 	// ボタンUIの初期化
 	// 入力: なし / 出力: なし / 副作用: ボタンの生成

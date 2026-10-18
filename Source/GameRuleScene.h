@@ -12,7 +12,7 @@ class GameRuleScene : public Scene
 {
 public:
 	GameRuleScene();
-	~GameRuleScene();
+	~GameRuleScene() override;
 
 	// ボタンUI、操作キー画像の初期化
     // 入力: なし / 出力: なし / 副作用: 画像ロード、Buttonの生成
