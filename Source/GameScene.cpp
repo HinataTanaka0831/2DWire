@@ -59,7 +59,7 @@ void GameScene::LoadData()
 	m_stageInfo = m_stage->GetStageInfo();
 
 	m_player = new Player(
-		"Resource/Player/player_idle.png",
+		"Resource/Object/Player/player_idle.png",
 		VGet(m_stageInfo.playerStartX, m_stageInfo.playerStartY, 0.0f),
 		3, 3, 1, 8, 1.0f, true
 	);
