@@ -10,7 +10,7 @@ public:
 	// プレイヤーオブジェクトおよび初期ステートの初期化
 	// 入力: fileName, initPosition, allNum, numX, numY, interval, scale, isPlayer / 出力: なし / 副作用: 各種アニメーションの登録
 	Player(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool isPlayer);
-	~Player();
+	~Player() override;
 
 	// 毎フレームの物理挙動、入力検知、攻撃・HPゲージ更新
 	// 入力: なし / 出力: なし / 副作用: 座標・速度・ステート・HPの更新
@@ -40,6 +40,7 @@ public:
 	// 入力: damage(ダメージ量) / 出力: なし / 副作用: HP減算、HP<=0時のSCENE_GAMEOVER遷移要求
 	void Damage(int damage);
 
+public:
 	float GetVelocityX() const { return m_velocityX; }
 	bool IsFacingLeft() const { return m_facingLeft; }
 	float GetAngularAcceleration() const { return m_angularAcceleration; } 

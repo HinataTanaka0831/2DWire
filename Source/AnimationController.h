@@ -43,6 +43,7 @@ public:
     // 入力: なし / 出力: trueならEndAnimation()を呼び出す、falseなら終了 / 副作用: アニメーションのループ制御
     bool EndAnimation();
 
+public:
     CharacterState GetCurrentState() const { return m_currentState; }
 
 private:

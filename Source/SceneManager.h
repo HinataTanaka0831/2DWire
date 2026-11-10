@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "TransitionEffectManager.h"
 
 class Scene;
 
@@ -62,21 +63,22 @@ public:
 	// 入力: なし / 出力: なし / 副作用: mbQuitRequestでゲームループを続けるかどうかを決める
 	void RequestQuit();
 
-
+public:
 	bool IsQuitRequest() const { return m_quitRequest; }
-
 	ResultType GetResultType() const { return m_resultType; }
-
-	Scene* GetCurrentScene() { return m_currentScene; }
+	Scene* GetCurrentScene() const { return m_currentScene; }
 
 
 private:
-	SceneType m_sceneType;            // 現在のシーン種別
-	SceneType m_nextSceneType;        // 次に遷移すべきシーン種別
-	ResultType m_resultType;          // リザルト演出の種類（クリア/ゲームオーバー）
-	Scene* m_currentScene;            // 現在のシーンインスタンス
+	SceneType m_sceneType;             // 現在のシーン種別
+	SceneType m_nextSceneType;         // 次に遷移すべきシーン種別
+	ResultType m_resultType;           // リザルト演出の種類（クリア/ゲームオーバー）
+	Scene* m_currentScene;             // 現在のシーンインスタンス
+	TransitionEffectManager& instance;
 
-	bool m_isTransition;              // トランジション演出を行うかどうかのフラグ
+	int m_shakeOffsetX;               // シェイクオフセットX
+	int m_shakeOffsetY;               // シェイクオフセットY
+	int m_workScreenHandle;           // ワークスクリーンハンドル
 
 	bool m_quitRequest;               // ゲームループを終了するかどうかのフラグ
 };

@@ -20,6 +20,8 @@ public:
 	};
 
 public:
+	// シングルトンインスタンスの取得
+    // 入力: なし / 出力: TransitionEffectManagerのシングルトンインスタンス / 副作用: なし
 	static TransitionEffectManager& GetInstance();
 
 	// 遷移演出のフェード・シェイク進行計算
@@ -31,9 +33,15 @@ public:
 	void DrawTransitionEffects();
 
 
-	int GetWorlScreenHandle() { return m_workScreenHandle; }
-	int GetShakeOffsetX() { return m_shakeOffsetX; }
-	int GetShakeOffsetY() { return m_shakeOffsetY; }
+	void InitializeTransitionEffects();
+
+public:
+	void SetTransitionType(TransitionType type) { m_transitionType = type; }
+
+	bool GetIsTransition() const { return m_isTransition; }
+	int GetWorkScreenHandle() const { return m_workScreenHandle; }
+	int GetShakeOffsetX() const { return m_shakeOffsetX; }
+	int GetShakeOffsetY() const { return m_shakeOffsetY; }
 
 private:
 	TransitionEffectManager();
@@ -48,8 +56,9 @@ private:
 
 
 private:
-	int m_transitionTimer;            // トランジションを行う時間
 	const int TransitionTime;         // 遷移にかけるフレーム数（約0.25秒）
+	bool m_isTransition;              // トランジション演出を行うかどうかのフラグ
+	int m_transitionTimer;            // トランジションを行う時間
 	TransitionPhase m_phase;          // 遷移演出の進行フェーズ
 	TransitionType m_transitionType;  // 遷移演出の種類（黒フェード/白フラッシュ/赤フラッシュ＋シェイク）
 	int m_shakeOffsetX;               // シェイクオフセットX

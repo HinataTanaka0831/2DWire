@@ -1,9 +1,18 @@
 #include "TransitionEffectManager.h"
 #include "DxLib.h"
+#include "Utility.h"
+#include "Master.h"
+
+TransitionEffectManager& TransitionEffectManager::GetInstance()
+{
+	static TransitionEffectManager instance;
+	return instance;
+}
 
 TransitionEffectManager::TransitionEffectManager()
-   : m_transitionTimer(0)
-   , TransitionTime(15)
+   : TransitionTime(15)
+   , m_isTransition(false)
+   , m_transitionTimer(0)
    , m_phase(TransitionPhase::TransNone)
    , m_transitionType(TransitionType::NormalBlack)
    , m_shakeOffsetX(0)
@@ -62,7 +71,7 @@ void TransitionEffectManager::UpdateTransition()
 	case TransitionPhase::TransFadeOut:
 		if (m_transitionTimer >= TransitionTime)
 		{
-			ChangeSceneIfNeeded();
+			Master::m_sceneManager->ChangeSceneIfNeeded();
 			m_phase = TransitionPhase::TransFadeIn;
 			m_transitionTimer = 0;
 		}
@@ -111,4 +120,14 @@ void TransitionEffectManager::DrawTransitionEffects()
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	DrawBox(0, 0, Utility::ScreenWidth, Utility::ScreenHeight, color, TRUE);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+}
+
+void TransitionEffectManager::InitializeTransitionEffects()
+{
+	m_isTransition = true;
+	m_phase = TransitionPhase::TransFadeOut;
+	m_transitionTimer = 0;
+	m_shakeOffsetX = 0;
+	m_shakeOffsetY = 0;
+
 }

@@ -42,13 +42,17 @@ public:
 	// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 	virtual void Draw();
 
+	// アニメーションの再生位置を初期化
+	// 入力: なし / 出力: なし / 副作用: アニメーション画像を一番初めに設定
 	void Reset();
 
 public:
 	void SetPosition(VECTOR pos) { m_position = pos; }
 	VECTOR GetPosition() const { return m_position; }
+
 	void SetDeleteFlag(bool flag) { m_deleteFlag = flag; }
 	bool IsDeleteFlag() const { return m_deleteFlag; }
+
 	void SetTag(Tag tag) { m_tag = tag; }
 	Tag GetTag() const { return m_tag; }
 

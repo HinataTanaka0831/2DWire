@@ -9,7 +9,7 @@ public:
 	// ゴール領域の生成
 	// 入力: initPosition(中心座標), width(横幅), height(縦幅) / 出力: なし / 副作用: Goal2Dタグの設定
 	Goal(VECTOR initPosition, int width, int height);
-	~Goal();
+	~Goal() override;
 
 	// 演出用カラーサイクルの更新
 	// 入力: なし / 出力: なし / 副作用: mColorStateの加算
@@ -19,6 +19,7 @@ public:
 	// 入力: なし / 出力: なし / 副作用: バックバッファへの描画
 	void Draw() override;
 
+public:
 	int GetWidth() const{ return m_width; }
 	int GetHeight() const{ return m_height; }
 

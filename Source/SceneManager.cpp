@@ -13,7 +13,10 @@ SceneManager::SceneManager()
 	, m_nextSceneType(SceneType::SceneNone)
 	, m_resultType(ResultType::ResultNone)
 	, m_currentScene(nullptr)
-	, m_isTransition(false)
+	, instance(TransitionEffectManager::GetInstance())
+	, m_shakeOffsetX(TransitionEffectManager::GetInstance().GetShakeOffsetX())
+	, m_shakeOffsetY(TransitionEffectManager::GetInstance().GetShakeOffsetY())
+    , m_workScreenHandle(TransitionEffectManager::GetInstance().GetWorkScreenHandle())
 	, m_quitRequest(false)
 
 {
@@ -41,9 +44,9 @@ void SceneManager::Update()
 		m_currentScene->Update();
 	}
 
-	if (m_isTransition)
+	if (instance.GetIsTransition())
 	{
-		UpdateTransition();
+		instance.UpdateTransition();
 	}
 }
 
@@ -65,14 +68,18 @@ void SceneManager::Draw()
 	// シェイクオフセットを加算して本来のバックバッファへ転送
 	DrawGraph(m_shakeOffsetX, m_shakeOffsetY, m_workScreenHandle, FALSE);
 
-	if (m_isTransition)
+	if (instance.GetIsTransition())
 	{
-		DrawTransitionEffects();
+		instance.DrawTransitionEffects();
 	}
 }
 
 void SceneManager::Finalize()
 {
+	if (m_currentScene != nullptr)
+	{
+		m_currentScene->Finalize();
+	}
 }
 
 void SceneManager::ChangeSceneIfNeeded()
@@ -127,22 +134,17 @@ void SceneManager::SetNextScene(SceneType next)
 	// シーンの演出意図に応じてトランジション種別を分岐
 	if (next == SceneType::SceneGameStage1 || next == SceneType::SceneGameStage2)
 	{
-		m_transitionType = TransitionType::WhiteFlash;
+	    instance.SetTransitionType(TransitionEffectManager::TransitionType::WhiteFlash);
 	}
 	else if (next == SceneType::SceneResult && m_resultType == ResultType::ResultGameOver)
 	{
-		m_transitionType = TransitionType::RedFlashShake;
+		instance.SetTransitionType(TransitionEffectManager::TransitionType::RedFlashShake);
 	}
 	else
 	{
-		m_transitionType = TransitionType::NormalBlack;
+		instance.SetTransitionType(TransitionEffectManager::TransitionType::NormalBlack);
 	}
 
-	m_isTransition = true;
-	m_phase = TransitionPhase::TransFadeOut;
-	m_transitionTimer = 0;
-	m_shakeOffsetX = 0;
-	m_shakeOffsetY = 0;
 }
 
 void SceneManager::SetResultType(ResultType result)

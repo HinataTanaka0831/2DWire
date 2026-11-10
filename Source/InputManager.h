@@ -38,8 +38,9 @@ public:
 	// 入力: mouseCode(マウスコード) / 出力: 離された瞬間ならtrue、それ以外はfalse / 副作用: なし
 	bool CheckReleaseMouseClick(int mouseCode);
 
-	float GetMouseX() { return m_mouseX; }
-	float GetMouseY() { return m_mouseY; }
+public:
+	float GetMouseX() const { return m_mouseX; }
+	float GetMouseY() const { return m_mouseY; }
 
 private:
 	InputManager();

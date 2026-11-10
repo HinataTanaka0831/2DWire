@@ -11,7 +11,7 @@ public:
 	// 敵キャラクターの初期化とアニメーションの登録
 	// 入力: fileName, initPosition, allNum, numX, numY, interval, scale, isPlayer / 出力: なし / 副作用: AnimationControllerへのステート登録
 	Enemy(std::string fileName, VECTOR initPosition, int allNum, int numX, int numY, int interval, float scale, bool isPlayer);
-	~Enemy();
+	~Enemy() override;
 
 	// 毎フレームのAI思考、移動、被弾点滅、HP更新、死亡アニメーション終了時の削除フラグ設定
 	// 入力: なし / 出力: なし / 副作用: 座標・アニメーション・HPの更新

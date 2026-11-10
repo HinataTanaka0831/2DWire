@@ -14,10 +14,6 @@ Stage::~Stage()
 {
 }
 
-void Stage::Initialize()
-{
-}
-
 // 指定ステージ番号に応じたオブジェクト群の一括インスタンス化
 // 入力: stageNum(ステージ番号) / 出力: なし / 副作用: WireTarget, Enemy, Goalの生成
 void Stage::LoadStage(int stageNum)
